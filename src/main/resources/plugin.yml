@@ -1,0 +1,9 @@
+name: EquinoxEquestrian
+version: '1.0'
+main: endcrypt.equinoxEquestrian.EquinoxEquestrian
+api-version: '1.20'
+commands:
+  eq:
+    description: Main Command of EquinoxEquestrian Plugin
+    usage: /eq
+    aliases: [equine]
