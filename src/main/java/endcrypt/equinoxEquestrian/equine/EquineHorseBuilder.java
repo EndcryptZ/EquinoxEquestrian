@@ -1,11 +1,7 @@
 package endcrypt.equinoxEquestrian.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
-import endcrypt.equinoxEquestrian.equine.enums.Breed;
-import endcrypt.equinoxEquestrian.equine.enums.Discipline;
-import endcrypt.equinoxEquestrian.equine.enums.Gender;
-import endcrypt.equinoxEquestrian.equine.enums.Trait;
+import endcrypt.equinoxEquestrian.equine.enums.*;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -23,7 +19,7 @@ public class EquineHorseBuilder {
     }
 
     // Method to spawn the horse at a player's location
-    public void spawnHorse(Player player, Discipline discipline, Breed breed, Gender gender, Trait[] traits) {
+    public void spawnHorse(Player player, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
         World world = player.getWorld();
         Location location = player.getLocation();
 
@@ -38,9 +34,9 @@ public class EquineHorseBuilder {
         horse.setTamed(true);
         horse.setOwner(player);
 
-        ReadWriteNBT entityNbt = NBT.createNBTObject();
-        NBT.get(horse, entityNbt::mergeCompound);
-        NBT.modify(horse, nbt -> {
+        horse.setColor(coatColor.getHorseColor());
+
+        NBT.modifyPersistentData(horse, nbt -> {
             nbt.setBoolean("EQUINE_HORSE", true);
             nbt.setString("EQUINE_DISCIPLINE", discipline.name());
             nbt.setString("EQUINE_BREED", breed.name());
@@ -49,10 +45,9 @@ public class EquineHorseBuilder {
             IntStream.range(0, traits.length)
                             .forEach(i -> {
                                 nbt.setString("EQUINE_TRAIT_" + i, traits[i].name());
-                            });
 
-            nbt.mergeCompound(entityNbt);
+                       });
+
         });
-
     }
 }
