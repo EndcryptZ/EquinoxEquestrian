@@ -1,0 +1,80 @@
+package endcrypt.equinoxEquestrian.equine;
+
+import endcrypt.equinoxEquestrian.equine.enums.*;
+
+public class EquineHorse {
+
+    private String name;
+    private Discipline discipline;
+    private Breed breed;
+    private CoatColor coatColor;
+    private CoatModifier coatModifier;
+    private Gender gender;
+    private Trait[] traits;
+
+    public EquineHorse(String name, Discipline discipline, Breed breed, CoatColor coatColor, CoatModifier coatModifier, Gender gender, Trait[] traits) {
+        this.name = name;
+        this.discipline = discipline;
+        this.breed = breed;
+        this.coatColor = coatColor;
+        this.coatModifier = coatModifier;
+        this.gender = gender;
+        this.traits = traits;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public Breed getBreed() {
+        return breed;
+    }
+
+    public CoatColor getCoatColor() {
+        return coatColor;
+    }
+
+    public CoatModifier getCoatModifier() {
+        return coatModifier;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public Trait[] getTraits() {
+        return traits;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
+    }
+
+    public void setBreed(Breed breed) {
+        this.breed = breed;
+    }
+
+    public void setCoatColor(CoatColor coatColor) {
+        this.coatColor = coatColor;
+    }
+
+    public void setCoatModifier(CoatModifier coatModifier) {
+        this.coatModifier = coatModifier;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public void setTraits(Trait[] traits) {
+        this.traits = traits;
+    }
+}
