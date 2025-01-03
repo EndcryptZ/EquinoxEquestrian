@@ -4,6 +4,7 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import endcrypt.equinoxEquestrian.equine.enums.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,14 +20,14 @@ public class BreedSelectMenu {
     }
 
     // Select Discipline Menu
-    public Inventory breedMenu(Player player, String name, Discipline discipline, CoatColor coatColor, Gender gender, Trait[] traits) {
+    public Inventory breedMenu(Player player, EquineHorse equineHorse) {
 
         SGMenu gui = plugin.getSpiGUI().create("Select Breed", 5, "Breed");
 
 
         int slot = 0;
         for(Breed breed : Breed.values()) {
-            SGButton breedButton = breedButton(player, name, discipline, breed, coatColor, gender, traits);
+            SGButton breedButton = breedButton(player, breed, equineHorse);
             gui.setButton(slot, breedButton);
             slot++;
         }
@@ -36,14 +37,15 @@ public class BreedSelectMenu {
 
     }
 
-    private SGButton breedButton(Player player, String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton breedButton(Player player, Breed breed, EquineHorse equineHorse) {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name(breed.getBreedName())
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    plugin.getBuildAHorseMenu().openWithParameters(player, name, discipline, breed, coatColor, gender, traits);
+                    equineHorse.setBreed(breed);
+                    plugin.getBuildAHorseMenu().openWithParameters(player, equineHorse);
                 });
     }
 }

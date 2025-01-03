@@ -12,14 +12,8 @@ import java.util.stream.IntStream;
 
 public class EquineHorseBuilder {
 
-    private final String name;
-
-    public EquineHorseBuilder(String name) {
-        this.name = name;
-    }
-
     // Method to spawn the horse at a player's location
-    public void spawnHorse(Player player, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    public void spawnHorse(Player player, EquineHorse equineHorse) {
         World world = player.getWorld();
         Location location = player.getLocation();
 
@@ -27,24 +21,28 @@ public class EquineHorseBuilder {
         Horse horse = (Horse) world.spawnEntity(location, EntityType.HORSE);
 
         // Set the horse's custom name
-        horse.setCustomName(name);
+        horse.setCustomName(equineHorse.getName());
         horse.setCustomNameVisible(true);
 
         // Optional: Set horse as tameable
         horse.setTamed(true);
         horse.setOwner(player);
 
-        horse.setColor(coatColor.getHorseColor());
+        horse.setColor(equineHorse.getCoatColor().getHorseColor());
+
+        if(equineHorse.getCoatModifier() != CoatModifier.NONE) {
+            horse.setStyle(equineHorse.getCoatModifier().getHorseCoatModifier());
+        }
 
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setBoolean("EQUINE_HORSE", true);
-            nbt.setString("EQUINE_DISCIPLINE", discipline.name());
-            nbt.setString("EQUINE_BREED", breed.name());
-            nbt.setString("EQUINE_GENDER", gender.name());
+            nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
+            nbt.setString("EQUINE_BREED", equineHorse.getBreed().name());
+            nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
 
-            IntStream.range(0, traits.length)
+            IntStream.range(0, equineHorse.getTraits().length)
                             .forEach(i -> {
-                                nbt.setString("EQUINE_TRAIT_" + i, traits[i].name());
+                                nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name());
 
                        });
 

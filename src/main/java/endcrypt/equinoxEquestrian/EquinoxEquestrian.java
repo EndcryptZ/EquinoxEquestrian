@@ -15,6 +15,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private DisciplineSelectMenu disciplineSelectMenu;
     private BreedSelectMenu breedSelectMenu;
     private CoatColorSelectMenu coatColorSelectMenu;
+    private CoatModifierSelectMenu coatModifierSelectMenu;
     private GenderSelectMenu genderSelectMenu;
     private TraitSelectMenu traitSelectMenu;
 
@@ -28,6 +29,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         disciplineSelectMenu = new DisciplineSelectMenu(this);
         breedSelectMenu = new BreedSelectMenu(this);
         coatColorSelectMenu = new CoatColorSelectMenu(this);
+        coatModifierSelectMenu = new CoatModifierSelectMenu(this);
         genderSelectMenu = new GenderSelectMenu(this);
         traitSelectMenu = new TraitSelectMenu(this);
 
@@ -57,6 +59,10 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     public CoatColorSelectMenu getCoatColorSelectMenu() {
         return coatColorSelectMenu;
+    }
+
+    public CoatModifierSelectMenu getCoatModifierSelectMenu() {
+        return coatModifierSelectMenu;
     }
 
     public GenderSelectMenu getGenderSelectMenu() {

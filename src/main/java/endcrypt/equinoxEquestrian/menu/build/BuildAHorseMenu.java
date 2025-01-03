@@ -4,6 +4,7 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import endcrypt.equinoxEquestrian.equine.EquineHorseBuilder;
 import endcrypt.equinoxEquestrian.equine.enums.*;
 import org.bukkit.ChatColor;
@@ -21,13 +22,7 @@ import java.util.Random;
 
 public class BuildAHorseMenu implements Listener {
 
-    private final Map<Player, String> playerNameInput = new HashMap<>();
-    private final Map<Player, Discipline> playerDisciplineInput = new HashMap<>();
-    private final Map<Player, Breed> playerBreedInput = new HashMap<>();
-    private final Map<Player, CoatColor> playerCoatColorInput = new HashMap<>();
-    private final Map<Player, Gender> playerGenderInput = new HashMap<>();
-    private final Map<Player, Integer> playerAgeInput = new HashMap<>();
-    private final Map<Player, Trait[]> playerTraitsInput = new HashMap<>();
+    private final Map<Player, EquineHorse> playerEquineHorseInput = new HashMap<>();
 
     private final Map<Player, Double> playerCost = new HashMap<>();
 
@@ -59,27 +54,29 @@ public class BuildAHorseMenu implements Listener {
         player.openInventory(defaultMenu(player));
     }
 
-    public void openWithParameters(Player player, String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    public void openWithParameters(Player player, EquineHorse equineHorse) {
 
-        player.openInventory(menuWithParameters(player, name, discipline, breed, coatColor, gender, traits));
+        player.openInventory(menuWithParameters(player, equineHorse));
     }
 
-    private Inventory createMenu(Player player, String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private Inventory createMenu(Player player, EquineHorse equineHorse) {
         SGMenu gui = plugin.getSpiGUI().create("Build a Horse", 3, "Build a Horse");
 
-        SGButton nameButton = nameButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton disciplineButton = disciplineButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton breedButton = breedButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton coatColorButton = coatColorButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton genderButton = genderButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton traitsButton = traitsButton(name, discipline, breed, coatColor, gender, traits);
-        SGButton buyButton = buyButton(player, name, discipline, breed, coatColor, gender, traits);
-        SGButton costButton = costButton(discipline, gender, traits);
+        SGButton nameButton = nameButton(equineHorse);
+        SGButton disciplineButton = disciplineButton(equineHorse);
+        SGButton breedButton = breedButton(equineHorse);
+        SGButton coatColorButton = coatColorButton(equineHorse);
+        SGButton coatModifierButton = coatModifierButton(equineHorse);
+        SGButton genderButton = genderButton(equineHorse);
+        SGButton traitsButton = traitsButton(equineHorse);
+        SGButton buyButton = buyButton(player, equineHorse);
+        SGButton costButton = costButton(equineHorse);
 
         gui.setButton(0, nameButton);
         gui.setButton(1, disciplineButton);
         gui.setButton(2, breedButton);
         gui.setButton(3, coatColorButton);
+        gui.setButton(4, coatModifierButton);
         gui.setButton(5, genderButton);
         gui.setButton(8, traitsButton);
         gui.setButton(22, buyButton);
@@ -94,38 +91,37 @@ public class BuildAHorseMenu implements Listener {
         Discipline discipline = Discipline.ALL_ROUND;
         Breed breed = Breed.AEGIDIENBERGER;
         CoatColor coatColor = CoatColor.WHITE;
+        CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.STALLION;
         Trait[] traits = {Trait.AGGRESSIVE, Trait.AGILE, Trait.ADVENTUROUS};
 
-        return createMenu(player, randomHorseName, discipline, breed, coatColor, gender, traits);
+        EquineHorse equineHorse = new EquineHorse(randomHorseName, discipline, breed, coatColor, coatModifier, gender, traits);
+
+        return createMenu(player, equineHorse);
     }
 
-    private Inventory menuWithParameters(Player player, String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
-        return createMenu(player, name, discipline, breed, coatColor, gender, traits);
+    private Inventory menuWithParameters(Player player, EquineHorse equineHorse) {
+        return createMenu(player, equineHorse);
     }
 
 
 
     // Main Buttons
-    private SGButton nameButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton nameButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fName")
                         .lore(
-                                ChatColor.WHITE + name
+                                ChatColor.WHITE + equineHorse.getName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerNameInput.put(player, name);
-                    playerDisciplineInput.put(player, discipline);
-                    playerBreedInput.put(player, breed);
-                    playerCoatColorInput.put(player, coatColor);
-                    playerGenderInput.put(player, gender);
-                    playerTraitsInput.put(player, traits);
+
+                    playerEquineHorseInput.put(player, equineHorse);
 
                     player.closeInventory();
 
@@ -138,99 +134,117 @@ public class BuildAHorseMenu implements Listener {
                 });
     }
 
-    private SGButton disciplineButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton disciplineButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fDiscipline")
                         .lore(
-                                ChatColor.WHITE + discipline.getDisciplineName()
+                                ChatColor.WHITE + equineHorse.getDiscipline().getDisciplineName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getDisciplineSelectMenu().disciplineMenu(player, name, breed, coatColor, gender, traits));
+                    player.openInventory(plugin.getDisciplineSelectMenu().disciplineMenu(player, equineHorse));
 
                 });
     }
 
-    private SGButton breedButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton breedButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fBreed")
                         .lore(
-                                ChatColor.WHITE + breed.getBreedName()
+                                ChatColor.WHITE + equineHorse.getBreed().getBreedName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getBreedSelectMenu().breedMenu(player, name, discipline, coatColor, gender, traits));
+                    player.openInventory(plugin.getBreedSelectMenu().breedMenu(player, equineHorse));
 
                 });
     }
 
-    private SGButton coatColorButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton coatColorButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fCoat Color")
                         .lore(
-                                ChatColor.WHITE + coatColor.getCoatColorName()
+                                ChatColor.WHITE + equineHorse.getCoatColor().getCoatColorName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getCoatColorSelectMenu().coatColorMenu(player, name, discipline, breed, gender, traits));
+                    player.openInventory(plugin.getCoatColorSelectMenu().coatColorMenu(player, equineHorse));
 
                 });
     }
 
-    private SGButton genderButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton coatModifierButton(EquineHorse equineHorse) {
+
+        return new SGButton(
+                new ItemBuilder(Material.PAPER)
+                        .name("&fCoat Modifier")
+                        .lore(
+                                ChatColor.WHITE + equineHorse.getCoatModifier().getCoatModifierName()
+                        )
+                        .build()
+        )
+                .withListener((InventoryClickEvent event) -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    player.openInventory(plugin.getCoatModifierSelectMenu().coatModifierMenu(player, equineHorse));
+
+                });
+    }
+
+    private SGButton genderButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fGender")
                         .lore(
-                                ChatColor.WHITE + gender.getGenderName()
+                                ChatColor.WHITE + equineHorse.getGender().getGenderName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getGenderSelectMenu().genderMenu(player, name, discipline, breed, coatColor, traits));
+                    player.openInventory(plugin.getGenderSelectMenu().genderMenu(player, equineHorse));
 
                 });
     }
 
-    private SGButton traitsButton(String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton traitsButton(EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&fTraits")
                         .lore(
-                                ChatColor.WHITE + "(1) " + traits[0].getTraitName(),
-                                ChatColor.WHITE + "(2) " + traits[1].getTraitName(),
-                                ChatColor.WHITE + "(3) " + traits[2].getTraitName()
+                                ChatColor.WHITE + "(1) " + equineHorse.getTraits()[0].getTraitName(),
+                                ChatColor.WHITE + "(2) " + equineHorse.getTraits()[1].getTraitName(),
+                                ChatColor.WHITE + "(3) " + equineHorse.getTraits()[2].getTraitName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getTraitSelectMenu().traitMenu(player, name, discipline, breed, coatColor, gender, traits));
+                    player.openInventory(plugin.getTraitSelectMenu().traitMenu(player, equineHorse));
 
                 });
     }
 
-    private SGButton buyButton(Player player, String name, Discipline discipline, Breed breed, CoatColor coatColor, Gender gender, Trait[] traits) {
+    private SGButton buyButton(Player player, EquineHorse equineHorse) {
 
         return new SGButton(
                 new ItemBuilder(Material.OAK_BUTTON)
@@ -238,22 +252,23 @@ public class BuildAHorseMenu implements Listener {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineHorseBuilder horseBuilder = new EquineHorseBuilder(name);
-                    horseBuilder.spawnHorse(player, discipline, breed, coatColor, gender, traits);
-                    clearInputs(player);
+                    EquineHorseBuilder horseBuilder = new EquineHorseBuilder();
+                    horseBuilder.spawnHorse(player, equineHorse);
+                    player.closeInventory();
+                    playerEquineHorseInput.remove(player);
                 });
     }
 
-    private SGButton costButton(Discipline discipline, Gender gender, Trait[] traits) {
+    private SGButton costButton(EquineHorse equineHorse) {
 
         int namePrice = 1000;
-        int disciplinePrice = discipline.getPrice();
+        int disciplinePrice = equineHorse.getDiscipline().getPrice();
         int coatColorPrice = 1000;
         int coatStylePrice = 1000;
-        int genderPrice = gender.getPrice();
+        int genderPrice = equineHorse.getGender().getPrice();
         int agePrice = 1000;
         int heightPrice = 1000;
-        int traitsPrice = traits[0].getPrice() + traits[1].getPrice() + traits[2].getPrice();
+        int traitsPrice = equineHorse.getTraits()[0].getPrice() + equineHorse.getTraits()[1].getPrice() + equineHorse.getTraits()[2].getPrice();
 
         double price = namePrice + disciplinePrice + coatColorPrice + coatStylePrice + genderPrice + agePrice + heightPrice + traitsPrice;
 
@@ -269,20 +284,15 @@ public class BuildAHorseMenu implements Listener {
     // Events
     @EventHandler
     public void onPlayerChat(PlayerChatEvent event) {
-        if(!playerNameInput.containsKey(event.getPlayer())) {
+        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
             return;
         }
 
         if(event.getMessage().equalsIgnoreCase("cancel")) {
             openWithParameters(event.getPlayer(),
-                    playerNameInput.get(event.getPlayer()),
-                    playerDisciplineInput.get(event.getPlayer()),
-                    playerBreedInput.get(event.getPlayer()),
-                    playerCoatColorInput.get(event.getPlayer()),
-                    playerGenderInput.get(event.getPlayer()),
-                    playerTraitsInput.get(event.getPlayer())
+                    playerEquineHorseInput.get(event.getPlayer())
             );
-            clearInputs(event.getPlayer());
+            playerEquineHorseInput.remove(event.getPlayer());
             event.setCancelled(true);
             return;
         }
@@ -299,31 +309,17 @@ public class BuildAHorseMenu implements Listener {
             return;
         }
 
+        playerEquineHorseInput.get(event.getPlayer()).setName(event.getMessage());
         openWithParameters(event.getPlayer(),
-                event.getMessage(),
-                playerDisciplineInput.get(event.getPlayer()),
-                playerBreedInput.get(event.getPlayer()),
-                playerCoatColorInput.get(event.getPlayer()),
-                playerGenderInput.get(event.getPlayer()),
-                playerTraitsInput.get(event.getPlayer())
+                playerEquineHorseInput.get(event.getPlayer())
         );
-        playerNameInput.remove(event.getPlayer());
+        playerEquineHorseInput.remove(event.getPlayer());
         event.setCancelled(true);
-    }
-
-    private void clearInputs(Player player) {
-        playerNameInput.remove(player);
-        playerDisciplineInput.remove(player);
-        playerBreedInput.remove(player);
-        playerCoatColorInput.remove(player);
-        playerGenderInput.remove(player);
-        playerAgeInput.remove(player);
-        playerTraitsInput.remove(player);
     }
 
     @EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if(!playerNameInput.containsKey(event.getPlayer())) {
+        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
             return;
         }
         event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cCommands are disabled during Horse Creation!"));
@@ -332,10 +328,10 @@ public class BuildAHorseMenu implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-        if(!playerNameInput.containsKey(event.getPlayer())) {
+        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
             return;
         }
 
-        clearInputs(event.getPlayer());
+        playerEquineHorseInput.remove(event.getPlayer());
     }
 }
