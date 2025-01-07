@@ -1,9 +1,10 @@
-package endcrypt.equinoxEquestrian.equine;
+package endcrypt.equinoxEquestrian.horse;
 
 import de.tr7zw.changeme.nbtapi.NBT;
-import endcrypt.equinoxEquestrian.equine.enums.*;
+import endcrypt.equinoxEquestrian.horse.enums.*;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public class EquineHorseBuilder {
         horse.setCustomName(equineHorse.getName());
         horse.setCustomNameVisible(true);
 
-        // Optional: Set horse as tameable
+        // Optional: Set horse as tamed
         horse.setTamed(true);
         horse.setOwner(player);
 
@@ -34,17 +35,18 @@ public class EquineHorseBuilder {
             horse.setStyle(equineHorse.getCoatModifier().getHorseCoatModifier());
         }
 
+        horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
+
         NBT.modifyPersistentData(horse, nbt -> {
-            nbt.setBoolean("EQUINE_HORSE", true);
+            nbt.setString("EQUINE_HORSE", "true");
             nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
             nbt.setString("EQUINE_BREED", equineHorse.getBreed().name());
             nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
+            nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
+            nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getSize());
 
             IntStream.range(0, equineHorse.getTraits().length)
-                            .forEach(i -> {
-                                nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name());
-
-                       });
+                            .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name()));
 
         });
     }

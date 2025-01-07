@@ -3,21 +3,25 @@ package endcrypt.equinoxEquestrian;
 import com.samjakob.spigui.SpiGUI;
 import endcrypt.equinoxEquestrian.commands.MainCommand;
 import endcrypt.equinoxEquestrian.commands.MainCommandTabCompleter;
-import endcrypt.equinoxEquestrian.menu.build.BuildAHorseMenu;
+import endcrypt.equinoxEquestrian.menu.build.BuildMenu;
 import endcrypt.equinoxEquestrian.menu.build.select.*;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class EquinoxEquestrian extends JavaPlugin {
 
     private SpiGUI spiGUI;
+    private Economy econ;
 
-    private BuildAHorseMenu buildAHorseMenu;
-    private DisciplineSelectMenu disciplineSelectMenu;
-    private BreedSelectMenu breedSelectMenu;
-    private CoatColorSelectMenu coatColorSelectMenu;
-    private CoatModifierSelectMenu coatModifierSelectMenu;
-    private GenderSelectMenu genderSelectMenu;
-    private TraitSelectMenu traitSelectMenu;
+    private BuildMenu buildAHorseMenu;
+
 
 
     @Override
@@ -25,19 +29,18 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
         spiGUI = new SpiGUI(this);
 
-        buildAHorseMenu = new BuildAHorseMenu(this);
-        disciplineSelectMenu = new DisciplineSelectMenu(this);
-        breedSelectMenu = new BreedSelectMenu(this);
-        coatColorSelectMenu = new CoatColorSelectMenu(this);
-        coatModifierSelectMenu = new CoatModifierSelectMenu(this);
-        genderSelectMenu = new GenderSelectMenu(this);
-        traitSelectMenu = new TraitSelectMenu(this);
+        buildAHorseMenu = new BuildMenu(this);
 
 
         getServer().getPluginCommand("eq").setExecutor(new MainCommand(this));
         getServer().getPluginCommand("eq").setTabCompleter(new MainCommandTabCompleter());
         // Plugin startup logic
 
+        setupEconomy();
+        if(econ == null) {
+            getServer().getLogger().severe("&cCouldn't find any economy provider plugin. Disabling the Plugin...");
+            getServer().getPluginManager().disablePlugin(this);
+        }
     }
 
     @Override
@@ -45,32 +48,8 @@ public final class EquinoxEquestrian extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public BuildAHorseMenu getBuildAHorseMenu() {
+    public BuildMenu getBuildAHorseMenu() {
         return buildAHorseMenu;
-    }
-
-    public DisciplineSelectMenu getDisciplineSelectMenu() {
-        return disciplineSelectMenu;
-    }
-
-    public BreedSelectMenu getBreedSelectMenu() {
-        return breedSelectMenu;
-    }
-
-    public CoatColorSelectMenu getCoatColorSelectMenu() {
-        return coatColorSelectMenu;
-    }
-
-    public CoatModifierSelectMenu getCoatModifierSelectMenu() {
-        return coatModifierSelectMenu;
-    }
-
-    public GenderSelectMenu getGenderSelectMenu() {
-        return genderSelectMenu;
-    }
-
-    public TraitSelectMenu getTraitSelectMenu() {
-        return traitSelectMenu;
     }
 
     public SpiGUI getSpiGUI() {
@@ -79,5 +58,21 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     public String getPrefix() {
         return "§8[§eEquinox§8] ";
+    }
+
+    public Economy getEcon() {
+        return econ;
+    }
+
+    private void setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return;
+        }
+        econ = rsp.getProvider();
+
     }
 }

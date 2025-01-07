@@ -33,7 +33,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:/Users/ptern/Desktop/Minecraft Server - 1.20.6/plugins</outputDirectory>
+                    <outputDirectory>C:/Users/ptern/Desktop/Minecraft Server - 1.21.4/plugins</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.14.0</version>
+            <version>2.14.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

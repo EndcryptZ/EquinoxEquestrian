@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.equine.enums;
+package endcrypt.equinoxEquestrian.horse.enums;
 
 public enum Trait {
 

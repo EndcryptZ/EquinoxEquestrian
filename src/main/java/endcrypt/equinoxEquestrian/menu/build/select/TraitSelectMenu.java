@@ -4,8 +4,9 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.equine.EquineHorse;
-import endcrypt.equinoxEquestrian.equine.enums.*;
+import endcrypt.equinoxEquestrian.horse.EquineHorse;
+import endcrypt.equinoxEquestrian.horse.enums.*;
+import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -57,7 +58,7 @@ public class TraitSelectMenu {
                 new ItemBuilder(Material.PAPER)
                         .name("&f" + traitName)
                         .lore(
-                                "&fPrice: &a$" + trait.getPrice())
+                                "&7" + trait.getTraitType())
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
@@ -70,7 +71,16 @@ public class TraitSelectMenu {
                     if (playerTraits != null && playerTraits.length == 3) {
                         // If player has 3 traits, don't allow selecting an additional trait
                         if (Arrays.stream(playerTraits).noneMatch(t -> t.equals(trait))) {
-                            player.sendMessage("§cYou cannot select more than 3 traits.");
+                            List<String> defaultLore = new ArrayList<>();
+                            defaultLore.add("§7" + trait.getTraitType());
+
+                            ItemUtils.itemMessage(plugin,
+                                    event.getCurrentItem(),
+                                    "§f" + trait.getTraitName(),
+                                    "§cYou cannot select more than 3 traits.",
+                                    defaultLore,
+                                    null
+                            );
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
                             return;
                         }
@@ -92,7 +102,16 @@ public class TraitSelectMenu {
 
                             meta.setDisplayName("§f" + trait.getTraitName() + " §a(Selected)");
                         } else {
-                            player.sendMessage("§cYou cannot select more than 3 traits.");
+                            List<String> defaultLore = new ArrayList<>();
+                            defaultLore.add("§7" + trait.getTraitType());
+
+                            ItemUtils.itemMessage(plugin,
+                                    event.getCurrentItem(),
+                                    "§f" + trait.getTraitName(),
+                                    "§cYou cannot select more than 3 traits.",
+                                    defaultLore,
+                                    null
+                            );
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
                             event.setCancelled(true);  // Prevent further action
                             return;
@@ -120,7 +139,7 @@ public class TraitSelectMenu {
                     } else {
                         // If the player doesn't have 3 traits, play the BLOCK_ANVIL_LAND sound and cancel the event
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
-                        player.sendMessage("§cYou need exactly 3 traits to confirm.");
+                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§a§lCONFIRM", "§cYou need exactly 3 traits to confirm.", null, null);
                         event.setCancelled(true);  // Prevent further actions (optional)
                     }
                 });

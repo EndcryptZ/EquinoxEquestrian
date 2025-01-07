@@ -4,26 +4,35 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.equine.EquineHorse;
-import endcrypt.equinoxEquestrian.equine.EquineHorseBuilder;
-import endcrypt.equinoxEquestrian.equine.enums.*;
+import endcrypt.equinoxEquestrian.horse.EquineHorse;
+import endcrypt.equinoxEquestrian.horse.EquineHorseBuilder;
+import endcrypt.equinoxEquestrian.horse.enums.*;
+import endcrypt.equinoxEquestrian.menu.build.select.*;
+import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
-public class BuildAHorseMenu implements Listener {
+public class BuildMenu implements Listener {
+
+
+    private final DisciplineSelectMenu disciplineSelectMenu;
+    private final BreedSelectMenu breedSelectMenu;
+    private final CoatColorSelectMenu coatColorSelectMenu;
+    private final CoatModifierSelectMenu coatModifierSelectMenu;
+    private final GenderSelectMenu genderSelectMenu;
+    private  final TraitSelectMenu traitSelectMenu;
 
     private final Map<Player, EquineHorse> playerEquineHorseInput = new HashMap<>();
-
     private final Map<Player, Double> playerCost = new HashMap<>();
 
 
@@ -42,8 +51,15 @@ public class BuildAHorseMenu implements Listener {
 
 
     private final EquinoxEquestrian plugin;
-    public BuildAHorseMenu(EquinoxEquestrian plugin) {
+    public BuildMenu(EquinoxEquestrian plugin) {
         this.plugin = plugin;
+
+        disciplineSelectMenu = new DisciplineSelectMenu(plugin);
+        breedSelectMenu = new BreedSelectMenu(plugin);
+        coatColorSelectMenu = new CoatColorSelectMenu(plugin);
+        coatModifierSelectMenu = new CoatModifierSelectMenu(plugin);
+        genderSelectMenu = new GenderSelectMenu(plugin);
+        traitSelectMenu = new TraitSelectMenu(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -68,9 +84,11 @@ public class BuildAHorseMenu implements Listener {
         SGButton coatColorButton = coatColorButton(equineHorse);
         SGButton coatModifierButton = coatModifierButton(equineHorse);
         SGButton genderButton = genderButton(equineHorse);
+        SGButton ageButton = ageButton(equineHorse);
+        SGButton heightButton = heightButton(equineHorse);
         SGButton traitsButton = traitsButton(equineHorse);
         SGButton buyButton = buyButton(player, equineHorse);
-        SGButton costButton = costButton(equineHorse);
+        SGButton costButton = costButton(player, equineHorse);
 
         gui.setButton(0, nameButton);
         gui.setButton(1, disciplineButton);
@@ -78,6 +96,8 @@ public class BuildAHorseMenu implements Listener {
         gui.setButton(3, coatColorButton);
         gui.setButton(4, coatModifierButton);
         gui.setButton(5, genderButton);
+        gui.setButton(6, ageButton);
+        gui.setButton(7, heightButton);
         gui.setButton(8, traitsButton);
         gui.setButton(22, buyButton);
 
@@ -93,9 +113,11 @@ public class BuildAHorseMenu implements Listener {
         CoatColor coatColor = CoatColor.WHITE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.STALLION;
+        int age = 4;
+        Height height = Height.SIZE_0_7;
         Trait[] traits = {Trait.AGGRESSIVE, Trait.AGILE, Trait.ADVENTUROUS};
 
-        EquineHorse equineHorse = new EquineHorse(randomHorseName, discipline, breed, coatColor, coatModifier, gender, traits);
+        EquineHorse equineHorse = new EquineHorse(randomHorseName, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
 
         return createMenu(player, equineHorse);
     }
@@ -147,7 +169,7 @@ public class BuildAHorseMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getDisciplineSelectMenu().disciplineMenu(player, equineHorse));
+                    player.openInventory(disciplineSelectMenu.disciplineMenu(player, equineHorse));
 
                 });
     }
@@ -158,14 +180,14 @@ public class BuildAHorseMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fBreed")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getBreed().getBreedName()
+                                ChatColor.WHITE + equineHorse.getBreed().getName()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getBreedSelectMenu().breedMenu(player, equineHorse));
+                    player.openInventory(breedSelectMenu.breedMenu(player, equineHorse));
 
                 });
     }
@@ -183,7 +205,7 @@ public class BuildAHorseMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getCoatColorSelectMenu().coatColorMenu(player, equineHorse));
+                    player.openInventory(coatColorSelectMenu.coatColorMenu(player, equineHorse));
 
                 });
     }
@@ -201,7 +223,7 @@ public class BuildAHorseMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getCoatModifierSelectMenu().coatModifierMenu(player, equineHorse));
+                    player.openInventory(coatModifierSelectMenu.coatModifierMenu(player, equineHorse));
 
                 });
     }
@@ -219,10 +241,124 @@ public class BuildAHorseMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getGenderSelectMenu().genderMenu(player, equineHorse));
+                    player.openInventory(genderSelectMenu.genderMenu(player, equineHorse));
 
                 });
     }
+
+    private SGButton ageButton(EquineHorse equineHorse) {
+
+        return new SGButton(
+                new ItemBuilder(Material.PAPER)
+                        .name("&fAge")
+                        .lore(
+                                ChatColor.WHITE + String.valueOf(equineHorse.getAge())
+                        )
+                        .build()
+        )
+                .withListener((InventoryClickEvent event) -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    int age = equineHorse.getAge();
+
+                    ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
+                    if (event.getClick().isLeftClick()) {
+                        if (age == 25) {
+                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fAge", ChatColor.RED + "The maximum age you can set is 4.", null, null);
+                            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
+                            return;
+                        }
+
+
+                        equineHorse.setAge(age + 1);
+                        age = equineHorse.getAge(); // Get updated age
+
+                        // Set the new lore
+                        List<String> lore = new ArrayList<>();
+                        lore.add(ChatColor.WHITE + String.valueOf(age));
+                        itemMeta.setLore(lore);
+
+                        // Apply the updated meta to the item
+                        event.getCurrentItem().setItemMeta(itemMeta);
+                    }
+
+                    if (event.getClick().isRightClick()) {
+                        if (age == 4) {
+                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fAge", ChatColor.RED + "The minimum age you can set is 4.", null, null);
+                            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
+                            return;
+                        }
+
+                        equineHorse.setAge(age - 1);
+                        age = equineHorse.getAge(); // Get updated age
+
+                        // Set the new lore
+                        List<String> lore = new ArrayList<>();
+                        lore.add(ChatColor.WHITE + String.valueOf(age));
+                        itemMeta.setLore(lore);
+
+                        // Apply the updated meta to the item
+                        event.getCurrentItem().setItemMeta(itemMeta);
+                    }
+                });
+    }
+
+
+    private SGButton heightButton(EquineHorse equineHorse) {
+
+        return new SGButton(
+                new ItemBuilder(Material.PAPER)
+                        .name("&fHeight")
+                        .lore(
+                                ChatColor.WHITE + equineHorse.getHeight().getHandsString()
+                        )
+                        .build()
+        )
+                .withListener((InventoryClickEvent event) -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    Height height = equineHorse.getHeight();
+
+                    ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
+                    if (event.getClick().isLeftClick()) {
+
+                        if(Height.getNextHeight(height.getSize()) != null) {
+
+                            equineHorse.setHeight(Height.getNextHeight(height.getSize()));
+                            height = equineHorse.getHeight(); // Get updated height
+
+                        }
+
+
+                        // Set the new lore
+                        List<String> lore = new ArrayList<>();
+                        lore.add(ChatColor.WHITE + equineHorse.getHeight().getHandsString());
+                        itemMeta.setLore(lore);
+
+                        // Apply the updated meta to the item
+                        event.getCurrentItem().setItemMeta(itemMeta);
+                    }
+
+                    if (event.getClick().isRightClick()) {
+
+                        if(Height.getPreviousHeight(height.getSize()) != null) {
+
+                            equineHorse.setHeight(Height.getPreviousHeight(height.getSize()));
+                            height = equineHorse.getHeight(); // Get updated height
+
+                        }
+
+                        // Set the new lore
+                        List<String> lore = new ArrayList<>();
+                        lore.add(ChatColor.WHITE + equineHorse.getHeight().getHandsString());
+                        itemMeta.setLore(lore);
+
+                        // Apply the updated meta to the item
+                        event.getCurrentItem().setItemMeta(itemMeta);
+                    }
+                });
+    }
+
 
     private SGButton traitsButton(EquineHorse equineHorse) {
 
@@ -239,7 +375,7 @@ public class BuildAHorseMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getTraitSelectMenu().traitMenu(player, equineHorse));
+                    player.openInventory(traitSelectMenu.traitMenu(player, equineHorse));
 
                 });
     }
@@ -252,14 +388,28 @@ public class BuildAHorseMenu implements Listener {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
+                    if(plugin.getEcon().getBalance(player) < playerCost.get(player)) {
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
+                        List<String> loreMessage = new ArrayList<>();
+                        loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
+                        loreMessage.add("§eCost: §a$§f" + playerCost.get(player));
+
+                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
+
+                        return;
+                    }
+
+                    plugin.getEcon().withdrawPlayer(player, playerCost.get(player));
+
                     EquineHorseBuilder horseBuilder = new EquineHorseBuilder();
-                    horseBuilder.spawnHorse(player, equineHorse);
                     player.closeInventory();
                     playerEquineHorseInput.remove(player);
+                    playerCost.remove(player);
+                    horseBuilder.spawnHorse(player, equineHorse);
                 });
     }
 
-    private SGButton costButton(EquineHorse equineHorse) {
+    private SGButton costButton(Player player, EquineHorse equineHorse) {
 
         int namePrice = 1000;
         int disciplinePrice = equineHorse.getDiscipline().getPrice();
@@ -271,6 +421,7 @@ public class BuildAHorseMenu implements Listener {
         int traitsPrice = equineHorse.getTraits()[0].getPrice() + equineHorse.getTraits()[1].getPrice() + equineHorse.getTraits()[2].getPrice();
 
         double price = namePrice + disciplinePrice + coatColorPrice + coatStylePrice + genderPrice + agePrice + heightPrice + traitsPrice;
+        playerCost.put(player, price);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)

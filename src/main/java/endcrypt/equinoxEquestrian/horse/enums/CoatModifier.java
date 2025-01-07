@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.equine.enums;
+package endcrypt.equinoxEquestrian.horse.enums;
 
 import org.bukkit.entity.Horse;
 

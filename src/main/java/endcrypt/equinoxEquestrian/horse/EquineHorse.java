@@ -1,6 +1,6 @@
-package endcrypt.equinoxEquestrian.equine;
+package endcrypt.equinoxEquestrian.horse;
 
-import endcrypt.equinoxEquestrian.equine.enums.*;
+import endcrypt.equinoxEquestrian.horse.enums.*;
 
 public class EquineHorse {
 
@@ -10,15 +10,19 @@ public class EquineHorse {
     private CoatColor coatColor;
     private CoatModifier coatModifier;
     private Gender gender;
+    private int age;
+    private Height height;
     private Trait[] traits;
 
-    public EquineHorse(String name, Discipline discipline, Breed breed, CoatColor coatColor, CoatModifier coatModifier, Gender gender, Trait[] traits) {
+    public EquineHorse(String name, Discipline discipline, Breed breed, CoatColor coatColor, CoatModifier coatModifier, Gender gender, int age, Height height, Trait[] traits) {
         this.name = name;
         this.discipline = discipline;
         this.breed = breed;
         this.coatColor = coatColor;
         this.coatModifier = coatModifier;
         this.gender = gender;
+        this.age = age;
+        this.height = height;
         this.traits = traits;
     }
 
@@ -44,6 +48,14 @@ public class EquineHorse {
 
     public Gender getGender() {
         return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public Height getHeight() {
+        return height;
     }
 
     public Trait[] getTraits() {
@@ -72,6 +84,14 @@ public class EquineHorse {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setHeight(Height height) {
+        this.height = height;
     }
 
     public void setTraits(Trait[] traits) {

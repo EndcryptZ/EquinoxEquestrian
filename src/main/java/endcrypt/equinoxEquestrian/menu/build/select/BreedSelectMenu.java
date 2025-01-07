@@ -4,8 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.equine.EquineHorse;
-import endcrypt.equinoxEquestrian.equine.enums.*;
+import endcrypt.equinoxEquestrian.horse.EquineHorse;
+import endcrypt.equinoxEquestrian.horse.enums.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -40,7 +40,7 @@ public class BreedSelectMenu {
     private SGButton breedButton(Player player, Breed breed, EquineHorse equineHorse) {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
-                        .name(breed.getBreedName())
+                        .name(breed.getName())
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
