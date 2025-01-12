@@ -3,17 +3,11 @@ package endcrypt.equinoxEquestrian;
 import com.samjakob.spigui.SpiGUI;
 import endcrypt.equinoxEquestrian.commands.MainCommand;
 import endcrypt.equinoxEquestrian.commands.MainCommandTabCompleter;
+import endcrypt.equinoxEquestrian.horse.EquineGaits;
 import endcrypt.equinoxEquestrian.menu.build.BuildMenu;
-import endcrypt.equinoxEquestrian.menu.build.select.*;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class EquinoxEquestrian extends JavaPlugin {
 
@@ -23,13 +17,13 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private BuildMenu buildAHorseMenu;
 
 
-
     @Override
     public void onEnable() {
 
         spiGUI = new SpiGUI(this);
 
         buildAHorseMenu = new BuildMenu(this);
+        EquineGaits equineGaits = new EquineGaits(this);
 
 
         getServer().getPluginCommand("eq").setExecutor(new MainCommand(this));

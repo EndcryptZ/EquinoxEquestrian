@@ -39,11 +39,15 @@ public class EquineHorseBuilder {
 
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setString("EQUINE_HORSE", "true");
+            nbt.setString("EQUINE_OWNER_UUID", player.getUniqueId().toString());
+            nbt.setString("EQUINE_OWNER_NAME", player.getName());
             nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
             nbt.setString("EQUINE_BREED", equineHorse.getBreed().name());
             nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
             nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
-            nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getSize());
+            nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getHands());
+
+            nbt.setDouble("EQUINE_BASE_SPEED", horse.getAttribute(Attribute.MOVEMENT_SPEED).getBaseValue());
 
             IntStream.range(0, equineHorse.getTraits().length)
                             .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name()));

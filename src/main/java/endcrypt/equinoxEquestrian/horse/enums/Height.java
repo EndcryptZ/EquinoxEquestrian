@@ -71,6 +71,16 @@ public enum Height {
         return hands + " hands";
     }
 
+    // Static method to get Height from the hands
+    public static Height getByHands(double hands) {
+        for (Height h : Height.values()) {
+            if (h.getHands() == hands) {
+                return h;
+            }
+        }
+        return null; // Return null for unknown hands
+    }
+
     // Static method to get hands from the size
     public static double getHandsFromSize(double size) {
         for (Height h : Height.values()) {

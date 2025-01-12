@@ -113,8 +113,16 @@ public class BuildMenu implements Listener {
         CoatColor coatColor = CoatColor.WHITE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.STALLION;
+        Height height = null;
         int age = 4;
-        Height height = Height.SIZE_0_7;
+
+        for(Height loopedHeight : Height.values()) {
+            if(loopedHeight.getHands() == breed.getMinimumHands()) {
+                height = loopedHeight;
+                break;
+            }
+        }
+
         Trait[] traits = {Trait.AGGRESSIVE, Trait.AGILE, Trait.ADVENTUROUS};
 
         EquineHorse equineHorse = new EquineHorse(randomHorseName, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
@@ -123,6 +131,19 @@ public class BuildMenu implements Listener {
     }
 
     private Inventory menuWithParameters(Player player, EquineHorse equineHorse) {
+        double minHand = equineHorse.getBreed().getMinimumHands();
+        double maxHand = equineHorse.getBreed().getMaximumHands();
+        double currentHand = equineHorse.getHeight().getHands();
+
+
+        if(minHand > currentHand) {
+            equineHorse.setHeight(Height.getByHands(minHand));
+        }
+
+        if(maxHand < currentHand) {
+            equineHorse.setHeight(Height.getByHands(maxHand));
+        }
+
         return createMenu(player, equineHorse);
     }
 
@@ -324,6 +345,11 @@ public class BuildMenu implements Listener {
 
                         if(Height.getNextHeight(height.getSize()) != null) {
 
+                            // Cancel if the next height exceeds the maximum height of the breed
+                            if(Height.getNextHeight(height.getSize()).getHands() > equineHorse.getBreed().getMaximumHands()) {
+                                return;
+                            }
+
                             equineHorse.setHeight(Height.getNextHeight(height.getSize()));
                             height = equineHorse.getHeight(); // Get updated height
 
@@ -342,6 +368,11 @@ public class BuildMenu implements Listener {
                     if (event.getClick().isRightClick()) {
 
                         if(Height.getPreviousHeight(height.getSize()) != null) {
+
+                            // Cancel if the previous height exceeds the minimum height of the breed
+                            if(Height.getPreviousHeight(height.getSize()).getHands() < equineHorse.getBreed().getMinimumHands()) {
+                                return;
+                            }
 
                             equineHorse.setHeight(Height.getPreviousHeight(height.getSize()));
                             height = equineHorse.getHeight(); // Get updated height
