@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
 
 public class EquineHorseBuilder {
 
+    private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
+
     // Method to spawn the horse at a player's location
     public void spawnHorse(Player player, EquineHorse equineHorse) {
         World world = player.getWorld();
@@ -38,6 +40,12 @@ public class EquineHorseBuilder {
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
 
         NBT.modifyPersistentData(horse, nbt -> {
+
+
+            long currentTime = System.currentTimeMillis();
+            nbt.setLong("EQUINE_BIRTH_TIME", currentTime - (MILLIS_PER_YEAR * equineHorse.getAge()));
+
+
             nbt.setString("EQUINE_HORSE", "true");
             nbt.setString("EQUINE_OWNER_UUID", player.getUniqueId().toString());
             nbt.setString("EQUINE_OWNER_NAME", player.getName());
@@ -45,12 +53,17 @@ public class EquineHorseBuilder {
             nbt.setString("EQUINE_BREED", equineHorse.getBreed().name());
             nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
             nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
+
             nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getHands());
 
             nbt.setDouble("EQUINE_BASE_SPEED", horse.getAttribute(Attribute.MOVEMENT_SPEED).getBaseValue());
+            nbt.setDouble("EQUINE_BASE_JUMP_POWER", horse.getJumpStrength());
 
             IntStream.range(0, equineHorse.getTraits().length)
                             .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name()));
+
+
+            nbt.setString("EQUINE_IS_CROSS_TIED", "false");
 
         });
     }

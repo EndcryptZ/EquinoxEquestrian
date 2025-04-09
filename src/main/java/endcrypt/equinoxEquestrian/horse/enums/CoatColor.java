@@ -3,6 +3,7 @@ package endcrypt.equinoxEquestrian.horse.enums;
 import org.bukkit.entity.Horse;
 
 public enum CoatColor {
+    NONE("None", null),
     WHITE("White", Horse.Color.WHITE),       // Minecraft equivalent: White horse
     PALOMINO("Palomino", Horse.Color.CREAMY),   // Closest to the creamy horse in Minecraft
     CHESTNUT("Chestnut", Horse.Color.CHESTNUT), // Minecraft has a Chestnut color variant

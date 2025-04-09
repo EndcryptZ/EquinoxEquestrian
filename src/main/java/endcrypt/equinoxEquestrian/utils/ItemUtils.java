@@ -6,13 +6,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemUtils {
 
     public static void itemMessage(JavaPlugin plugin, ItemStack item, String defaultItemName, String message, List<String> defaultLore, List<String> loreMessage) {
         ItemMeta itemMeta = item.getItemMeta();
+
+        List<String> veryDefaultLore = itemMeta.getLore();
 
         if(loreMessage != null) {
             itemMeta.setLore(loreMessage);
@@ -31,9 +32,7 @@ public class ItemUtils {
                 if(defaultLore != null) {
                     itemMeta.setLore(defaultLore);
                 } else {
-                    List<String> lore = new ArrayList<>();
-                    lore.clear();
-                    itemMeta.setLore(lore);
+                    itemMeta.setLore(veryDefaultLore);
                 }
 
                 item.setItemMeta(itemMeta);

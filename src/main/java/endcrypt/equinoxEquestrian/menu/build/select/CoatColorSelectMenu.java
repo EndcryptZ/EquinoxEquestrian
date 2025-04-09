@@ -21,11 +21,12 @@ public class CoatColorSelectMenu {
     // Select Coat Color Menu
     public Inventory coatColorMenu(Player player, EquineHorse equineHorse) {
 
-        SGMenu gui = plugin.getSpiGUI().create("Select Coat Color", 3, "Select Coat Color");
+        SGMenu gui = plugin.getSpiGUI().create("Select Coat Color", 3, "Coat Color Menu");
 
 
         int slot = 0;
         for(CoatColor coatColor : CoatColor.values()) {
+            if (coatColor == CoatColor.NONE) continue;
             SGButton coatColorButton = coatColorButton(player, coatColor, equineHorse);
             gui.setButton(slot, coatColorButton);
             slot++;
@@ -43,7 +44,7 @@ public class CoatColorSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setCoatColor(coatColor);
-                    plugin.getBuildAHorseMenu().openWithParameters(player, equineHorse);
+                    plugin.getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 }

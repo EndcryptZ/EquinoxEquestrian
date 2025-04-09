@@ -9,6 +9,7 @@ import endcrypt.equinoxEquestrian.horse.EquineHorseBuilder;
 import endcrypt.equinoxEquestrian.horse.enums.*;
 import endcrypt.equinoxEquestrian.menu.build.select.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,21 +35,9 @@ public class BuildMenu implements Listener {
     private  final TraitSelectMenu traitSelectMenu;
 
     private final Map<Player, EquineHorse> playerEquineHorseInput = new HashMap<>();
+    private final Map<Player, EquineHorse> playerEquineSubMenuInput = new HashMap<>();
     private final Map<Player, Double> playerCost = new HashMap<>();
 
-
-    String[] horseNames = {
-            "Thunder", "Spirit", "Shadow", "Majesty", "Blaze",
-            "Storm", "Aurora", "Dakota", "Scout", "Cinnamon",
-            "Rusty", "Whisper", "Apollo", "Hunter", "Luna",
-            "Nova", "Sable", "Falcon", "Echo", "Zephyr",
-            "Midnight", "Ranger", "Starlight", "Comet", "Sundance",
-            "Ash", "Flicka", "Windy", "Jet", "Sky",
-            "Silver", "Stormy", "Dancer", "Rain", "Willow",
-            "Breeze", "Mustang", "Copper", "Tornado", "Rio",
-            "Phoenix", "Gypsy", "Lightning", "Rogue", "Bandit",
-            "Cherokee", "Raven", "Onyx", "Clover", "Mystic"
-    };
 
 
     private final EquinoxEquestrian plugin;
@@ -106,13 +96,12 @@ public class BuildMenu implements Listener {
     }
 
     private Inventory defaultMenu(Player player) {
-        Random randomName = new Random();
-        String randomHorseName = horseNames[randomName.nextInt(horseNames.length)];
-        Discipline discipline = Discipline.ALL_ROUND;
-        Breed breed = Breed.AEGIDIENBERGER;
-        CoatColor coatColor = CoatColor.WHITE;
+        String name = "";
+        Discipline discipline = Discipline.NONE;
+        Breed breed = Breed.NONE;
+        CoatColor coatColor = CoatColor.NONE;
         CoatModifier coatModifier = CoatModifier.NONE;
-        Gender gender = Gender.STALLION;
+        Gender gender = Gender.NONE;
         Height height = null;
         int age = 4;
 
@@ -123,9 +112,9 @@ public class BuildMenu implements Listener {
             }
         }
 
-        Trait[] traits = {Trait.AGGRESSIVE, Trait.AGILE, Trait.ADVENTUROUS};
+        Trait[] traits = {Trait.NONE, Trait.NONE, Trait.NONE};
 
-        EquineHorse equineHorse = new EquineHorse(randomHorseName, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
+        EquineHorse equineHorse = new EquineHorse(name, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
 
         return createMenu(player, equineHorse);
     }
@@ -156,6 +145,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fName")
                         .lore(
+
                                 ChatColor.WHITE + equineHorse.getName()
                         )
                         .build()
@@ -190,6 +180,7 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(disciplineSelectMenu.disciplineMenu(player, equineHorse));
 
                 });
@@ -208,6 +199,7 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(breedSelectMenu.breedMenu(player, equineHorse));
 
                 });
@@ -226,6 +218,7 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(coatColorSelectMenu.coatColorMenu(player, equineHorse));
 
                 });
@@ -244,6 +237,7 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(coatModifierSelectMenu.coatModifierMenu(player, equineHorse));
 
                 });
@@ -262,6 +256,7 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(genderSelectMenu.genderMenu(player, equineHorse));
 
                 });
@@ -285,7 +280,6 @@ public class BuildMenu implements Listener {
                     ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
                     if (event.getClick().isLeftClick()) {
                         if (age == 25) {
-                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fAge", ChatColor.RED + "The maximum age you can set is 4.", null, null);
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
                             return;
                         }
@@ -406,27 +400,43 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
+                    playerEquineSubMenuInput.put(player, equineHorse);
                     player.openInventory(traitSelectMenu.traitMenu(player, equineHorse));
 
                 });
     }
 
     private SGButton buyButton(Player player, EquineHorse equineHorse) {
-
         return new SGButton(
                 new ItemBuilder(Material.OAK_BUTTON)
                         .name("&7[&aBuy&7]")
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    if(plugin.getEcon().getBalance(player) < playerCost.get(player)) {
+
+                    List<String> missingAttributes = new ArrayList<>();
+
+                    if (equineHorse.getName() == "") missingAttributes.add("Name");
+                    if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
+                    if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
+                    if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
+                    if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
+                    if (Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) missingAttributes.add("Trait(s)");
+
+                    if (!missingAttributes.isEmpty()) {
+                        List<String> loreMessage = new ArrayList<>();
+                        loreMessage.add(ChatColor.RED + "Missing: " + String.join(", ", missingAttributes));
+                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "Horse details are incomplete!", null, loreMessage);
+                        return;
+                    }
+
+                    if (plugin.getEcon().getBalance(player) < playerCost.get(player)) {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
                         List<String> loreMessage = new ArrayList<>();
                         loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
                         loreMessage.add("§eCost: §a$§f" + playerCost.get(player));
 
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
-
                         return;
                     }
 
@@ -516,4 +526,19 @@ public class BuildMenu implements Listener {
 
         playerEquineHorseInput.remove(event.getPlayer());
     }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getInventory().getHolder() instanceof SGMenu) {
+            SGMenu menu = (SGMenu) event.getInventory().getHolder();
+            if (menu.getName().contains("Select")) { // assuming your sub-menus have "Select" in their title
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    Player player = (Player) event.getPlayer();
+                    openWithParameters(player, playerEquineSubMenuInput.get(event.getPlayer()));
+                    playerEquineSubMenuInput.remove(event.getPlayer());
+                }, 1L);
+            }
+        }
+    }
+
 }

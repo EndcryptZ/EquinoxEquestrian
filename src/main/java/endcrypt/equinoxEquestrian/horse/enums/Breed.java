@@ -2,6 +2,8 @@ package endcrypt.equinoxEquestrian.horse.enums;
 
 public enum Breed {
 
+    NONE("None", "None", "None", 13, 15),
+
     AEGIDIENBERGER("Aegidienberger", "GAITED", "HORSE", 13, 15),
     AKHAL_TEKE("Akhal-Teke", "EXOTIC", "HORSE", 14, 16),
     AMERICAN_INDIAN_HORSE("American Indian Horse", "STOCK", "HORSE", 13, 16.3),

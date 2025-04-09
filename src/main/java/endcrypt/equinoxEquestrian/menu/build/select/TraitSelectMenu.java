@@ -29,12 +29,17 @@ public class TraitSelectMenu {
     // Select Traits Menu
     public Inventory traitMenu(Player player, EquineHorse equineHorse) {
 
-        SGMenu gui = plugin.getSpiGUI().create("Select Traits", 6, "Select Traits");
+        SGMenu gui = plugin.getSpiGUI().create("Select Traits", 6, "Trait Menu");
+
+        if(Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) {
+            equineHorse.setTraits(new Trait[0]);
+        }
 
         playerTraitMap.put(player, equineHorse.getTraits());
 
         int slot = 0;
         for(Trait trait : Trait.values()) {
+            if(trait == Trait.NONE) continue;
             SGButton traitButton = traitButton(player, trait);
             gui.setButton(slot, traitButton);
             slot++;
@@ -50,15 +55,20 @@ public class TraitSelectMenu {
     private SGButton traitButton(Player player, Trait trait) {
         String traitName = trait.getTraitName();
 
-        if(Arrays.stream(playerTraitMap.get(player)).toList().contains(trait)) {
+        // Determine if the player has selected this trait
+        boolean isTraitSelected = Arrays.stream(playerTraitMap.get(player)).toList().contains(trait);
+
+        // Change material based on whether the trait is selected or not
+        Material material = isTraitSelected ? Material.MAP : Material.PAPER;
+
+        if (isTraitSelected) {
             traitName = traitName + " &a(Selected)";
         }
 
         return new SGButton(
-                new ItemBuilder(Material.PAPER)
+                new ItemBuilder(material)
                         .name("&f" + traitName)
-                        .lore(
-                                "&7" + trait.getTraitType())
+                        .lore("&7" + trait.getTraitType())
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
@@ -93,6 +103,8 @@ public class TraitSelectMenu {
                                 .filter(t -> !t.equals(trait)) // Filter out the selected trait
                                 .toArray(Trait[]::new));
 
+                        // Change the item back to paper and update display name
+                        event.getCurrentItem().setType(Material.PAPER);
                         meta.setDisplayName("§f" + trait.getTraitName()); // Update the display name
                     } else {
                         // If not selected yet, add it to the array and set the name as selected
@@ -100,6 +112,8 @@ public class TraitSelectMenu {
                             playerTraitMap.put(player, Arrays.copyOf(playerTraits, playerTraits.length + 1));  // Resize the array
                             playerTraitMap.get(player)[playerTraits.length] = trait;  // Add the new trait to the last position
 
+                            // Change the item to map and set display name as selected
+                            event.getCurrentItem().setType(Material.MAP);
                             meta.setDisplayName("§f" + trait.getTraitName() + " §a(Selected)");
                         } else {
                             List<String> defaultLore = new ArrayList<>();
@@ -135,7 +149,7 @@ public class TraitSelectMenu {
                     if (playerTraits != null && playerTraits.length == 3) {
                         // If the player has 3 traits, proceed with opening the menu
                         equineHorse.setTraits(playerTraits);
-                        plugin.getBuildAHorseMenu().openWithParameters(player, equineHorse);
+                        plugin.getBuildMenu().openWithParameters(player, equineHorse);
                     } else {
                         // If the player doesn't have 3 traits, play the BLOCK_ANVIL_LAND sound and cancel the event
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);

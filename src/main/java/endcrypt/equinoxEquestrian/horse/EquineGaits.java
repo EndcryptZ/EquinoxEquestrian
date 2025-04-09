@@ -34,6 +34,8 @@ public class EquineGaits implements Listener {
         startGaitsUpdater();
     }
 
+    // Map to store the progress of the gait for each player
+    private final Map<Player, Integer> playerCurrentProgress = new HashMap<>();
     private final Map<Player, Gaits> playerCurrentGaits = new HashMap<>();
 
 
@@ -42,25 +44,29 @@ public class EquineGaits implements Listener {
             for (Player player : playerCurrentGaits.keySet()) {
                 Gaits playerCurrentGait = playerCurrentGaits.get(player);
 
-
-                if (playerCurrentGait == Gaits.WALK) {
-                    sendActionBarMessage(player, "§f[§a§l||||§7§l|||||||||||||||||||||§f] §aWalk");
+                if (EquineUtils.isCrossTied((AbstractHorse) player.getVehicle())) {
+                    continue;
                 }
 
-                if (playerCurrentGait == Gaits.TROT) {
-                    sendActionBarMessage(player, "§f[§a§l||||§e§l||||§7§l|||||||||||||||||§f] §eTrot");
+                // Get current progress (default to 0 if none exists)
+                int currentProgress = playerCurrentProgress.getOrDefault(player, 0);
+                int targetProgress = getTargetProgress(playerCurrentGait); // Get the target based on the gait
+
+                // Smoothly increase or decrease progress
+                if (currentProgress < targetProgress) {
+                    currentProgress += 1; // Increase the progress gradually
+                } else if (currentProgress > targetProgress) {
+                    currentProgress -= 1; // Decrease the progress gradually
                 }
 
-                if (playerCurrentGait == Gaits.CANTER) {
-                    sendActionBarMessage(player, "§f[§a§l||||§e§l||||§6§l|||||§7§l||||||||||||§f] §6Canter");
-                }
+                // Save updated progress
+                playerCurrentProgress.put(player, currentProgress);
 
-                if (playerCurrentGait == Gaits.GALLOP) {
-                    sendActionBarMessage(player, "§f[§a§l||||§e§l||||§6§l|||||§4§l||||||||||||§f] §4Gallop");
-                }
-
+                // Send the updated action bar message based on the current progress
+                String progressBar = getProgressBar(currentProgress, getGaitColor(playerCurrentGait), getGaitLabel(playerCurrentGait));
+                sendActionBarMessage(player, progressBar);
             }
-        }, 20L, 10L);
+        }, 20L, 2L); // Runs every 10 ticks (0.5 seconds)
     }
 
     private void sendActionBarMessage(Player player, String message) {
@@ -84,6 +90,10 @@ public class EquineGaits implements Listener {
             return;
         }
 
+        if (EquineUtils.isCrossTied(equineHorse)) {
+            return;
+        }
+
         if(event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
            Gaits currentGait = playerCurrentGaits.get(player);
 
@@ -104,6 +114,84 @@ public class EquineGaits implements Listener {
         }
     }
 
+    // Example method to determine the target progress based on the current gait
+    private int getTargetProgress(Gaits gait) {
+        switch (gait) {
+            case WALK:
+                return 4; // For walk, set the target progress as 10
+            case TROT:
+                return 10; // For trot, set the target progress as 20
+            case CANTER:
+                return 18; // For canter, set the target progress as 30
+            case GALLOP:
+                return 30; // For gallop, set the target progress as 40
+            default:
+                
+                return 0;  // Default is 0 (no movement)
+        }
+    }
+
+    // Example method to get the color associated with the gait
+    private String getGaitColor(Gaits gait) {
+        switch (gait) {
+            case WALK:
+                return "§a"; // Green for walk
+            case TROT:
+                return "§e"; // Yellow for trot
+            case CANTER:
+                return "§6"; // Orange for canter
+            case GALLOP:
+                return "§4"; // Red for gallop
+            default:
+                return "§7"; // Gray for default
+        }
+    }
+
+    // Example method to get the label associated with the gait
+    private String getGaitLabel(Gaits gait) {
+        switch (gait) {
+            case WALK:
+                return "Walk";
+            case TROT:
+                return "Trot";
+            case CANTER:
+                return "Canter";
+            case GALLOP:
+                return "Gallop";
+            default:
+                return "Idle";
+        }
+    }
+
+    // Progress bar builder
+    private String getProgressBar(int progress, String color, String label) {
+        StringBuilder progressBar = new StringBuilder("§f[");
+
+        // The total progress is 50 (5 green + 10 yellow + 15 orange + 20 red)
+        int totalBars = 30;
+
+        // Calculate filled sections for the bar
+        int filled = Math.min(progress, totalBars);  // Ensure the progress does not exceed 50
+        int remaining = totalBars - filled;
+
+        // Green for first 5 bars
+        if (filled > 0) progressBar.append("§a§l").append("|".repeat(Math.min(filled, 4)));
+
+        // Yellow for next 10 bars
+        if (filled > 4) progressBar.append("§e§l").append("|".repeat(Math.min(filled - 4, 6)));
+
+        // Orange for next 15 bars
+        if (filled > 10) progressBar.append("§6§l").append("|".repeat(Math.min(filled - 10, 8)));
+
+        // Red for the remaining 20 bars
+        if (filled > 18) progressBar.append("§4§l").append("|".repeat(Math.min(filled - 18, 12)));
+
+        // Fill remaining with gray
+        progressBar.append("§7§l").append("|".repeat(remaining));
+
+        progressBar.append("§f] ").append(color).append(label);
+        return progressBar.toString();
+    }
 
     @EventHandler
     public void onMount(VehicleEnterEvent event) {
@@ -122,7 +210,13 @@ public class EquineGaits implements Listener {
 
         Player player = (Player) event.getEntered();
         AbstractHorse equineHorse = (AbstractHorse) event.getVehicle();
+
         playerCurrentGaits.put(player, Gaits.WALK);
+
+        if(EquineUtils.isCrossTied(equineHorse)) {
+            ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0);
+            return;
+        }
         ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeed() * EquineUtils.getBaseSpeed(equineHorse));
 
     }

@@ -21,7 +21,7 @@ public class CoatModifierSelectMenu {
     // Select Coat Color Menu
     public Inventory coatModifierMenu(Player player, EquineHorse equineHorse) {
 
-        SGMenu gui = plugin.getSpiGUI().create("Select Coat Color", 3, "Select Coat Color");
+        SGMenu gui = plugin.getSpiGUI().create("Select Coat Modifier", 3, "Coad Modifier Menu");
 
 
         int slot = 0;
@@ -43,7 +43,7 @@ public class CoatModifierSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setCoatModifier(coatModifier);
-                    plugin.getBuildAHorseMenu().openWithParameters(player, equineHorse);
+                    plugin.getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 

@@ -1,6 +1,8 @@
 package endcrypt.equinoxEquestrian.horse.enums;
 
 public enum Discipline {
+    NONE("None", 0),
+
     ALL_ROUND("All Round", 1000),
     BARREL_RACING("Barrel Racing", 1000),
     CLASSICAL_DRESSAGE("Classical Dressage", 1000),

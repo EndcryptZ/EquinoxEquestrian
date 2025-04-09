@@ -21,11 +21,12 @@ public class GenderSelectMenu {
     // Select Coat Color Menu
     public Inventory genderMenu(Player player, EquineHorse equineHorse) {
 
-        SGMenu gui = plugin.getSpiGUI().create("Select Gender", 3, "Select Gender");
+        SGMenu gui = plugin.getSpiGUI().create("Select Gender", 3, "Gender Menu");
 
 
         int slot = 0;
         for(Gender gender : Gender.values()) {
+            if(gender == Gender.NONE) continue;
             SGButton genderButton = genderButton(player, gender, equineHorse);
             gui.setButton(slot, genderButton);
             slot++;
@@ -43,7 +44,7 @@ public class GenderSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setGender(gender);
-                    plugin.getBuildAHorseMenu().openWithParameters(player, equineHorse);
+                    plugin.getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 }

@@ -1,6 +1,8 @@
 package endcrypt.equinoxEquestrian.horse.enums;
 
 public enum Gender {
+    NONE("None", 0),
+
     STALLION("Stallion", 2000),
     GELDING("Gelding", 1000),
     MARE("Mare", 3000);

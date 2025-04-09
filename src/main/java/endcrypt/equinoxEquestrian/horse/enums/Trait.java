@@ -2,6 +2,8 @@ package endcrypt.equinoxEquestrian.horse.enums;
 
 public enum Trait {
 
+    NONE("None", "Neutral", "None Value", 0),
+
     // A Traits
     ADVENTUROUS("Adventurous", "Positive", "Learns new skills faster", 3000),
     AGGRESSIVE("Aggressive", "Negative", "Horse can be aggressive to rider, other horses, or people. Can kick or buck.", 500),
