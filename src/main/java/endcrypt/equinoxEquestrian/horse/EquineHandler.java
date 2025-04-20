@@ -10,6 +10,7 @@ public class EquineHandler {
     private final EquineHome equineHome;
     private final EquineGroom equineGroom;
     private final EquineItems equineItems;
+    private final EquineInvulnerable equineInvulnerable;
 
     private final EquinoxEquestrian plugin;
     public EquineHandler(EquinoxEquestrian plugin) {
@@ -21,6 +22,7 @@ public class EquineHandler {
         equineHome = new EquineHome(plugin);
         equineGroom = new EquineGroom(plugin);
         equineItems = new EquineItems(plugin);
+        equineInvulnerable = new EquineInvulnerable(plugin);
 
     }
 
@@ -30,5 +32,9 @@ public class EquineHandler {
 
     public EquineHome getEquineHome() {
         return equineHome;
+    }
+
+    public EquineGroom getEquineGroom() {
+        return equineGroom;
     }
 }

@@ -4,10 +4,7 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.menu.horse.submenus.GroomMenu;
-import endcrypt.equinoxEquestrian.menu.horse.submenus.HealthMenu;
-import endcrypt.equinoxEquestrian.menu.horse.submenus.HomeMenu;
-import endcrypt.equinoxEquestrian.menu.horse.submenus.InventoryHorseMenu;
+import endcrypt.equinoxEquestrian.menu.horse.submenus.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,6 +27,8 @@ public class HorseMenu implements Listener {
     private final HomeMenu homeMenu;
     private final GroomMenu groomMenu;
     private final HealthMenu healthMenu;
+    private final HorseListMenu horseListMenu;
+    private final AutoVetMenu autoVetMenu;
 
     private final EquinoxEquestrian plugin;
     public HorseMenu(EquinoxEquestrian plugin) {
@@ -39,6 +38,9 @@ public class HorseMenu implements Listener {
         homeMenu = new HomeMenu(plugin);
         groomMenu = new GroomMenu(plugin);
         healthMenu = new HealthMenu(plugin);
+        horseListMenu = new HorseListMenu(plugin);
+        autoVetMenu = new AutoVetMenu(plugin);
+
 
 
     }
@@ -68,7 +70,6 @@ public class HorseMenu implements Listener {
         gui.setButton(5, healthButton);
 
         gui.setButton(8, mountUnmountButton);
-
         return gui.getInventory();
     }
 
@@ -132,7 +133,12 @@ public class HorseMenu implements Listener {
                                 "&7regular vet though."
                         )
                         .build()
-        );
+        )
+                .withListener((InventoryClickEvent event ) -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    player.openInventory(autoVetMenu.menu(player, abstractHorse));
+                });
     }
 
 
@@ -186,7 +192,22 @@ public class HorseMenu implements Listener {
             return;
         }
 
+        if(plugin.getEquineHandler().getEquineGroom().isPlayerGrooming(event.getPlayer())) {
 
+
+            if(plugin.getEquineHandler().getEquineGroom().getHorse(event.getPlayer()) == event.getRightClicked()) {
+                event.getPlayer().openInventory(groomMenu.menu(event.getPlayer(), (AbstractHorse) event.getRightClicked()));
+
+            } else {
+                open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
+            }
+
+            plugin.getEquineHandler().getEquineGroom().resetGroom(event.getPlayer());
+            event.setCancelled(true);
+            return;
+        }
+
+        plugin.getEquineHandler().getEquineGroom().resetGroom(event.getPlayer());
         open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
         event.setCancelled(true);
     }
@@ -201,5 +222,11 @@ public class HorseMenu implements Listener {
         open((Player) event.getPlayer(), (AbstractHorse) event.getInventory().getHolder());
     }
 
+    public GroomMenu getGroomMenu() {
+        return groomMenu;
+    }
 
+    public HorseListMenu getHorseListMenu() {
+        return horseListMenu;
+    }
 }

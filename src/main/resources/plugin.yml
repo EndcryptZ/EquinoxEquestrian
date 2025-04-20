@@ -8,3 +8,7 @@ commands:
     description: Main Command of EquinoxEquestrian Plugin
     usage: /eq
     aliases: [equine]
+  horse:
+    description: Horse Command of EquinoxEquestrian Plugin
+    usage: /horse
+    aliases: [h]

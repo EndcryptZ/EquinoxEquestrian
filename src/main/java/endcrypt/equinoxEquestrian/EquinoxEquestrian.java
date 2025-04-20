@@ -3,6 +3,7 @@ package endcrypt.equinoxEquestrian;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.samjakob.spigui.SpiGUI;
+import endcrypt.equinoxEquestrian.commands.HorseCommand;
 import endcrypt.equinoxEquestrian.commands.MainCommand;
 import endcrypt.equinoxEquestrian.commands.MainCommandTabCompleter;
 import endcrypt.equinoxEquestrian.horse.EquineHandler;
@@ -48,6 +49,8 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
         getServer().getPluginCommand("eq").setExecutor(new MainCommand(this));
         getServer().getPluginCommand("eq").setTabCompleter(new MainCommandTabCompleter());
+
+        getServer().getPluginCommand("horse").setExecutor(new HorseCommand(this));
         // Plugin startup logic
 
 
