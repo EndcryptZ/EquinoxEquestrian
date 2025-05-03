@@ -2,6 +2,9 @@ package endcrypt.equinoxEquestrian.horse.enums;
 
 import org.bukkit.entity.Horse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum CoatColor {
     NONE("None", null),
     WHITE("White", Horse.Color.WHITE),       // Minecraft equivalent: White horse
@@ -26,5 +29,13 @@ public enum CoatColor {
 
     public Horse.Color getHorseColor() {
         return horseColor;
+    }
+
+    public static List<String> getCoatColorNames() {
+        List<String> names = new ArrayList<>();
+        for (CoatColor coatColor : CoatColor.values()) {
+            names.add(coatColor.getCoatColorName());
+        }
+        return names;
     }
 }

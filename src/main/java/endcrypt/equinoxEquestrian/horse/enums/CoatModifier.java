@@ -2,6 +2,9 @@ package endcrypt.equinoxEquestrian.horse.enums;
 
 import org.bukkit.entity.Horse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum CoatModifier {
     NONE("None", null),
     SNIP("Snip", Horse.Style.WHITE),
@@ -23,5 +26,13 @@ public enum CoatModifier {
 
     public Horse.Style getHorseCoatModifier() {
         return horseCoatModifier;
+    }
+
+    public static List<String> getCoatModifierNames() {
+        List<String> names = new ArrayList<>();
+        for (CoatModifier coatModifier : CoatModifier.values()) {
+            names.add(coatModifier.getCoatModifierName());
+        }
+        return names;
     }
 }

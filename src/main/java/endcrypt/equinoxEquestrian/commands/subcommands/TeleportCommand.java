@@ -4,13 +4,15 @@ import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
-public class SetHomeCommand {
+public class TeleportCommand {
+
 
     private final EquinoxEquestrian plugin;
 
-    public SetHomeCommand(EquinoxEquestrian plugin) {
+    public TeleportCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
 
@@ -21,12 +23,16 @@ public class SetHomeCommand {
         }
 
         if (args.length < 2 || !(args[1].equalsIgnoreCase("stall") || args[1].equalsIgnoreCase("pasture"))) {
-            commandSender.sendMessage(ChatColor.RED + "Usage: /" + command.getLabel() + " sethome pasture/stall");
+            AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+            if (horse == null) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou have not selected a horse!"));
+                return;
+            }
+            player.teleport(horse);
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&fYou have been teleported to your selected horse!"));
             return;
         }
 
-        plugin.getEquineHandler().getEquineHome().setHome(player, args[1]);
-
-        // Add your logic to set the home here
+        plugin.getEquineHandler().getEquineHome().teleportHome(player, args[1]);
     }
 }

@@ -1,5 +1,8 @@
 package endcrypt.equinoxEquestrian.horse.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Gender {
     NONE("None", 0),
 
@@ -21,5 +24,13 @@ public enum Gender {
 
     public int getPrice() {
         return price;
+    }
+
+    public static List<String> getGenderNames() {
+        List<String> names = new ArrayList<>();
+        for (Gender gender : Gender.values()) {
+            names.add(gender.getGenderName());
+        }
+        return names;
     }
 }

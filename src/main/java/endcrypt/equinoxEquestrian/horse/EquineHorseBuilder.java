@@ -1,6 +1,7 @@
 package endcrypt.equinoxEquestrian.horse;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.horse.enums.*;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -9,9 +10,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
+import java.sql.SQLException;
 import java.util.stream.IntStream;
 
 public class EquineHorseBuilder {
+    private final EquinoxEquestrian plugin;
+
+    public EquineHorseBuilder(EquinoxEquestrian plugin) {
+        this.plugin = plugin;
+    }
 
     private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
 
@@ -38,6 +45,12 @@ public class EquineHorseBuilder {
         }
 
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
+
+        try {
+            plugin.getDatabaseManager().addLiveHorse(horse);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         NBT.modifyPersistentData(horse, nbt -> {
 

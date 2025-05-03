@@ -3,13 +3,14 @@ package endcrypt.equinoxEquestrian.commands.subcommands;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
-public class MenuCommand {
+public class TpHereCommand {
 
     private final EquinoxEquestrian plugin;
 
-    public MenuCommand(EquinoxEquestrian plugin) {
+    public TpHereCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
 
@@ -20,10 +21,16 @@ public class MenuCommand {
         }
 
 
-        if (plugin.getFloodgateApi().isFloodgatePlayer(player.getUniqueId())) {
-            plugin.getBedrockBuildForm().openDefault(player);
+        AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+
+        if (horse == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou have not selected a horse!"));
             return;
         }
-        plugin.getBuildMenu().openDefault(player);
+
+        horse.teleport(player.getLocation());
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&f" + horse.getName() + " &7has been teleported to your location."));
+
+
     }
 }

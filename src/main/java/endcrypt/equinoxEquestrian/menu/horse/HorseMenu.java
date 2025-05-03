@@ -41,6 +41,8 @@ public class HorseMenu implements Listener {
         horseListMenu = new HorseListMenu(plugin);
         autoVetMenu = new AutoVetMenu(plugin);
 
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
 
 
     }

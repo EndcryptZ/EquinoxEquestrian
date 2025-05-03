@@ -2,6 +2,7 @@ package endcrypt.equinoxEquestrian.horse;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.api.events.EquinePlayerSelectHorseEvent;
 import endcrypt.equinoxEquestrian.horse.enums.Item;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -59,6 +60,14 @@ public class EquineGroom implements Listener {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Left-Click &f&o" + horse.getName() + " &7to use item(s)."));
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Right-Click &f&o" + horse.getName() + " &7to cancel."));
         return true;
+    }
+
+    @EventHandler
+    public void onHorseSelect(EquinePlayerSelectHorseEvent event) {
+        Player player = event.getPlayer();
+        if(groomMap.get(player) != null) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

@@ -1,5 +1,8 @@
 package endcrypt.equinoxEquestrian.horse.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Breed {
 
     NONE("None", "None", "None", 13, 15), // Adjusted minimum hands
@@ -253,6 +256,14 @@ public enum Breed {
 
     public double getMaximumHands() {
         return maximumHands;
+    }
+
+    public static List<String> getBreedNames() {
+        List<String> names = new ArrayList<>();
+        for (Breed breed : Breed.values()) {
+            names.add(breed.getName());
+        }
+        return names;
     }
 
     @Override

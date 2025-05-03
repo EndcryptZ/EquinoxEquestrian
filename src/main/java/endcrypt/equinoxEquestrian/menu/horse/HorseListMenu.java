@@ -5,12 +5,21 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public class    HorseListMenu {
 
@@ -27,6 +36,16 @@ public class    HorseListMenu {
 
     private Inventory createMenu(Player player) {
         SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
+
+        try {
+            List<UUID> horses = plugin.getDatabaseManager().getPlayerHorses(player);
+
+            for (int i = 0; i < horses.size(); i++) {
+                gui.setButton(i, horseButton(player, (AbstractHorse) Bukkit.getEntity(horses.get(i))));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
         gui.setButton(31, menuOrganiserButton());
@@ -61,6 +80,32 @@ public class    HorseListMenu {
                     Player player = (Player) event.getWhoClicked();
 
 
+                });
+    }
+
+    private SGButton horseButton(Player player, AbstractHorse horse) {
+        boolean isSelected = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse() == horse;
+        String displayName = "&f" + horse.getName() + (isSelected ? " &a(Selected)" : "");
+        List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
+        HeadDatabaseAPI headDatabaseAPI = plugin.getHeadDatabaseAPI();
+        Random random = new Random();
+        int randomID = random.nextInt(idList.size());
+        String headID = idList.get(randomID);
+        ItemStack head = headDatabaseAPI.getItemHead(headID);
+
+
+        return new SGButton(
+                new ItemBuilder(head)
+                        .name(displayName)
+                        .build())
+
+
+                .withListener((InventoryClickEvent event) -> {
+                    if(!isSelected) {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&aYou have selected " + horse.getName() + "!"));
+                        plugin.getPlayerManager().getPlayerData(player).setSelectedHorse(horse);
+                        open(player);
+                    }
                 });
     }
 }

@@ -1,5 +1,8 @@
 package endcrypt.equinoxEquestrian.horse.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Discipline {
     NONE("None", 0),
 
@@ -32,6 +35,14 @@ public enum Discipline {
 
     public String getDisciplineName() {
         return disciplineName;
+    }
+
+    public static List<String> getDisciplineNames() {
+        List<String> names = new ArrayList<>();
+        for (Discipline discipline : Discipline.values()) {
+            names.add(discipline.getDisciplineName());
+        }
+        return names;
     }
 
     public int getPrice() {

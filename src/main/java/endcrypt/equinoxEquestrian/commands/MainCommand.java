@@ -1,10 +1,7 @@
 package endcrypt.equinoxEquestrian.commands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.commands.subcommands.GiveCommand;
-import endcrypt.equinoxEquestrian.commands.subcommands.MenuCommand;
-import endcrypt.equinoxEquestrian.commands.subcommands.LungeCommand;
-import endcrypt.equinoxEquestrian.commands.subcommands.SetHomeCommand;
+import endcrypt.equinoxEquestrian.commands.subcommands.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +13,8 @@ public class MainCommand implements CommandExecutor {
     private final LungeCommand lungeCommand;
     private final SetHomeCommand setHomeCommand;
     private final GiveCommand giveCommand;
+    private final TeleportCommand teleportCommand;
+    private final TpHereCommand tpHereCommand;
 
     public MainCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
@@ -23,6 +22,8 @@ public class MainCommand implements CommandExecutor {
         this.lungeCommand = new LungeCommand(plugin);
         this.setHomeCommand = new SetHomeCommand(plugin);
         this.giveCommand = new GiveCommand(plugin);
+        this.teleportCommand = new TeleportCommand(plugin);
+        this.tpHereCommand = new TpHereCommand(plugin);
     }
 
     @Override
@@ -36,10 +37,17 @@ public class MainCommand implements CommandExecutor {
                     lungeCommand.execute(commandSender, args);
                     break;
                 case "sethome":
-                    setHomeCommand.execute(commandSender, args);
+                    setHomeCommand.execute(commandSender, command, args);
                     break;
                 case "give":
                     giveCommand.execute(commandSender, args);
+                    break;
+                case "tp":
+                case "teleport":
+                    teleportCommand.execute(commandSender, command, args);
+                    break;
+                case "tphere":
+                    tpHereCommand.execute(commandSender, args);
                     break;
                 default:
                     commandSender.sendMessage("Unknown command.");

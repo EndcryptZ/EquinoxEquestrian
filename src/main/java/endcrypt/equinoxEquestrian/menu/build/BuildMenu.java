@@ -78,6 +78,7 @@ public class BuildMenu implements Listener {
         SGButton heightButton = heightButton(equineHorse);
         SGButton traitsButton = traitsButton(equineHorse);
         SGButton buyButton = buyButton(player, equineHorse);
+        SGButton tokenButton = tokenButton(player);
         SGButton costButton = costButton(player, equineHorse);
 
         gui.setButton(0, nameButton);
@@ -91,6 +92,7 @@ public class BuildMenu implements Listener {
         gui.setButton(8, traitsButton);
         gui.setButton(22, buyButton);
 
+        gui.setButton(25, tokenButton);
         gui.setButton(26, costButton);
         return gui.getInventory();
     }
@@ -429,25 +431,38 @@ public class BuildMenu implements Listener {
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "Horse details are incomplete!", null, loreMessage);
                         return;
                     }
+                    if(plugin.getPlayerManager().getPlayerData(player).getTokens() < 1) {
+                        if (plugin.getEcon().getBalance(player) < playerCost.get(player)) {
+                            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
+                            List<String> loreMessage = new ArrayList<>();
+                            loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
+                            loreMessage.add("§eCost: §a$§f" + playerCost.get(player));
 
-                    if (plugin.getEcon().getBalance(player) < playerCost.get(player)) {
-                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
-                        List<String> loreMessage = new ArrayList<>();
-                        loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
-                        loreMessage.add("§eCost: §a$§f" + playerCost.get(player));
-
-                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
-                        return;
+                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
+                            return;
+                        }
+                        plugin.getEcon().withdrawPlayer(player, playerCost.get(player));
+                    } else {
+                        plugin.getPlayerManager().getPlayerData(player).setTokens(plugin.getPlayerManager().getPlayerData(player).getTokens() - 1);
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7You used a token!"));
                     }
 
-                    plugin.getEcon().withdrawPlayer(player, playerCost.get(player));
-
-                    EquineHorseBuilder horseBuilder = new EquineHorseBuilder();
+                    EquineHorseBuilder horseBuilder = new EquineHorseBuilder(plugin);
                     player.closeInventory();
                     playerEquineHorseInput.remove(player);
                     playerCost.remove(player);
                     horseBuilder.spawnHorse(player, equineHorse);
                 });
+    }
+
+    private SGButton tokenButton(Player player) {
+
+        return new SGButton(
+                new ItemBuilder(Material.GOLD_INGOT)
+                        .name("&f[&eToken&f]")
+                        .lore("&70")
+                        .build()
+        );
     }
 
     private SGButton costButton(Player player, EquineHorse equineHorse) {

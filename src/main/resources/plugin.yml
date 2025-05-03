@@ -2,7 +2,9 @@ name: EquinoxEquestrian
 version: '1.0'
 main: endcrypt.equinoxEquestrian.EquinoxEquestrian
 api-version: '1.20'
-depend: [ ProtocolLib, Vault ]
+depend: [ ProtocolLib, Vault, floodgate ]
+softdepend:
+  - PlaceholderAPI
 commands:
   eq:
     description: Main Command of EquinoxEquestrian Plugin
