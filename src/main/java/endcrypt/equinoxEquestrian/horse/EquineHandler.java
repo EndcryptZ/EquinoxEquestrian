@@ -13,6 +13,7 @@ public class EquineHandler {
     private final EquineItems equineItems;
     private final EquineInvulnerable equineInvulnerable;
     private final EquineSelector equineSelector;
+    private final EquineTeleport equineTeleport;
 
     private final EquinoxEquestrian plugin;
     public EquineHandler(EquinoxEquestrian plugin) {
@@ -27,6 +28,7 @@ public class EquineHandler {
         equineItems = new EquineItems(plugin);
         equineInvulnerable = new EquineInvulnerable(plugin);
         equineSelector = new EquineSelector(plugin);
+        equineTeleport = new EquineTeleport(plugin);
 
     }
 
