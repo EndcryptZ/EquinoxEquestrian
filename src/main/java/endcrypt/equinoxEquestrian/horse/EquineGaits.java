@@ -238,6 +238,7 @@ public class EquineGaits implements Listener {
         AbstractHorse equineHorse = (AbstractHorse) event.getVehicle();
         playerCurrentGaits.remove(player);
         ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(EquineUtils.getBaseSpeed(equineHorse));
+        sendActionBarMessage(player, "");
 
     }
 
