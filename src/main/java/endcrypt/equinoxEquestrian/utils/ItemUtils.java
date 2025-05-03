@@ -12,6 +12,7 @@ public class ItemUtils {
     public static void itemMessage(JavaPlugin plugin, ItemStack item, String defaultItemName, String message, List<String> defaultLore, List<String> loreMessage) {
         ItemMeta itemMeta = item.getItemMeta();
 
+        assert itemMeta != null;
         List<String> veryDefaultLore = itemMeta.getLore();
 
         if(loreMessage != null) {
