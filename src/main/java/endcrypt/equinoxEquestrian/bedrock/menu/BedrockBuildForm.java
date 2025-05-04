@@ -9,6 +9,7 @@ import endcrypt.equinoxEquestrian.player.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -111,14 +112,7 @@ public class BedrockBuildForm {
 
     private void initializeSubmission(Player player, int toEdit, boolean isCreatingHorse, EquineHorse equineHorse) {
         if (isCreatingHorse) {
-            List<String> missingAttributes = new ArrayList<>();
-
-            if (equineHorse.getName().isEmpty()) missingAttributes.add("Name");
-            if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-            if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
-            if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
-            if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-            if (Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) missingAttributes.add("Trait(s)");
+            List<String> missingAttributes = getStrings(equineHorse);
 
             if (!missingAttributes.isEmpty()) {
                 String message = "§cMissing: " + String.join(", ", missingAttributes);
@@ -126,9 +120,7 @@ public class BedrockBuildForm {
                 return;
             }
 
-            double price = 1000 + equineHorse.getDiscipline().getPrice() + 1000 + 1000 +
-                    equineHorse.getGender().getPrice() + 1000 + 1000 +
-                    Arrays.stream(equineHorse.getTraits()).mapToDouble(Trait::getPrice).sum();
+            double price = calculateCost(equineHorse);
 
             double balance = plugin.getEcon().getBalance(player);
             PlayerData data = plugin.getPlayerManager().getPlayerData(player);
@@ -160,6 +152,18 @@ public class BedrockBuildForm {
             case 7 -> heightForm.openForm(player, equineHorse);
             case 8, 9, 10 -> traitForm.openForm(player, equineHorse, toEdit - 8);
         }
+    }
+
+    private static @NotNull List<String> getStrings(EquineHorse equineHorse) {
+        List<String> missingAttributes = new ArrayList<>();
+
+        if (equineHorse.getName().isEmpty()) missingAttributes.add("Name");
+        if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
+        if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
+        if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
+        if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
+        if (Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) missingAttributes.add("Trait(s)");
+        return missingAttributes;
     }
 
 
