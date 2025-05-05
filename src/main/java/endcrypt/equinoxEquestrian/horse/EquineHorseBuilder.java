@@ -46,6 +46,7 @@ public class EquineHorseBuilder {
 
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
 
+        // Add Horse to database
         try {
             plugin.getDatabaseManager().addLiveHorse(horse);
         } catch (SQLException e) {
