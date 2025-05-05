@@ -19,12 +19,12 @@ public class HorseInfoMenu {
         this.plugin = plugin;
     }
 
-    public void open(Player player, AbstractHorse horse) {
-        player.openInventory(createMenu(player, horse));
+    public void open(Player player, AbstractHorse horse, ListOrganizeType listOrganizeType) {
+        player.openInventory(createMenu(player, horse, listOrganizeType));
 
     }
 
-    private Inventory createMenu(Player player, AbstractHorse horse) {
+    private Inventory createMenu(Player player, AbstractHorse horse, ListOrganizeType listOrganizeType) {
 
         SGMenu gui = plugin.getSpiGUI().create(horse.getName() + "'s Info", 4, "Horse Info");
 
@@ -33,6 +33,8 @@ public class HorseInfoMenu {
         gui.setButton(12, horseInformation1(horse));
         gui.setButton(13, horseInformation2(horse));
         gui.setButton(14, horseInformation3(horse));
+
+        gui.setButton(31, backButton(player, listOrganizeType));
 
         return gui.getInventory();
     }
@@ -103,5 +105,14 @@ public class HorseInfoMenu {
                         )
                         .build()
         );
+    }
+
+    private SGButton backButton(Player player, ListOrganizeType listOrganizeType) {
+        return new SGButton(
+                new ItemBuilder(Material.RED_CANDLE)
+                        .name("&c&l&oBack")
+                        .lore("&7Click to open your horse list menu")
+                        .build()
+        ).withListener(event -> plugin.getHorseMenu().getHorseListMenu().open(player, listOrganizeType));
     }
 }
