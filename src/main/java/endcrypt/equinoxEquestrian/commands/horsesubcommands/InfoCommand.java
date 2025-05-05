@@ -1,6 +1,7 @@
 package endcrypt.equinoxEquestrian.commands.horsesubcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.menu.horse.internal.ListOrganizeType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
@@ -26,6 +27,6 @@ public class InfoCommand {
             return;
         }
 
-        plugin.getHorseMenu().getHorseInfoMenu().open(player, horse);
+        plugin.getHorseMenu().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
     }
 }
