@@ -14,7 +14,6 @@ import endcrypt.equinoxEquestrian.horse.EquineHandler;
 import endcrypt.equinoxEquestrian.menu.build.BuildMenu;
 import endcrypt.equinoxEquestrian.menu.horse.HorseMenu;
 import endcrypt.equinoxEquestrian.player.PlayerManager;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,7 +34,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private ProtocolManager protocolManager;
     private PlayerManager playerManager;
     private DatabaseManager databaseManager;
-    private HeadDatabaseAPI headDatabaseAPI;
     private FloodgateApi floodgateApi;
 
 
@@ -91,7 +89,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
         horseMenu = new HorseMenu(this);
         equineHandler = new EquineHandler(this);
         playerManager = new PlayerManager(this);
-        headDatabaseAPI = new HeadDatabaseAPI();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             playerManager.addPlayer(player);
@@ -156,10 +153,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
-    }
-
-    public HeadDatabaseAPI getHeadDatabaseAPI() {
-        return headDatabaseAPI;
     }
 
     public BedrockBuildForm getBedrockBuildForm() {
