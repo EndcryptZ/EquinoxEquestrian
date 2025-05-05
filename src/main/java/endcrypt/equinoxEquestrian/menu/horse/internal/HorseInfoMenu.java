@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.menu.horse;
+package endcrypt.equinoxEquestrian.menu.horse.internal;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
@@ -7,7 +7,6 @@ import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.horse.EquineHorse;
 import endcrypt.equinoxEquestrian.horse.EquineUtils;
 import endcrypt.equinoxEquestrian.utils.HeadUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -20,12 +19,7 @@ public class HorseInfoMenu {
         this.plugin = plugin;
     }
 
-    public void open(Player player) {
-        AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
-        if(horse == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou have not selected a horse!"));
-            return;
-        }
+    public void open(Player player, AbstractHorse horse) {
         player.openInventory(createMenu(player, horse));
 
     }
