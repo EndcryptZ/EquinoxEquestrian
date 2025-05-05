@@ -6,6 +6,7 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.menu.horse.internal.HorseInfoMenu;
 import endcrypt.equinoxEquestrian.menu.horse.internal.HorseListMenu;
+import endcrypt.equinoxEquestrian.menu.horse.internal.ListOrganizerMenu;
 import endcrypt.equinoxEquestrian.menu.horse.submenus.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.ChatColor;
@@ -29,9 +30,11 @@ public class HorseMenu implements Listener {
     private final HomeMenu homeMenu;
     private final GroomMenu groomMenu;
     private final HealthMenu healthMenu;
+    private final AutoVetMenu autoVetMenu;
+
     private final HorseListMenu horseListMenu;
     private final HorseInfoMenu horseInfoMenu;
-    private final AutoVetMenu autoVetMenu;
+    private final ListOrganizerMenu listOrganizerMenu;
 
     private final EquinoxEquestrian plugin;
     public HorseMenu(EquinoxEquestrian plugin) {
@@ -41,9 +44,11 @@ public class HorseMenu implements Listener {
         homeMenu = new HomeMenu(plugin);
         groomMenu = new GroomMenu(plugin);
         healthMenu = new HealthMenu(plugin);
+        autoVetMenu = new AutoVetMenu(plugin);
+
         horseListMenu = new HorseListMenu(plugin);
         horseInfoMenu = new HorseInfoMenu(plugin);
-        autoVetMenu = new AutoVetMenu(plugin);
+        listOrganizerMenu = new ListOrganizerMenu(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
@@ -238,5 +243,9 @@ public class HorseMenu implements Listener {
 
     public HorseInfoMenu getHorseInfoMenu() {
         return horseInfoMenu;
+    }
+
+    public ListOrganizerMenu getListOrganizerMenu() {
+        return listOrganizerMenu;
     }
 }
