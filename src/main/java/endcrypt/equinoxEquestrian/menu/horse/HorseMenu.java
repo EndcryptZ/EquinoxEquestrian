@@ -4,6 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.menu.horse.internal.HorseInfoMenu;
+import endcrypt.equinoxEquestrian.menu.horse.internal.HorseListMenu;
 import endcrypt.equinoxEquestrian.menu.horse.submenus.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.ChatColor;
