@@ -83,7 +83,7 @@ public class EquineUtils {
                 traits[i] = Trait.valueOf(nbt.getString("EQUINE_TRAIT_" + i));
             }
 
-            return new EquineHorse(
+            EquineHorse equineHorse = new EquineHorse(
                     name,
                     discipline,
                     breed,
@@ -94,6 +94,10 @@ public class EquineUtils {
                     Height.getByHands(heightHands),
                     traits
             );
+
+            equineHorse.setUuid(horse.getUniqueId());
+
+            return equineHorse;
         });
     }
 }
