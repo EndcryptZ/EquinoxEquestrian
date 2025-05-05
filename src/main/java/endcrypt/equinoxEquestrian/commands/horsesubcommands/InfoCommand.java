@@ -3,6 +3,7 @@ package endcrypt.equinoxEquestrian.commands.horsesubcommands;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 public class InfoCommand {
@@ -19,7 +20,12 @@ public class InfoCommand {
             return;
         }
 
+        AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou have not selected a horse!"));
+            return;
+        }
 
-        plugin.getHorseMenu().getHorseInfoMenu().open(player);
+        plugin.getHorseMenu().getHorseInfoMenu().open(player, horse);
     }
 }
