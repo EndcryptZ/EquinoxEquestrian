@@ -9,69 +9,58 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EquineUtils {
 
     public static boolean isLivingEquineHorse(AbstractHorse horse) {
-        String isEquine = NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_HORSE"));
-        return isEquine.equalsIgnoreCase("true");
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_HORSE")));
     }
 
     public static double getBaseSpeed(AbstractHorse horse) {
-        return NBT.getPersistentData(horse, nbt -> nbt.getDouble("EQUINE_BASE_SPEED"));
+        return horse == null ? 0 : NBT.getPersistentData(horse, nbt -> nbt.getDouble("EQUINE_BASE_SPEED"));
     }
 
     public static double getBaseJumpPower(AbstractHorse horse) {
-        return NBT.getPersistentData(horse, nbt -> nbt.getDouble("EQUINE_BASE_JUMP_POWER"));
+        return horse == null ? 0 : NBT.getPersistentData(horse, nbt -> nbt.getDouble("EQUINE_BASE_JUMP_POWER"));
     }
 
     public static boolean isCrossTied(AbstractHorse horse) {
-        String isCrossTied = NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_IS_CROSS_TIED"));
-        return isCrossTied.equalsIgnoreCase("true");
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_IS_CROSS_TIED")));
     }
-
 
     public static boolean isLunging(AbstractHorse horse) {
-        String isLunging = NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_IS_LUNGING"));
-        return isLunging.equalsIgnoreCase("true");
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(NBT.getPersistentData(horse, nbt -> nbt.getString("EQUINE_IS_LUNGING")));
     }
-
 
     public static List<Entity> getLeashedEntities(Player player) {
-        List<Entity> leashedEntities = new ArrayList<>();
+        if (player == null) return new ArrayList<>();
 
-        // Iterate through all entities in the world
-        for (Entity entity : player.getNearbyEntities(20, 20, 20)) {
-            // Check if the entity is leashed and its leash holder is the player
-            if(!(entity instanceof LivingEntity livingEntity)) {
-                continue;
-            }
-            if (livingEntity.isLeashed() && livingEntity.getLeashHolder() == player) {
-                leashedEntities.add(livingEntity);
-            }
-        }
-
-        return leashedEntities;
+        return player.getNearbyEntities(20, 20, 20).stream()
+                .filter(entity -> entity instanceof LivingEntity)
+                .map(entity -> (LivingEntity) entity)
+                .filter(livingEntity -> livingEntity.isLeashed() && livingEntity.getLeashHolder() == player)
+                .collect(Collectors.toList());
     }
-
 
     public static boolean isGroomItem(ItemStack item) {
-        String isGroomItem = NBT.get(item, nbt -> (String) nbt.getString("EQUINE_GROOM_ITEM"));
-        return isGroomItem.equalsIgnoreCase("true");
+        if (item == null) return false;
+        return "true".equalsIgnoreCase(NBT.get(item, nbt -> nbt.getString("EQUINE_GROOM_ITEM")));
     }
 
-    public static String getHorseClaimdate(AbstractHorse horse) {
+    public static String getHorseClaimDate(AbstractHorse horse) {
+        if (horse == null) return "Unknown";
+
         long claimEpoch = NBT.getPersistentData(horse, nbt -> nbt.getLong("EQUINE_CLAIM_TIME"));
-
-        Date date = new Date(claimEpoch);
-
-        // Format date to "DD MMM YYYY"
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
-
-        return formatter.format(date);
+        return new SimpleDateFormat("dd MMM yyyy").format(new Date(claimEpoch));
     }
 
     public static EquineHorse fromAbstractHorse(AbstractHorse horse) {
+        if (horse == null) return null;
+
         return NBT.getPersistentData(horse, nbt -> {
             String name = horse.getCustomName();
             int age = nbt.getInteger("EQUINE_AGE");
@@ -81,7 +70,6 @@ public class EquineUtils {
             Breed breed = Breed.valueOf(nbt.getString("EQUINE_BREED"));
             Gender gender = Gender.valueOf(nbt.getString("EQUINE_GENDER"));
 
-            // Extract coat color and modifier from Horse
             CoatColor coatColor = CoatColor.NONE;
             CoatModifier coatModifier = CoatModifier.NONE;
 
@@ -90,13 +78,12 @@ public class EquineUtils {
                 coatModifier = CoatModifier.getCoatModifierFromHorseStyle(h.getStyle());
             }
 
-            // Traits
-            List<Trait> traits = new ArrayList<>(3);
+            Trait[] traits = new Trait[3];
             for (int i = 0; i < 3; i++) {
-                traits.add(Trait.valueOf(nbt.getString("EQUINE_TRAIT_" + i)));
+                traits[i] = Trait.valueOf(nbt.getString("EQUINE_TRAIT_" + i));
             }
 
-            EquineHorse equineHorse = new EquineHorse(
+            return new EquineHorse(
                     name,
                     discipline,
                     breed,
@@ -105,14 +92,8 @@ public class EquineUtils {
                     gender,
                     age,
                     Height.getByHands(heightHands),
-                    traits.toArray(new Trait[0])
+                    traits
             );
-
-
-            return equineHorse;
         });
     }
-
-
-
 }
