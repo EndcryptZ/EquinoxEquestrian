@@ -2,6 +2,8 @@ package endcrypt.equinoxEquestrian.horse;
 
 import endcrypt.equinoxEquestrian.horse.enums.*;
 
+import java.util.UUID;
+
 public class EquineHorse {
 
     private String name;
@@ -13,6 +15,8 @@ public class EquineHorse {
     private int age;
     private Height height;
     private Trait[] traits;
+
+    private UUID uuid;
 
     public EquineHorse(String name, Discipline discipline, Breed breed, CoatColor coatColor, CoatModifier coatModifier, Gender gender, int age, Height height, Trait[] traits) {
         this.name = name;
@@ -62,6 +66,10 @@ public class EquineHorse {
         return traits;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -96,5 +104,9 @@ public class EquineHorse {
 
     public void setTraits(Trait[] traits) {
         this.traits = traits;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
