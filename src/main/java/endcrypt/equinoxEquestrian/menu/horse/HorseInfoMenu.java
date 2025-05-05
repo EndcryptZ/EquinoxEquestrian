@@ -60,7 +60,7 @@ public class HorseInfoMenu {
                                 "&7▸ &bOwner: &7" + horse.getOwner().getName(),
                                 "&7▸ &bRegistered: &7WIP",
                                 "&7▸ &bID: &7WIP",
-                                "&7▸ &bClaimdate: &7" + EquineUtils.getHorseClaimdate(horse)
+                                "&7▸ &bClaim Date: &7" + EquineUtils.getHorseClaimDate(horse)
                                 )
                         .build()
         );
