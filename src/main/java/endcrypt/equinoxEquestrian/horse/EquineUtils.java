@@ -48,7 +48,7 @@ public class EquineUtils {
 
     public static boolean isGroomItem(ItemStack item) {
         if (item == null) return false;
-        return "true".equalsIgnoreCase(NBT.get(item, nbt -> nbt.getString("EQUINE_GROOM_ITEM")));
+        return "true".equalsIgnoreCase(NBT.get(item, nbt -> (String) nbt.getString("EQUINE_GROOM_ITEM")));
     }
 
     public static String getHorseClaimDate(AbstractHorse horse) {
