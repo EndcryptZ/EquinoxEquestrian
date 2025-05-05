@@ -40,7 +40,10 @@ public class ListOrganizerMenu {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&f&l&oDiscipline Order")
-                        .lore(loreIndicator)
+                        .lore(
+                                loreIndicator,
+                                "&7English - Western - Racing - Other"
+                        )
                         .build()
         ).withListener(event -> {
             // Listener logic (currently empty)
@@ -54,7 +57,10 @@ public class ListOrganizerMenu {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&f&l&oAlphabetical Order")
-                        .lore(loreIndicator)
+                        .lore(
+                                loreIndicator,
+                                "  &7A > Z"
+                        )
                         .build()
         ).withListener(event -> {
             plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.ALPHABETICAL);
@@ -68,7 +74,10 @@ public class ListOrganizerMenu {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&f&l&oAge Order")
-                        .lore(loreIndicator)
+                        .lore(
+                                loreIndicator,
+                                "  &7Youngest > Oldest"
+                        )
                         .build()
         ).withListener(event -> {
             plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.AGE);
@@ -82,7 +91,10 @@ public class ListOrganizerMenu {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&f&l&oLevel Order")
-                        .lore(loreIndicator)
+                        .lore(
+                                loreIndicator,
+                                "  &7Lowest > Highest"
+                        )
                         .build()
         ).withListener(event -> {
         });
@@ -95,7 +107,10 @@ public class ListOrganizerMenu {
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
                         .name("&f&l&oGender Order")
-                        .lore(loreIndicator)
+                        .lore(
+                                loreIndicator,
+                                "&7Mare - Gelding - Stallion"
+                        )
                         .build()
         ).withListener(event -> {
             plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.GENDER);
