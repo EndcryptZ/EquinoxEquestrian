@@ -4,9 +4,11 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.horse.EquineHorse;
+import endcrypt.equinoxEquestrian.horse.EquineUtils;
+import endcrypt.equinoxEquestrian.horse.enums.Gender;
 import endcrypt.equinoxEquestrian.utils.HeadUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -15,10 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class    HorseListMenu {
 
@@ -28,41 +27,89 @@ public class    HorseListMenu {
     }
 
 
-    public void open(Player player) {
-        player.openInventory(createMenu(player));
+    public void open(Player player, ListOrganizeType listOrganizeType) {
+        player.openInventory(createMenu(player, listOrganizeType));
 
     }
 
-    private Inventory createMenu(Player player) {
-        SGMenu gui = plugin.getSpiGUI().create("Horse List", 3, "Horse List");
+    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
+        SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
 
         try {
-            List<UUID> horses = plugin.getDatabaseManager().getPlayerHorses(player);
+            List<UUID> horseIds = plugin.getDatabaseManager().getPlayerHorses(player);
 
-            for (int i = 0; i < horses.size(); i++) {
-                gui.setButton(i, horseButton(player, (AbstractHorse) Bukkit.getEntity(horses.get(i))));
+            if (listOrganizeType == ListOrganizeType.AGE) {
+                List<EquineHorse> equineHorses = horseIds.stream()
+                        .map(Bukkit::getEntity)
+                        .filter(e -> e instanceof AbstractHorse)
+                        .map(e -> EquineUtils.fromAbstractHorse((AbstractHorse) e))
+                        .filter(Objects::nonNull)
+                        .sorted(Comparator.comparingInt(EquineHorse::getAge))
+                        .toList();
+
+                for (int i = 0; i < equineHorses.size(); i++) {
+                    AbstractHorse horse = (AbstractHorse) Bukkit.getEntity(equineHorses.get(i).getUuid());
+                    gui.setButton(i, horseButton(player, horse));
+                }
+
+            } else if (listOrganizeType == ListOrganizeType.ALPHABETICAL) {
+                List<AbstractHorse> sorted = horseIds.stream()
+                        .map(Bukkit::getEntity)
+                        .filter(e -> e instanceof AbstractHorse)
+                        .map(e -> (AbstractHorse) e)
+                        .sorted(Comparator.comparing(h -> {
+                            String name = h.getCustomName();
+                            return name != null ? name.toLowerCase() : "";
+                        }))
+                        .toList();
+
+                for (int i = 0; i < sorted.size(); i++) {
+                    gui.setButton(i, horseButton(player, sorted.get(i)));
+                }
+
+            } else if (listOrganizeType == ListOrganizeType.GENDER) {
+                // Define gender order: Mare = 0, Gelding = 1, Stallion = 2, None = 3
+                Map<Gender, Integer> genderOrder = Map.of(
+                        Gender.MARE, 0,
+                        Gender.GELDING, 1,
+                        Gender.STALLION, 2
+                );
+
+                List<EquineHorse> sortedByGender = horseIds.stream()
+                        .map(Bukkit::getEntity)
+                        .filter(e -> e instanceof AbstractHorse)
+                        .map(e -> EquineUtils.fromAbstractHorse((AbstractHorse) e))
+                        .filter(Objects::nonNull)
+                        .sorted(Comparator.comparingInt(h -> genderOrder.getOrDefault(h.getGender(), 3)))
+                        .toList();
+
+                for (int i = 0; i < sortedByGender.size(); i++) {
+                    AbstractHorse horse = (AbstractHorse) Bukkit.getEntity(sortedByGender.get(i).getUuid());
+                    gui.setButton(i, horseButton(player, horse));
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-
-        gui.setButton(31, menuOrganiserButton());
-        gui.setButton(35, trustedHorsesButton());
-
+        gui.setButton(31, menuOrganiserButton(listOrganizeType));
 
         return gui.getInventory();
     }
 
-    private SGButton menuOrganiserButton() {
+
+    private SGButton menuOrganiserButton(ListOrganizeType listOrganizeType) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
-                        .name("&f&l&oMenu Organiser")
+                        .name("&f&l&oMenu Organizer")
+                        .lore("&7▸ &bCurrent Organizer: &7" + listOrganizeType.getName())
                         .build()
         )
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
+                    plugin.getHorseMenu().getListOrganizerMenu().open(player, listOrganizeType);
 
 
                 });
@@ -99,7 +146,7 @@ public class    HorseListMenu {
 
 
                 .withListener((InventoryClickEvent event) -> {
-                    plugin.getHorseMenu().getHorseInfoMenu().open(player, horse);
+                    plugin.getHorseMenu().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
                 });
     }
 }
