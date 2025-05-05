@@ -34,7 +34,7 @@ public class    HorseListMenu {
     }
 
     private Inventory createMenu(Player player) {
-        SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
+        SGMenu gui = plugin.getSpiGUI().create("Horse List", 3, "Horse List");
 
         try {
             List<UUID> horses = plugin.getDatabaseManager().getPlayerHorses(player);
