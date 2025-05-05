@@ -18,7 +18,7 @@ public class HorseCommandTabCompeter implements TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("list", "tokens");
+            return Arrays.asList("list", "tokens", "info");
         }
 
         if (args.length == 2) {
