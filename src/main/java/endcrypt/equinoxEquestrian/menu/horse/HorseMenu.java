@@ -28,6 +28,7 @@ public class HorseMenu implements Listener {
     private final GroomMenu groomMenu;
     private final HealthMenu healthMenu;
     private final HorseListMenu horseListMenu;
+    private final HorseInfoMenu horseInfoMenu;
     private final AutoVetMenu autoVetMenu;
 
     private final EquinoxEquestrian plugin;
@@ -39,6 +40,7 @@ public class HorseMenu implements Listener {
         groomMenu = new GroomMenu(plugin);
         healthMenu = new HealthMenu(plugin);
         horseListMenu = new HorseListMenu(plugin);
+        horseInfoMenu = new HorseInfoMenu(plugin);
         autoVetMenu = new AutoVetMenu(plugin);
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -230,5 +232,9 @@ public class HorseMenu implements Listener {
 
     public HorseListMenu getHorseListMenu() {
         return horseListMenu;
+    }
+
+    public HorseInfoMenu getHorseInfoMenu() {
+        return horseInfoMenu;
     }
 }
