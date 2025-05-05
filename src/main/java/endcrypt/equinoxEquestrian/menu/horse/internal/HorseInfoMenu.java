@@ -32,7 +32,10 @@ public class HorseInfoMenu {
         gui.setButton(10, horseHead(horse));
         gui.setButton(12, horseInformation1(horse));
         gui.setButton(13, horseInformation2(horse));
-        gui.setButton(14, horseInformation3(horse));
+        gui.setButton(14, motionInformation(horse));
+        gui.setButton(15, welfareInformation(horse));
+        gui.setButton(16, horseInformation3(horse));
+        gui.setButton(17, healthInformation(horse));
 
         gui.setButton(31, backButton(player, listOrganizeType));
 
@@ -84,12 +87,12 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton horseInformation3 (AbstractHorse horse){
+    private SGButton motionInformation(AbstractHorse horse){
         EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
-                        .name("&fHorse Information 3")
+                        .name("&fMotion")
                         .lore(
                                 "&7▸ &bSpeed: &7WIP",
                                 "&7▸ &bJump: &7WIP",
@@ -102,6 +105,60 @@ public class HorseInfoMenu {
                                 "    &7▸ &bTrait 3: &7" + equineHorse.getTraits()[2].getTraitName()
 
 
+                        )
+                        .build()
+        );
+    }
+
+    private SGButton welfareInformation(AbstractHorse horse) {
+        return new SGButton(
+                new ItemBuilder(Material.MAP)
+                        .name("&fWelfare")
+                        .lore(
+                                "&7▸ &bHappiness: &7WIP",
+                                "&7▸ &bRelationship: &7WIP",
+                                "&7▸ &bNutrition:",
+                                "&7▸ &b+ Hunger: &7WIP",
+                                "&7▸ &b+ Thirst: &7WIP",
+                                "&7▸ &b+ Weight: &7WIP",
+                                "&7▸ &bCleanliness: &7WIP"
+                        )
+                        .build()
+        );
+    }
+
+    private SGButton horseInformation3(AbstractHorse horse) {
+        return new SGButton(
+                new ItemBuilder(Material.MAP)
+                        .name("&fHorse Information 3")
+                        .lore(
+                                "&bShod: &7WIP",
+                                "&bRideable: &7WIP",
+                                "&bSenses:",
+                                "&b  + Vision: &7WIP",
+                                "&b  + Hearing: &7WIP",
+                                "&bTags:",
+                                "&b  + WIP",
+                                "&bEarnings: &7WIP"
+                        )
+                        .build()
+        );
+    }
+
+    private SGButton healthInformation(AbstractHorse horse) {
+        return new SGButton(
+                new ItemBuilder(Material.MAP)
+                        .name("&fHealth")
+                        .lore(
+                                "&bVaccines:",
+                                "&7+ WIP",
+                                "&7+ WIP + WIP + WIP",
+                                "&bIllnesses:",
+                                "&7+ WIP",
+                                "&7+ WIP + WIP + WIP",
+                                "&bInjury:",
+                                "&7+ WIP",
+                                "&7+ WIP + WIP + WIP"
                         )
                         .build()
         );
