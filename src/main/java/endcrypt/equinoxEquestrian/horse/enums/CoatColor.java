@@ -38,4 +38,13 @@ public enum CoatColor {
         }
         return names;
     }
+
+    public static CoatColor getCoatColorFromHorseColor(Horse.Color color) {
+        for (CoatColor cc : CoatColor.values()) {
+            if (cc.getHorseColor() == color) {
+                return cc;
+            }
+        }
+        return CoatColor.NONE;
+    }
 }
