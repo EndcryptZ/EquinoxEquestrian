@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.menu.horse;
+package endcrypt.equinoxEquestrian.menu.horse.internal;
 
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
@@ -99,11 +99,7 @@ public class    HorseListMenu {
 
 
                 .withListener((InventoryClickEvent event) -> {
-                    if(!isSelected) {
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&aYou have selected " + horse.getName() + "!"));
-                        plugin.getPlayerManager().getPlayerData(player).setSelectedHorse(horse);
-                        open(player);
-                    }
+                    plugin.getHorseMenu().getHorseInfoMenu().open(player, horse);
                 });
     }
 }
