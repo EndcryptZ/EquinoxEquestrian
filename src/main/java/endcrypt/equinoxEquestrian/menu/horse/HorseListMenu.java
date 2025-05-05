@@ -4,8 +4,7 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.utils.ItemUtils;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import endcrypt.equinoxEquestrian.utils.HeadUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -87,11 +86,10 @@ public class    HorseListMenu {
         boolean isSelected = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse() == horse;
         String displayName = "&f" + horse.getName() + (isSelected ? " &a(Selected)" : "");
         List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
-        HeadDatabaseAPI headDatabaseAPI = plugin.getHeadDatabaseAPI();
         Random random = new Random();
         int randomID = random.nextInt(idList.size());
         String headID = idList.get(randomID);
-        ItemStack head = headDatabaseAPI.getItemHead(headID);
+        ItemStack head = HeadUtils.getItemHead(headID);
 
 
         return new SGButton(
