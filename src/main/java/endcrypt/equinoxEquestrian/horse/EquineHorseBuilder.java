@@ -56,6 +56,7 @@ public class EquineHorseBuilder {
 
 
             long currentTime = System.currentTimeMillis();
+            nbt.setLong("EQUINE_CLAIM_TIME", currentTime);
             nbt.setLong("EQUINE_BIRTH_TIME", currentTime - (MILLIS_PER_YEAR * equineHorse.getAge()));
 
 
