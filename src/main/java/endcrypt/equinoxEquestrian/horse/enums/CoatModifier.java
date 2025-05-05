@@ -35,4 +35,13 @@ public enum CoatModifier {
         }
         return names;
     }
+
+    public static CoatModifier getCoatModifierFromHorseStyle(Horse.Style style) {
+        for (CoatModifier cm : CoatModifier.values()) {
+            if (cm.getHorseCoatModifier() == style) {
+                return cm;
+            }
+        }
+        return CoatModifier.NONE;
+    }
 }
