@@ -1,0 +1,49 @@
+package endcrypt.equinoxEquestrian.commands.equineadmin;
+
+import endcrypt.equinoxEquestrian.horse.enums.Item;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class EquineAdminTabCompleter implements TabCompleter {
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList(
+                    "tokens"
+                    );
+        }
+
+        if (args.length == 2) {
+            switch (args[0].toLowerCase()) {
+                case "tokens":
+                    return Arrays.asList("give", "take", "set");
+            }
+        }
+
+        if (args.length == 3) {
+            switch (args[0].toLowerCase()) {
+                case "tokens":
+                    switch (args[1].toLowerCase()) {
+                        case "give":
+                        case "take":
+                        case "set":
+                            return Bukkit.getOnlinePlayers().stream()
+                                    .map(Player::getName)
+                                    .collect(Collectors.toList());
+                    }
+            }
+        }
+
+        return null;
+    }
+}
