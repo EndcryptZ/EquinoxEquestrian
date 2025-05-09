@@ -3,6 +3,7 @@ package endcrypt.equinoxEquestrian.bedrock.menu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.bedrock.menu.subforms.*;
 import endcrypt.equinoxEquestrian.equine.*;
+import endcrypt.equinoxEquestrian.equine.attributes.*;
 import endcrypt.equinoxEquestrian.player.data.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

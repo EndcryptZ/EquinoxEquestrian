@@ -2,7 +2,7 @@ package endcrypt.equinoxEquestrian.bedrock.menu.subforms;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.equine.EquineHorse;
-import endcrypt.equinoxEquestrian.equine.Height;
+import endcrypt.equinoxEquestrian.equine.attributes.Height;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
 

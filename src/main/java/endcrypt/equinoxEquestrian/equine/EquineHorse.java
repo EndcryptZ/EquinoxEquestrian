@@ -1,5 +1,7 @@
 package endcrypt.equinoxEquestrian.equine;
 
+import endcrypt.equinoxEquestrian.equine.attributes.*;
+
 import java.util.UUID;
 
 public class EquineHorse {

@@ -5,6 +5,7 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.equine.*;
+import endcrypt.equinoxEquestrian.equine.attributes.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.equine;
+package endcrypt.equinoxEquestrian.equine.attributes;
 
 import java.util.ArrayList;
 import java.util.List;

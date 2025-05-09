@@ -2,6 +2,7 @@ package endcrypt.equinoxEquestrian.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.equine.attributes.CoatModifier;
 import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.equine;
+package endcrypt.equinoxEquestrian.equine.attributes;
 
 public enum Height {
     SIZE_0_7(0.7, 9.0),

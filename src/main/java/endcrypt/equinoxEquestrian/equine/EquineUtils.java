@@ -1,6 +1,7 @@
 package endcrypt.equinoxEquestrian.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import endcrypt.equinoxEquestrian.equine.attributes.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 

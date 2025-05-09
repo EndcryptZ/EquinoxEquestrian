@@ -6,7 +6,7 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import endcrypt.equinoxEquestrian.equine.EquineUtils;
-import endcrypt.equinoxEquestrian.equine.Gender;
+import endcrypt.equinoxEquestrian.equine.attributes.Gender;
 import endcrypt.equinoxEquestrian.utils.HeadUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

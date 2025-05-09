@@ -4,7 +4,7 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.equine.Discipline;
+import endcrypt.equinoxEquestrian.equine.attributes.Discipline;
 import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
