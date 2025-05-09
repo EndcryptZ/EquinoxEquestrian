@@ -4,8 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.enums.*;
+import endcrypt.equinoxEquestrian.equine.CoatColor;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -44,7 +44,7 @@ public class CoatColorSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setCoatColor(coatColor);
-                    plugin.getBuildMenu().openWithParameters(player, equineHorse);
+                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 }

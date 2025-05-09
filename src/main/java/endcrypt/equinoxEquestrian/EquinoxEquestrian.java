@@ -6,11 +6,16 @@ import com.samjakob.spigui.SpiGUI;
 import endcrypt.equinoxEquestrian.bedrock.menu.BedrockBuildForm;
 import endcrypt.equinoxEquestrian.commands.CommandManager;
 import endcrypt.equinoxEquestrian.database.DatabaseManager;
+import endcrypt.equinoxEquestrian.equine.crosstie.EquineCrossTieListener;
+import endcrypt.equinoxEquestrian.equine.groom.EquineGroomListener;
 import endcrypt.equinoxEquestrian.hooks.placeholderapi.Placeholders;
-import endcrypt.equinoxEquestrian.horse.EquineHandler;
-import endcrypt.equinoxEquestrian.menu.build.BuildMenu;
-import endcrypt.equinoxEquestrian.menu.horse.HorseMenu;
-import endcrypt.equinoxEquestrian.player.PlayerManager;
+import endcrypt.equinoxEquestrian.equine.EquineManager;
+import endcrypt.equinoxEquestrian.menu.build.BuildMenuListener;
+import endcrypt.equinoxEquestrian.menu.build.BuildMenuManager;
+import endcrypt.equinoxEquestrian.menu.horse.HorseMenuListener;
+import endcrypt.equinoxEquestrian.menu.horse.HorseMenuManager;
+import endcrypt.equinoxEquestrian.player.data.PlayerDataListener;
+import endcrypt.equinoxEquestrian.player.data.PlayerDataManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,22 +29,20 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     private SpiGUI spiGUI;
     private Economy econ;
-    private BuildMenu buildMenu;
+    private BuildMenuManager buildMenuManager;
     private BedrockBuildForm bedrockBuildForm;
-    private HorseMenu horseMenu;
-    private EquineHandler equineHandler;
+    private HorseMenuManager horseMenuManager;
+    private EquineManager equineManager;
     private ProtocolManager protocolManager;
-    private PlayerManager playerManager;
+    private PlayerDataManager playerDataManager;
     private DatabaseManager databaseManager;
     private CommandManager commandManager;
     private FloodgateApi floodgateApi;
 
-
-
-
     @Override
     public void onEnable() {
         this.initializeInstances();
+        this.initializeListeners();
         this.setupEconomy();
         this.commandManager.registerCommands();
 
@@ -82,44 +85,25 @@ public final class EquinoxEquestrian extends JavaPlugin {
         floodgateApi = FloodgateApi.getInstance();
         protocolManager = ProtocolLibrary.getProtocolManager();
         spiGUI = new SpiGUI(this);
-        buildMenu = new BuildMenu(this);
+        buildMenuManager = new BuildMenuManager(this);
         bedrockBuildForm = new BedrockBuildForm(this);
-        horseMenu = new HorseMenu(this);
-        equineHandler = new EquineHandler(this);
-        playerManager = new PlayerManager(this);
+        horseMenuManager = new HorseMenuManager(this);
+        equineManager = new EquineManager(this);
+        playerDataManager = new PlayerDataManager(this);
         commandManager = new CommandManager(this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            playerManager.addPlayer(player);
+            playerDataManager.addPlayer(player);
         }
     }
 
-    public BuildMenu getBuildMenu() {
-        return buildMenu;
-    }
+    private void initializeListeners() {
+        new PlayerDataListener(this);
+        new BuildMenuListener(this);
+        new HorseMenuListener(this);
+        new EquineCrossTieListener(this);
+        new EquineGroomListener(this);
 
-    public HorseMenu getHorseMenu() {
-        return horseMenu;
-    }
-
-    public EquineHandler getEquineHandler() {
-        return equineHandler;
-    }
-
-    public SpiGUI getSpiGUI() {
-        return spiGUI;
-    }
-
-    public String getPrefix() {
-        return "§8[§bEquinox§8] ";
-    }
-
-    public Economy getEcon() {
-        return econ;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
     }
 
     private void setupEconomy() {
@@ -137,6 +121,34 @@ public final class EquinoxEquestrian extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
+    }
+
+    public BuildMenuManager getBuildMenuManager() {
+        return buildMenuManager;
+    }
+
+    public EquineManager getEquineManager() {
+        return equineManager;
+    }
+
+    public SpiGUI getSpiGUI() {
+        return spiGUI;
+    }
+
+    public String getPrefix() {
+        return "§8[§bEquinox§8] ";
+    }
+
+    public Economy getEcon() {
+        return econ;
+    }
+
+    public PlayerDataManager getPlayerDataManager() {
+        return playerDataManager;
+    }
+
+    public HorseMenuManager getHorseMenuManager() {
+        return horseMenuManager;
     }
 
     public ProtocolManager getProtocolManager() {

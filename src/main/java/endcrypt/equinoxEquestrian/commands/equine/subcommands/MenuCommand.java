@@ -25,6 +25,6 @@ public class MenuCommand {
             plugin.getBedrockBuildForm().openDefault(player);
             return;
         }
-        plugin.getBuildMenu().openDefault(player);
+        plugin.getBuildMenuManager().getBuildMenu().openDefault(player);
     }
 }

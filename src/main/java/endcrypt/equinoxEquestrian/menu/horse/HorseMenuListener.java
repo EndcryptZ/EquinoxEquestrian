@@ -1,0 +1,65 @@
+package endcrypt.equinoxEquestrian.menu.horse;
+
+import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import org.bukkit.Material;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.HorseInventory;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class HorseMenuListener implements Listener {
+
+    private final EquinoxEquestrian plugin;
+    public HorseMenuListener(EquinoxEquestrian plugin) {
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    List<Material> allowedHorseRightClickItems = Arrays.asList(Material.LEAD, Material.WHEAT);
+
+    @EventHandler
+    public void onHorseClick(PlayerInteractEntityEvent event) {
+        if(!(event.getRightClicked() instanceof AbstractHorse)) {
+            return;
+        }
+
+        if(allowedHorseRightClickItems.contains(event.getPlayer().getInventory().getItemInMainHand().getType())){
+            return;
+        }
+
+        if(plugin.getEquineManager().getEquineGroomManager().isPlayerGrooming(event.getPlayer())) {
+
+
+            if(plugin.getEquineManager().getEquineGroomManager().getHorse(event.getPlayer()) == event.getRightClicked()) {
+                event.getPlayer().openInventory(plugin.getHorseMenuManager().getGroomMenu().menu(event.getPlayer(), (AbstractHorse) event.getRightClicked()));
+
+            } else {
+                plugin.getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
+            }
+
+            plugin.getEquineManager().getEquineGroomManager().resetGroom(event.getPlayer());
+            event.setCancelled(true);
+            return;
+        }
+
+        plugin.getEquineManager().getEquineGroomManager().resetGroom(event.getPlayer());
+        plugin.getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onHorseInventoryOpen(InventoryOpenEvent event) {
+        if(!(event.getInventory() instanceof HorseInventory)) {
+            return;
+        }
+
+        event.setCancelled(true);
+        plugin.getHorseMenuManager().getHorseMenu().open((Player) event.getPlayer(), (AbstractHorse) event.getInventory().getHolder());
+    }
+}

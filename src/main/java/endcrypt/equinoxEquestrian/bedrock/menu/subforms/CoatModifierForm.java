@@ -1,9 +1,8 @@
 package endcrypt.equinoxEquestrian.bedrock.menu.subforms;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.enums.CoatColor;
-import endcrypt.equinoxEquestrian.horse.enums.CoatModifier;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
+import endcrypt.equinoxEquestrian.equine.CoatModifier;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
 

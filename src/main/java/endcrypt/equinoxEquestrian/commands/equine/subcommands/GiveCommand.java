@@ -2,8 +2,8 @@ package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineUtils;
-import endcrypt.equinoxEquestrian.horse.enums.Item;
+import endcrypt.equinoxEquestrian.equine.EquineUtils;
+import endcrypt.equinoxEquestrian.equine.items.Item;
 import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;

@@ -39,12 +39,12 @@ public class Placeholders extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.equalsIgnoreCase("selected_horse")) {
-            AbstractHorse horse = plugin.getPlayerManager().getPlayerData((Player) player).getSelectedHorse();
+            AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse();
             if (horse == null) {
                 return "None"; //
             }
 
-            return plugin.getPlayerManager().getPlayerData((Player) player).getSelectedHorse().getName(); //
+            return plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse().getName(); //
         }
 
         return null; //

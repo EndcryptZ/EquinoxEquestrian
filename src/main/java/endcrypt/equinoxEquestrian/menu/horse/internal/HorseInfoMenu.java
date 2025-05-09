@@ -4,8 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.EquineUtils;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
+import endcrypt.equinoxEquestrian.equine.EquineUtils;
 import endcrypt.equinoxEquestrian.utils.HeadUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
@@ -170,6 +170,6 @@ public class HorseInfoMenu {
                         .name("&c&l&oBack")
                         .lore("&7Click to open your horse list menu")
                         .build()
-        ).withListener(event -> plugin.getHorseMenu().getHorseListMenu().open(player, listOrganizeType));
+        ).withListener(event -> plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType));
     }
 }

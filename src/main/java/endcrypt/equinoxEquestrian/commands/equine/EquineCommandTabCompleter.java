@@ -1,6 +1,6 @@
 package endcrypt.equinoxEquestrian.commands.equine;
 
-import endcrypt.equinoxEquestrian.horse.enums.Item;
+import endcrypt.equinoxEquestrian.equine.items.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

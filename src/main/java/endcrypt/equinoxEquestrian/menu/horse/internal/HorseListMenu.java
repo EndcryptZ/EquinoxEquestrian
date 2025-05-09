@@ -4,9 +4,9 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.EquineUtils;
-import endcrypt.equinoxEquestrian.horse.enums.Gender;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
+import endcrypt.equinoxEquestrian.equine.EquineUtils;
+import endcrypt.equinoxEquestrian.equine.Gender;
 import endcrypt.equinoxEquestrian.utils.HeadUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -109,7 +109,7 @@ public class    HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
-                    plugin.getHorseMenu().getListOrganizerMenu().open(player, listOrganizeType);
+                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player, listOrganizeType);
 
 
                 });
@@ -130,7 +130,7 @@ public class    HorseListMenu {
     }
 
     private SGButton horseButton(Player player, AbstractHorse horse) {
-        boolean isSelected = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse() == horse;
+        boolean isSelected = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse() == horse;
         String displayName = "&f" + horse.getName() + (isSelected ? " &a(Selected)" : "");
         List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
         Random random = new Random();
@@ -146,7 +146,7 @@ public class    HorseListMenu {
 
 
                 .withListener((InventoryClickEvent event) -> {
-                    plugin.getHorseMenu().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
+                    plugin.getHorseMenuManager().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
                 });
     }
 }

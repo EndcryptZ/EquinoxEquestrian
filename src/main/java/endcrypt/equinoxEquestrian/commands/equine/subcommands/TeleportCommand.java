@@ -3,7 +3,6 @@ package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
@@ -25,7 +24,7 @@ public class TeleportCommand {
         }
 
         if (args.length < 2 || !(args[1].equalsIgnoreCase("stall") || args[1].equalsIgnoreCase("pasture"))) {
-            AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+            AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
             if (horse == null) {
                 player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
                         Placeholder.parsed("prefix", plugin.getPrefix())));
@@ -37,6 +36,6 @@ public class TeleportCommand {
             return;
         }
 
-        plugin.getEquineHandler().getEquineHome().teleportHome(player, args[1]);
+        plugin.getEquineManager().getEquineHome().teleportHome(player, args[1]);
     }
 }

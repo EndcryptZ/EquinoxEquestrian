@@ -21,12 +21,12 @@ public class InfoCommand {
             return;
         }
 
-        AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
         if(horse == null) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou have not selected a horse!"));
             return;
         }
 
-        plugin.getHorseMenu().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
+        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
     }
 }

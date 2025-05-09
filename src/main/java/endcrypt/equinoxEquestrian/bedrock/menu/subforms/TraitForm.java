@@ -1,14 +1,12 @@
 package endcrypt.equinoxEquestrian.bedrock.menu.subforms;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.enums.Discipline;
-import endcrypt.equinoxEquestrian.horse.enums.Trait;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
+import endcrypt.equinoxEquestrian.equine.Trait;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class TraitForm {

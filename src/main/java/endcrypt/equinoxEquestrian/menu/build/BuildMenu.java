@@ -4,21 +4,14 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.EquineHorseBuilder;
-import endcrypt.equinoxEquestrian.horse.enums.*;
-import endcrypt.equinoxEquestrian.menu.build.select.*;
+import endcrypt.equinoxEquestrian.equine.*;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -26,32 +19,10 @@ import java.util.*;
 
 public class BuildMenu implements Listener {
 
-
-    private final DisciplineSelectMenu disciplineSelectMenu;
-    private final BreedSelectMenu breedSelectMenu;
-    private final CoatColorSelectMenu coatColorSelectMenu;
-    private final CoatModifierSelectMenu coatModifierSelectMenu;
-    private final GenderSelectMenu genderSelectMenu;
-    private  final TraitSelectMenu traitSelectMenu;
-
-    private final Map<Player, EquineHorse> playerEquineHorseInput = new HashMap<>();
-    private final Map<Player, EquineHorse> playerEquineSubMenuInput = new HashMap<>();
-    private final Map<Player, Double> playerCost = new HashMap<>();
-
-
-
     private final EquinoxEquestrian plugin;
     public BuildMenu(EquinoxEquestrian plugin) {
         this.plugin = plugin;
 
-        disciplineSelectMenu = new DisciplineSelectMenu(plugin);
-        breedSelectMenu = new BreedSelectMenu(plugin);
-        coatColorSelectMenu = new CoatColorSelectMenu(plugin);
-        coatModifierSelectMenu = new CoatModifierSelectMenu(plugin);
-        genderSelectMenu = new GenderSelectMenu(plugin);
-        traitSelectMenu = new TraitSelectMenu(plugin);
-
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     public void openDefault(Player player){
@@ -156,7 +127,7 @@ public class BuildMenu implements Listener {
                     Player player = (Player) event.getWhoClicked();
 
 
-                    playerEquineHorseInput.put(player, equineHorse);
+                    plugin.getBuildMenuManager().getPlayerEquineHorseInput().put(player, equineHorse);
 
                     player.closeInventory();
 
@@ -182,8 +153,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(disciplineSelectMenu.disciplineMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getDisciplineSelectMenu().disciplineMenu(player, equineHorse));
 
                 });
     }
@@ -201,8 +172,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(breedSelectMenu.breedMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getBreedSelectMenu().breedMenu(player, equineHorse));
 
                 });
     }
@@ -220,8 +191,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(coatColorSelectMenu.coatColorMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getCoatColorSelectMenu().coatColorMenu(player, equineHorse));
 
                 });
     }
@@ -239,8 +210,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(coatModifierSelectMenu.coatModifierMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getCoatModifierSelectMenu().coatModifierMenu(player, equineHorse));
 
                 });
     }
@@ -258,8 +229,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(genderSelectMenu.genderMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getGenderSelectMenu().genderMenu(player, equineHorse));
 
                 });
     }
@@ -402,8 +373,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    playerEquineSubMenuInput.put(player, equineHorse);
-                    player.openInventory(traitSelectMenu.traitMenu(player, equineHorse));
+                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getBuildMenuManager().getTraitSelectMenu().traitMenu(player, equineHorse));
 
                 });
     }
@@ -431,26 +402,26 @@ public class BuildMenu implements Listener {
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "Horse details are incomplete!", null, loreMessage);
                         return;
                     }
-                    if(plugin.getPlayerManager().getPlayerData(player).getTokens() < 1) {
-                        if (plugin.getEcon().getBalance(player) < playerCost.get(player)) {
+                    if(plugin.getPlayerDataManager().getPlayerData(player).getTokens() < 1) {
+                        if (plugin.getEcon().getBalance(player) < plugin.getBuildMenuManager().getPlayerCost().get(player)) {
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
                             List<String> loreMessage = new ArrayList<>();
                             loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
-                            loreMessage.add("§eCost: §a$§f" + playerCost.get(player));
+                            loreMessage.add("§eCost: §a$§f" + plugin.getBuildMenuManager().getPlayerCost().get(player));
 
                             ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
                             return;
                         }
-                        plugin.getEcon().withdrawPlayer(player, playerCost.get(player));
+                        plugin.getEcon().withdrawPlayer(player, plugin.getBuildMenuManager().getPlayerCost().get(player));
                     } else {
-                        plugin.getPlayerManager().getPlayerData(player).setTokens(plugin.getPlayerManager().getPlayerData(player).getTokens() - 1);
+                        plugin.getPlayerDataManager().getPlayerData(player).setTokens(plugin.getPlayerDataManager().getPlayerData(player).getTokens() - 1);
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7You used a token!"));
                     }
 
                     EquineHorseBuilder horseBuilder = new EquineHorseBuilder(plugin);
                     player.closeInventory();
-                    playerEquineHorseInput.remove(player);
-                    playerCost.remove(player);
+                    plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(player);
+                    plugin.getBuildMenuManager().getPlayerCost().remove(player);
                     horseBuilder.spawnHorse(player, equineHorse);
                 });
     }
@@ -477,7 +448,7 @@ public class BuildMenu implements Listener {
         int traitsPrice = equineHorse.getTraits()[0].getPrice() + equineHorse.getTraits()[1].getPrice() + equineHorse.getTraits()[2].getPrice();
 
         double price = namePrice + disciplinePrice + coatColorPrice + coatStylePrice + genderPrice + agePrice + heightPrice + traitsPrice;
-        playerCost.put(player, price);
+        plugin.getBuildMenuManager().getPlayerCost().put(player, price);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
@@ -485,75 +456,6 @@ public class BuildMenu implements Listener {
                         .lore("&a$&f" + price)
                         .build()
         );
-    }
-
-
-    // Events
-    @EventHandler
-    public void onPlayerChat(PlayerChatEvent event) {
-        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
-            return;
-        }
-
-        if(event.getMessage().equalsIgnoreCase("cancel")) {
-            openWithParameters(event.getPlayer(),
-                    playerEquineHorseInput.get(event.getPlayer())
-            );
-            playerEquineHorseInput.remove(event.getPlayer());
-            event.setCancelled(true);
-            return;
-        }
-
-        if(event.getMessage().length() < 2) {
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cName too short! Please keep it above 1 character."));
-            event.setCancelled(true);
-            return;
-        }
-
-        if(event.getMessage().length() > 16) {
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cName too long! Please keep it under 16 characters."));
-            event.setCancelled(true);
-            return;
-        }
-
-        playerEquineHorseInput.get(event.getPlayer()).setName(event.getMessage());
-        openWithParameters(event.getPlayer(),
-                playerEquineHorseInput.get(event.getPlayer())
-        );
-        playerEquineHorseInput.remove(event.getPlayer());
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
-            return;
-        }
-        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cCommands are disabled during Horse Creation!"));
-        event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
-        if(!playerEquineHorseInput.containsKey(event.getPlayer())) {
-            return;
-        }
-
-        playerEquineHorseInput.remove(event.getPlayer());
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getInventory().getHolder() instanceof SGMenu) {
-            SGMenu menu = (SGMenu) event.getInventory().getHolder();
-            if (menu.getName().contains("Select")) { // assuming your sub-menus have "Select" in their title
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    Player player = (Player) event.getPlayer();
-                    openWithParameters(player, playerEquineSubMenuInput.get(event.getPlayer()));
-                    playerEquineSubMenuInput.remove(event.getPlayer());
-                }, 1L);
-            }
-        }
     }
 
 }

@@ -22,7 +22,7 @@ public class TokensCommand {
                 return;
             }
 
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&aYour tokens: &6" + plugin.getPlayerManager().getPlayerData(player).getTokens()));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&aYour tokens: &6" + plugin.getPlayerDataManager().getPlayerData(player).getTokens()));
         }
 
         if(args.length == 2) {
@@ -31,7 +31,7 @@ public class TokensCommand {
                 sender.sendMessage(ChatColor.RED + "Player not found.");
                 return;
             }
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&a" + target.getName() + "'s tokens: &6" + plugin.getPlayerManager().getPlayerData(target).getTokens()));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&a" + target.getName() + "'s tokens: &6" + plugin.getPlayerDataManager().getPlayerData(target).getTokens()));
         }
     }
 }

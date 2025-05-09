@@ -22,7 +22,7 @@ public class TpHereCommand {
         }
 
 
-        AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
 
         if (horse == null) {
             player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",

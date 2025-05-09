@@ -4,8 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineGroom;
-import endcrypt.equinoxEquestrian.horse.enums.Item;
+import endcrypt.equinoxEquestrian.equine.groom.EquineGroomManager;
+import endcrypt.equinoxEquestrian.equine.items.Item;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
@@ -49,7 +49,7 @@ public class GroomMenu {
                             .build()
             )
                     .withListener((InventoryClickEvent event) -> {
-                        EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                        EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                         boolean success = groom.initializeGroom(player, abstractHorse, Item.HARD_BRUSH);
 
                         if (!success) {
@@ -73,7 +73,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.SOFT_BRUSH);
 
                     if (!success) {
@@ -97,7 +97,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.HOOF_PICK);
 
                     if (!success) {
@@ -121,7 +121,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.FLY_SPRAY);
 
                     if (!success) {
@@ -145,7 +145,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.WASH_HORSE);
 
                     if (!success) {
@@ -169,7 +169,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.CONDITIONER);
 
                     if (!success) {
@@ -193,7 +193,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.SHAMPOO);
 
                     if (!success) {
@@ -217,7 +217,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.HOOF_OIL);
 
                     if (!success) {
@@ -241,7 +241,7 @@ public class GroomMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    EquineGroom groom = plugin.getEquineHandler().getEquineGroom();
+                    EquineGroomManager groom = plugin.getEquineManager().getEquineGroomManager();
                     boolean success = groom.initializeGroom(player, abstractHorse, Item.SUN_CREAM);
 
                     if (!success) {

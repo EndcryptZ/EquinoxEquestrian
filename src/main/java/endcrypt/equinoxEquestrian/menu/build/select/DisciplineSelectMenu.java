@@ -4,15 +4,12 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.enums.*;
-import org.bukkit.Bukkit;
+import endcrypt.equinoxEquestrian.equine.Discipline;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -55,7 +52,7 @@ public class DisciplineSelectMenu implements Listener {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setDiscipline(discipline);
-                    plugin.getBuildMenu().openWithParameters(player, equineHorse);
+                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 

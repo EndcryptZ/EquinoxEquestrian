@@ -2,10 +2,8 @@ package endcrypt.equinoxEquestrian.bedrock.menu;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.bedrock.menu.subforms.*;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.EquineHorseBuilder;
-import endcrypt.equinoxEquestrian.horse.enums.*;
-import endcrypt.equinoxEquestrian.player.PlayerData;
+import endcrypt.equinoxEquestrian.equine.*;
+import endcrypt.equinoxEquestrian.player.data.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
@@ -95,7 +93,7 @@ public class BedrockBuildForm {
                         "\n§6Trait 1: §f" + equineHorse.getTraits()[0].getTraitName() +
                         "\n§6Trait 2: §f" + equineHorse.getTraits()[1].getTraitName() +
                         "\n§6Trait 3: §f" + equineHorse.getTraits()[2].getTraitName() +
-                        "\n\n§6Your Tokens: §e" + plugin.getPlayerManager().getPlayerData(player).getTokens() +
+                        "\n\n§6Your Tokens: §e" + plugin.getPlayerDataManager().getPlayerData(player).getTokens() +
                         "\n§6Your Balance: §a$" + plugin.getEcon().getBalance(player) +
                         "\n§eCost: §a$" + calculateCost(equineHorse))
                 .dropdown("Select to Edit", "Name", "Discipline", "Breed", "Coat Color", "Coat Modifier", "Gender", "Age", "Height", "Trait 1", "Trait 2", "Trait 3")
@@ -123,7 +121,7 @@ public class BedrockBuildForm {
             double price = calculateCost(equineHorse);
 
             double balance = plugin.getEcon().getBalance(player);
-            PlayerData data = plugin.getPlayerManager().getPlayerData(player);
+            PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
 
             if (data.getTokens() < 1) {
                 if (balance < price) {

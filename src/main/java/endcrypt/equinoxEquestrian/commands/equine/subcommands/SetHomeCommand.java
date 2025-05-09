@@ -2,7 +2,6 @@ package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.utils.ColorUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,7 +25,7 @@ public class SetHomeCommand {
             return;
         }
 
-        plugin.getEquineHandler().getEquineHome().setHome(player, args[1]);
+        plugin.getEquineManager().getEquineHome().setHome(player, args[1]);
 
         // Add your logic to set the home here
     }

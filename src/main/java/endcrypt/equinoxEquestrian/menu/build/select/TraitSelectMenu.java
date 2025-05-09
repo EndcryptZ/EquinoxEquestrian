@@ -4,8 +4,8 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.horse.EquineHorse;
-import endcrypt.equinoxEquestrian.horse.enums.*;
+import endcrypt.equinoxEquestrian.equine.EquineHorse;
+import endcrypt.equinoxEquestrian.equine.Trait;
 import endcrypt.equinoxEquestrian.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -149,7 +149,7 @@ public class TraitSelectMenu {
                     if (playerTraits != null && playerTraits.length == 3) {
                         // If the player has 3 traits, proceed with opening the menu
                         equineHorse.setTraits(playerTraits);
-                        plugin.getBuildMenu().openWithParameters(player, equineHorse);
+                        plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                     } else {
                         // If the player doesn't have 3 traits, play the BLOCK_ANVIL_LAND sound and cancel the event
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);

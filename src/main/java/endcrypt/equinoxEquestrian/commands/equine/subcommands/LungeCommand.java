@@ -2,7 +2,6 @@ package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.utils.ColorUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,6 +19,6 @@ public class LungeCommand {
             return;
         }
 
-        plugin.getEquineHandler().getEquineLunge().lungeHorse(player);
+        plugin.getEquineManager().getEquineLunge().lungeHorse(player);
     }
 }

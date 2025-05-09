@@ -63,7 +63,7 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.ALPHABETICAL);
+            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.ALPHABETICAL);
         });
     }
 
@@ -80,7 +80,7 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.AGE);
+            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE);
         });
     }
 
@@ -113,7 +113,7 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.GENDER);
+            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.GENDER);
         });
     }
 

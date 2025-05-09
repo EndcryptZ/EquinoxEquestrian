@@ -20,7 +20,7 @@ public class ListCommand {
             return;
         }
 
-        plugin.getHorseMenu().getHorseListMenu().open(player, ListOrganizeType.AGE);
+        plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE);
     }
 
 
