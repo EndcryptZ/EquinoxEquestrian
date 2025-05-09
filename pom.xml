@@ -50,10 +50,15 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <minimizeJar>true</minimizeJar>
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>endcrypt.equinoxEquestrian.nbtapi</shadedPattern>
+                            <shadedPattern>endcrypt.equinox.shaded.nbtapi</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>dev.jorel.commandapi</pattern>
+                            <shadedPattern>endcrypt.equinox.shaded.commandapi</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -76,7 +81,6 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
-
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
@@ -147,6 +151,11 @@
             <artifactId>api</artifactId>
             <version>2.2.4-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.jorel</groupId>
+            <artifactId>commandapi-bukkit-shade-mojang-mapped</artifactId>
+            <version>10.0.0</version>
         </dependency>
     </dependencies>
 </project>
