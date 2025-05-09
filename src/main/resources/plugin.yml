@@ -7,9 +7,12 @@ softdepend:
   - PlaceholderAPI
 commands:
   eq:
-    description: Main Command of EquinoxEquestrian Plugin
+    description: Equine Command of EquinoxEquestrian Plugin
     usage: /eq
     aliases: [equine]
+  eqadmin:
+    description: Admin Command of EquinoxEquestrian Plugin
+    aliases: [equineadmin]
   horse:
     description: Horse Command of EquinoxEquestrian Plugin
     usage: /horse
