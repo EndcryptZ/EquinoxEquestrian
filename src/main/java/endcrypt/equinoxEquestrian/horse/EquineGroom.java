@@ -4,7 +4,9 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.api.events.EquinePlayerSelectHorseEvent;
 import endcrypt.equinoxEquestrian.horse.enums.Item;
-import org.bukkit.ChatColor;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.AbstractHorse;
@@ -57,8 +59,13 @@ public class EquineGroom implements Listener {
         groomMap.put(player, new EquineGroomData(item, horse, 0));
 
         player.closeInventory();
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Left-Click &f&o" + horse.getName() + " &7to use item(s)."));
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Right-Click &f&o" + horse.getName() + " &7to cancel."));
+        player.sendMessage(ColorUtils.color("<prefix><gray>Left-Click <white><italic><horse> <gray>to use item(s).",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", horse.getName())));
+
+        player.sendMessage(ColorUtils.color("<prefix><gray>Right-Click <white><italic><horse> <gray>to cancel.",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", horse.getName())));
         return true;
     }
 
@@ -90,20 +97,28 @@ public class EquineGroom implements Listener {
         event.setCancelled(true);
 
         if(heldItem.getType() == Material.AIR) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cThat is not " + item.getName() + "!"));
+            player.sendMessage(ColorUtils.color("<prefix><red>That is not <item>!",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("item", item.getName())
+                    ));
             event.setCancelled(true);
             return;
         }
 
 
         if (playerHorse != horse) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cYou are not grooming this horse!"));
+            player.sendMessage(ColorUtils.color("<prefix><red>You are not grooming this horse!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())
+            ));
             return;
         }
 
         String isEqualItem = NBT.get(heldItem, nbt -> (String) nbt.getString(item.getNbt()));
         if(!isEqualItem.equalsIgnoreCase("true")) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cThat is not " + item.getName() + "!"));
+            player.sendMessage(ColorUtils.color("<prefix><red>That is not <item>!",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("item", item.getName())
+            ));
             return;
         }
 
@@ -111,7 +126,11 @@ public class EquineGroom implements Listener {
         groomMap.get(player).setGroomTimes(groomMap.get(player).getGroomTimes() + 1);
         damageGroomItem(player, heldItem);
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7You have used &f" + item.getName() + " &7on &f&o" + horse.getName() + " &7(&f" + groomMap.get(player).getGroomTimes() + "/2&7)."));
+        player.sendMessage(ColorUtils.color("<prefix><gray>You have used <white><item> <gray>on <white><italic><horse> <gray>(<white><times>/2<gray>).",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("item", item.getName()),
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("times", String.valueOf(groomMap.get(player).getGroomTimes()))));
 
         if(groomMap.get(player).getGroomTimes() == 2) {
             player.openInventory(plugin.getHorseMenu().getGroomMenu().menu(player, playerHorse));
@@ -140,15 +159,16 @@ public class EquineGroom implements Listener {
         // Update lore
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+            List<Component> lore = meta.hasLore() ? meta.lore() : new ArrayList<>();
 
             // Ensure at least 2 lines exist
             while (lore.size() < 2) {
-                lore.add("");
+                lore.add(ColorUtils.color(""));
             }
 
-            lore.set(1, "§fDurability: " + (durabilityHealth - 1));
-            meta.setLore(lore);
+            lore.set(1, ColorUtils.color("<gray>Durability: <white><item_durability>/2<gray>.",
+                    Placeholder.parsed("item_durability", String.valueOf(durabilityHealth - 1))));
+            meta.lore(lore);
             item.setItemMeta(meta);
         }
     }

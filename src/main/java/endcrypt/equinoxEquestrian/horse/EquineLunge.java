@@ -65,14 +65,12 @@ public class EquineLunge {
             return;
         }
 
-        LivingEntity leashedEntity = (LivingEntity) leashedList.get(0);
+        LivingEntity leashedEntity = (LivingEntity) leashedList.getFirst();
 
-        if (!(leashedEntity instanceof AbstractHorse)) {
+        if (!(leashedEntity instanceof AbstractHorse horse)) {
             player.sendMessage("§cYou can only lunge a horse! The entity you're leashed to is a " + leashedEntity.getType() + ".");
             return;
         }
-
-        AbstractHorse horse = (AbstractHorse) leashedEntity;
 
         if (!(horse.getOwner() == player)) {
             player.sendMessage("§cYou can only lunge your own tamed horse!");

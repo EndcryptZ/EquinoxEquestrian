@@ -62,7 +62,7 @@ public class EquineUtils {
         if (horse == null) return null;
 
         return NBT.getPersistentData(horse, nbt -> {
-            String name = horse.getCustomName();
+            String name = horse.getName();
             int age = nbt.getInteger("EQUINE_AGE");
             double heightHands = nbt.getDouble("EQUINE_HEIGHT");
 

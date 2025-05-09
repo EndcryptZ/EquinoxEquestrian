@@ -4,10 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.samjakob.spigui.SpiGUI;
 import endcrypt.equinoxEquestrian.bedrock.menu.BedrockBuildForm;
-import endcrypt.equinoxEquestrian.commands.HorseCommand;
-import endcrypt.equinoxEquestrian.commands.HorseCommandTabCompeter;
-import endcrypt.equinoxEquestrian.commands.MainCommand;
-import endcrypt.equinoxEquestrian.commands.MainCommandTabCompleter;
+import endcrypt.equinoxEquestrian.commands.CommandManager;
 import endcrypt.equinoxEquestrian.database.DatabaseManager;
 import endcrypt.equinoxEquestrian.hooks.placeholderapi.Placeholders;
 import endcrypt.equinoxEquestrian.horse.EquineHandler;
@@ -34,6 +31,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private ProtocolManager protocolManager;
     private PlayerManager playerManager;
     private DatabaseManager databaseManager;
+    private CommandManager commandManager;
     private FloodgateApi floodgateApi;
 
 
@@ -41,9 +39,9 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        initializeInstances();
-        setupEconomy();
-        registerCommands();
+        this.initializeInstances();
+        this.setupEconomy();
+        this.commandManager.registerCommands();
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
             new Placeholders(this).register(); //
@@ -89,17 +87,11 @@ public final class EquinoxEquestrian extends JavaPlugin {
         horseMenu = new HorseMenu(this);
         equineHandler = new EquineHandler(this);
         playerManager = new PlayerManager(this);
+        commandManager = new CommandManager(this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             playerManager.addPlayer(player);
         }
-    }
-
-    private void registerCommands() {
-        getServer().getPluginCommand("eq").setExecutor(new MainCommand(this));
-        getServer().getPluginCommand("eq").setTabCompleter(new MainCommandTabCompleter());
-        getServer().getPluginCommand("horse").setExecutor(new HorseCommand(this));
-        getServer().getPluginCommand("horse").setTabCompleter(new HorseCommandTabCompeter());
     }
 
     public BuildMenu getBuildMenu() {

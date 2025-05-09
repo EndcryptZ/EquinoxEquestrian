@@ -4,8 +4,9 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.horse.EquineUtils;
 import endcrypt.equinoxEquestrian.horse.enums.Item;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,13 +23,13 @@ public class GiveCommand {
 
     public void execute(CommandSender sender, String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: /eq give <player> <item> <amount>");
+            sender.sendMessage(ColorUtils.color("<red>Usage: /eq give <player> <item> <amount>"));
             return;
         }
 
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null) {
-            sender.sendMessage(ChatColor.RED + "Player not found.");
+            sender.sendMessage(ColorUtils.color("<red>Player not found."));
             return;
         }
 
@@ -36,7 +37,7 @@ public class GiveCommand {
         try {
             item = Item.valueOf(args[2].toUpperCase());
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid item name.");
+            sender.sendMessage(ColorUtils.color("<red>Item not found."));
             return;
         }
 
@@ -45,7 +46,7 @@ public class GiveCommand {
             try {
                 amount = Integer.parseInt(args[3]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + "Amount must be a number.");
+                sender.sendMessage(ColorUtils.color("<red>Amount must be a number."));
                 return;
             }
         }
@@ -59,13 +60,19 @@ public class GiveCommand {
                 });
                 target.getInventory().addItem(itemStack);
             }
-            sender.sendMessage(ChatColor.GREEN + "Gave " + amount + "x " + item.name() + " to " + target.getName() + ".");
+            sender.sendMessage(ColorUtils.color("<green>Gave <amount>x <item> to <player>.",
+                    Placeholder.parsed("amount", String.valueOf(amount)),
+                    Placeholder.parsed("item", item.name()),
+                    Placeholder.parsed("player", target.getName())));
             return;
         }
 
         itemStack.setAmount(amount);
         target.getInventory().addItem(itemStack);
-        sender.sendMessage(ChatColor.GREEN + "Gave " + amount + "x " + item.name() + " to " + target.getName() + ".");
+        sender.sendMessage(ColorUtils.color("<green>Gave <amount>x <item> to <player>.",
+                Placeholder.parsed("amount", String.valueOf(amount)),
+                Placeholder.parsed("item", item.name()),
+                Placeholder.parsed("player", target.getName())));
     }
 
 }

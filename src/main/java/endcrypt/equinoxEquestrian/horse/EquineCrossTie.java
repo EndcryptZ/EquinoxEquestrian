@@ -4,12 +4,12 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.api.events.EquineCrossTieLeashEvent;
 import endcrypt.equinoxEquestrian.api.events.EquineCrossTieLeashRemovedEvent;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -58,7 +58,7 @@ public class EquineCrossTie implements Listener {
         }
 
         if (!EquineUtils.isLivingEquineHorse(horse)) {
-            Bukkit.getServer().broadcastMessage(ChatColor.RED + "You're trying to cross-tie a Vanilla Horse. Please try it with an Equine Horse");
+            player.sendMessage(ColorUtils.color("<red>You're trying to cross-tie a Vanilla Horse. Please try it with an Equine Horse"));
             return;
         }
 

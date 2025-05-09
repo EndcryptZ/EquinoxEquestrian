@@ -2,7 +2,8 @@ package endcrypt.equinoxEquestrian.horse;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.api.events.EquinePlayerSelectHorseEvent;
-import org.bukkit.ChatColor;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,7 +35,9 @@ public class EquineSelector implements Listener {
             return;
         }
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&aYou have selected " + horse.getName() + "!"));
+        player.sendMessage(ColorUtils.color("<prefix><green>You have selected <horse>!",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", horse.getName())));
         plugin.getPlayerManager().getPlayerData(player).setSelectedHorse(horse);
 
 

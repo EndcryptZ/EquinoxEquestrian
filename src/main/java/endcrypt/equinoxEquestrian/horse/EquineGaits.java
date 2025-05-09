@@ -2,8 +2,8 @@ package endcrypt.equinoxEquestrian.horse;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.horse.enums.Gaits;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -63,14 +63,14 @@ public class EquineGaits implements Listener {
                 playerCurrentProgress.put(player, currentProgress);
 
                 // Send the updated action bar message based on the current progress
-                String progressBar = getProgressBar(currentProgress, getGaitColor(playerCurrentGait), getGaitLabel(playerCurrentGait));
+                Component progressBar = ColorUtils.color(getProgressBar(currentProgress, getGaitColor(playerCurrentGait), getGaitLabel(playerCurrentGait)));
                 sendActionBarMessage(player, progressBar);
             }
         }, 20L, 2L); // Runs every 10 ticks (0.5 seconds)
     }
 
-    private void sendActionBarMessage(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(message));
+    private void sendActionBarMessage(Player player, Component message) {
+        player.sendActionBar(message);
     }
 
 
@@ -116,34 +116,28 @@ public class EquineGaits implements Listener {
 
     // Example method to determine the target progress based on the current gait
     private int getTargetProgress(Gaits gait) {
-        switch (gait) {
-            case WALK:
-                return 4; // For walk, set the target progress as 10
-            case TROT:
-                return 10; // For trot, set the target progress as 20
-            case CANTER:
-                return 18; // For canter, set the target progress as 30
-            case GALLOP:
-                return 30; // For gallop, set the target progress as 40
-            default:
-                
-                return 0;  // Default is 0 (no movement)
-        }
+        return switch (gait) {
+            case WALK -> 4; // For walk, set the target progress as 10
+            case TROT -> 10; // For trot, set the target progress as 20
+            case CANTER -> 18; // For canter, set the target progress as 30
+            case GALLOP -> 30; // For gallop, set the target progress as 40
+            // Default is 0 (no movement)
+        };
     }
 
     // Example method to get the color associated with the gait
     private String getGaitColor(Gaits gait) {
         switch (gait) {
             case WALK:
-                return "§a"; // Green for walk
+                return "<green>"; // Green for walk
             case TROT:
-                return "§e"; // Yellow for trot
+                return "<yellow>"; // Yellow for trot
             case CANTER:
-                return "§6"; // Orange for canter
+                return "<orange>"; // Orange for canter
             case GALLOP:
-                return "§4"; // Red for gallop
+                return "<dark_red>"; // Red for gallop
             default:
-                return "§7"; // Gray for default
+                return "<gray>"; // Gray for default
         }
     }
 
@@ -238,7 +232,7 @@ public class EquineGaits implements Listener {
         AbstractHorse equineHorse = (AbstractHorse) event.getVehicle();
         playerCurrentGaits.remove(player);
         ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(EquineUtils.getBaseSpeed(equineHorse));
-        sendActionBarMessage(player, "");
+        sendActionBarMessage(player, ColorUtils.color(""));
 
     }
 

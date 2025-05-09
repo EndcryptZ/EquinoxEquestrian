@@ -3,6 +3,7 @@ package endcrypt.equinoxEquestrian.horse;
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.horse.enums.*;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -31,7 +32,7 @@ public class EquineHorseBuilder {
         Horse horse = (Horse) world.spawnEntity(location, EntityType.HORSE);
 
         // Set the horse's custom name
-        horse.setCustomName(equineHorse.getName());
+        horse.customName(ColorUtils.color(equineHorse.getName()));
         horse.setCustomNameVisible(true);
 
         // Optional: Set horse as tamed

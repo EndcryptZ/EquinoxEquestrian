@@ -2,20 +2,14 @@ package endcrypt.equinoxEquestrian.horse;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import org.bukkit.ChatColor;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class EquineHome {
 
-    private EquinoxEquestrian plugin;
+    private final EquinoxEquestrian plugin;
     public EquineHome(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
@@ -24,7 +18,7 @@ public class EquineHome {
         AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
 
         if(horse == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have not selected a horse!"));
+            player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
             return;
         }
 
@@ -60,11 +54,11 @@ public class EquineHome {
         AbstractHorse horse = plugin.getPlayerManager().getPlayerData(player).getSelectedHorse();
 
         if (horse == null) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have not selected a horse!"));
+            player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
             return;
         }
 
-        Location loc = null;
+        Location loc;
 
         if (type.equalsIgnoreCase("pasture") && NBT.getPersistentData(horse, nbt -> nbt.getString("HAS_PASTURE")).equals("true")) {
             double x = NBT.getPersistentData(horse, nbt -> nbt.getDouble("PASTURE_X"));
@@ -83,14 +77,12 @@ public class EquineHome {
             loc = new Location(plugin.getServer().getWorld(world), x, y, z);
             player.sendMessage("You and your horse have been teleported to its stall!");
         } else {
-            player.sendMessage(ChatColor.RED + "No saved " + type.toLowerCase() + " location for your selected horse!");
+            player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
             return;
         }
 
-        if (loc != null) {
-            player.teleport(loc);
-            horse.teleport(loc);
-        }
+        player.teleport(loc);
+        horse.teleport(loc);
     }
 
 

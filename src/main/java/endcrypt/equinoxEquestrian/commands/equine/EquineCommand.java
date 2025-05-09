@@ -2,6 +2,7 @@ package endcrypt.equinoxEquestrian.commands.equine;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.commands.equine.subcommands.*;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -50,7 +51,7 @@ public class EquineCommand implements CommandExecutor {
                     tpHereCommand.execute(commandSender, args);
                     break;
                 default:
-                    commandSender.sendMessage("Unknown command.");
+                    commandSender.sendMessage("Unknown Command.");
             }
         }
         return true;

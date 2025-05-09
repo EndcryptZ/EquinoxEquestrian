@@ -1,6 +1,7 @@
 package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
+import endcrypt.equinoxEquestrian.utils.ColorUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,12 +17,12 @@ public class SetHomeCommand {
 
     public void execute(CommandSender commandSender, Command command, String[] args) {
         if (!(commandSender instanceof Player player)) {
-            commandSender.sendMessage(ChatColor.RED + "This command is only available for players!");
+            commandSender.sendMessage(ColorUtils.color("<red>This command is only available for players!"));
             return;
         }
 
         if (args.length < 2 || !(args[1].equalsIgnoreCase("stall") || args[1].equalsIgnoreCase("pasture"))) {
-            commandSender.sendMessage(ChatColor.RED + "Usage: /" + command.getLabel() + " sethome pasture/stall");
+            commandSender.sendMessage(ColorUtils.color("<red>Usage: /eq sethome <stall|pasture>"));
             return;
         }
 
