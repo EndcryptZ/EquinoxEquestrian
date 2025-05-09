@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.commands.horsesubcommands;
+package endcrypt.equinoxEquestrian.commands.horse.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import endcrypt.equinoxEquestrian.menu.horse.internal.ListOrganizeType;

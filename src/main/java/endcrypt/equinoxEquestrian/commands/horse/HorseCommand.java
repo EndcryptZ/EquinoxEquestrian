@@ -1,9 +1,9 @@
-package endcrypt.equinoxEquestrian.commands;
+package endcrypt.equinoxEquestrian.commands.horse;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.commands.horsesubcommands.InfoCommand;
-import endcrypt.equinoxEquestrian.commands.horsesubcommands.ListCommand;
-import endcrypt.equinoxEquestrian.commands.horsesubcommands.TokensCommand;
+import endcrypt.equinoxEquestrian.commands.horse.subcommands.InfoCommand;
+import endcrypt.equinoxEquestrian.commands.horse.subcommands.ListCommand;
+import endcrypt.equinoxEquestrian.commands.horse.subcommands.TokensCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.commands;
+package endcrypt.equinoxEquestrian.commands.equine;
 
 import endcrypt.equinoxEquestrian.horse.enums.Item;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MainCommandTabCompleter implements TabCompleter {
+public class EquineCommandTabCompleter implements TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {

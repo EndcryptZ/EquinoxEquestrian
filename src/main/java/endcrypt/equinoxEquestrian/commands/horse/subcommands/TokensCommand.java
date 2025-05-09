@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.commands.horsesubcommands;
+package endcrypt.equinoxEquestrian.commands.horse.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.Bukkit;

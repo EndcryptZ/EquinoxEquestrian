@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.commands.subcommands;
+package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;

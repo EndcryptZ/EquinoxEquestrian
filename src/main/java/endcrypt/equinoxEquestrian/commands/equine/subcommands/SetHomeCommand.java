@@ -1,4 +1,4 @@
-package endcrypt.equinoxEquestrian.commands.subcommands;
+package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.ChatColor;

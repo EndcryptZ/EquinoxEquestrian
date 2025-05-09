@@ -1,12 +1,12 @@
-package endcrypt.equinoxEquestrian.commands;
+package endcrypt.equinoxEquestrian.commands.equine;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
-import endcrypt.equinoxEquestrian.commands.subcommands.*;
+import endcrypt.equinoxEquestrian.commands.equine.subcommands.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class MainCommand implements CommandExecutor {
+public class EquineCommand implements CommandExecutor {
 
     private final EquinoxEquestrian plugin;
     private final MenuCommand menuCommand;
@@ -16,7 +16,7 @@ public class MainCommand implements CommandExecutor {
     private final TeleportCommand teleportCommand;
     private final TpHereCommand tpHereCommand;
 
-    public MainCommand(EquinoxEquestrian plugin) {
+    public EquineCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         this.menuCommand = new MenuCommand(plugin);
         this.lungeCommand = new LungeCommand(plugin);

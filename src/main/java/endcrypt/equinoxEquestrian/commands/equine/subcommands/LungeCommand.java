@@ -1,15 +1,15 @@
-package endcrypt.equinoxEquestrian.commands.subcommands;
+package endcrypt.equinoxEquestrian.commands.equine.subcommands;
 
 import endcrypt.equinoxEquestrian.EquinoxEquestrian;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class MenuCommand {
+public class LungeCommand {
 
     private final EquinoxEquestrian plugin;
 
-    public MenuCommand(EquinoxEquestrian plugin) {
+    public LungeCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
 
@@ -19,11 +19,6 @@ public class MenuCommand {
             return;
         }
 
-
-        if (plugin.getFloodgateApi().isFloodgatePlayer(player.getUniqueId())) {
-            plugin.getBedrockBuildForm().openDefault(player);
-            return;
-        }
-        plugin.getBuildMenu().openDefault(player);
+        plugin.getEquineHandler().getEquineLunge().lungeHorse(player);
     }
 }
