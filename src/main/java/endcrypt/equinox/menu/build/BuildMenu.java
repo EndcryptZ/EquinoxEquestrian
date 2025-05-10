@@ -6,8 +6,12 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.*;
 import endcrypt.equinox.equine.attributes.*;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.ItemUtils;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,6 +20,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
 import java.util.*;
 
 public class BuildMenu implements Listener {
@@ -29,12 +34,12 @@ public class BuildMenu implements Listener {
     public void openDefault(Player player){
 
 
-        player.openInventory(defaultMenu(player));
+        Bukkit.getScheduler().runTask(plugin, () -> player.openInventory(defaultMenu(player)));
     }
 
     public void openWithParameters(Player player, EquineHorse equineHorse) {
 
-        player.openInventory(menuWithParameters(player, equineHorse));
+        Bukkit.getScheduler().runTask(plugin, () -> player.openInventory(menuWithParameters(player, equineHorse)));
     }
 
     private Inventory createMenu(Player player, EquineHorse equineHorse) {
@@ -119,8 +124,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fName")
                         .lore(
-
-                                ChatColor.WHITE + equineHorse.getName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getName())
                         )
                         .build()
         )
@@ -132,11 +136,11 @@ public class BuildMenu implements Listener {
 
                     player.closeInventory();
 
-                    player.sendTitle("§6§lHorse Creation", "§fSee chat.", 10, 40, 10);
+                    player.showTitle(Title.title(ColorUtils.color("<gold><bold>Horse Creation"), ColorUtils.color("<white>See chat."), Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(2), Duration.ofMillis(500))));
 
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Enter the name you'd like for your horse in chat."));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7To cancel, type 'Cancel' in chat."));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7Name length: &a2&f to &a16 &fcharacters."));
+                    player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>Enter the name you'd like for your horse in chat."));
+                    player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>To cancel, type 'Cancel' in chat."));
+                    player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>Name length: <green>2<gray> to <green>16 <gray>characters."));
 
                 });
     }
@@ -147,7 +151,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fDiscipline")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getDiscipline().getDisciplineName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getDiscipline().getDisciplineName())
                         )
                         .build()
         )
@@ -166,7 +170,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fBreed")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getBreed().getName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getBreed().getName())
                         )
                         .build()
         )
@@ -185,7 +189,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fCoat Color")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getCoatColor().getCoatColorName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getCoatColor().getCoatColorName())
                         )
                         .build()
         )
@@ -204,7 +208,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fCoat Modifier")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getCoatModifier().getCoatModifierName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getCoatModifier().getCoatModifierName())
                         )
                         .build()
         )
@@ -223,7 +227,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fGender")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getGender().getGenderName()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getGender().getGenderName())
                         )
                         .build()
         )
@@ -242,7 +246,7 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fAge")
                         .lore(
-                                ChatColor.WHITE + String.valueOf(equineHorse.getAge())
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getAge())
                         )
                         .build()
         )
@@ -263,9 +267,10 @@ public class BuildMenu implements Listener {
                         age = equineHorse.getAge(); // Get updated age
 
                         // Set the new lore
-                        List<String> lore = new ArrayList<>();
-                        lore.add(ChatColor.WHITE + String.valueOf(age));
-                        itemMeta.setLore(lore);
+                        List<Component> lore = new ArrayList<>();
+                        lore.add(ColorUtils.color("<white><age>",
+                                Placeholder.parsed("age", String.valueOf(age))));
+                        itemMeta.lore(lore);
 
                         // Apply the updated meta to the item
                         event.getCurrentItem().setItemMeta(itemMeta);
@@ -273,7 +278,7 @@ public class BuildMenu implements Listener {
 
                     if (event.getClick().isRightClick()) {
                         if (age == 4) {
-                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fAge", ChatColor.RED + "The minimum age you can set is 4.", null, null);
+                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fAge", "§cThe minimum age you can set is 4.", null, null);
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
                             return;
                         }
@@ -282,9 +287,10 @@ public class BuildMenu implements Listener {
                         age = equineHorse.getAge(); // Get updated age
 
                         // Set the new lore
-                        List<String> lore = new ArrayList<>();
-                        lore.add(ChatColor.WHITE + String.valueOf(age));
-                        itemMeta.setLore(lore);
+                        List<Component> lore = new ArrayList<>();
+                        lore.add(ColorUtils.color("<white><age>",
+                                Placeholder.parsed("age", String.valueOf(age))));
+                        itemMeta.lore(lore);
 
                         // Apply the updated meta to the item
                         event.getCurrentItem().setItemMeta(itemMeta);
@@ -299,13 +305,11 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fHeight")
                         .lore(
-                                ChatColor.WHITE + equineHorse.getHeight().getHandsString()
+                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getHeight().getHandsString())
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    Player player = (Player) event.getWhoClicked();
-
                     Height height = equineHorse.getHeight();
 
                     ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
@@ -325,9 +329,10 @@ public class BuildMenu implements Listener {
 
 
                         // Set the new lore
-                        List<String> lore = new ArrayList<>();
-                        lore.add(ChatColor.WHITE + equineHorse.getHeight().getHandsString());
-                        itemMeta.setLore(lore);
+                        List<Component> lore = new ArrayList<>();
+                        lore.add(ColorUtils.color("<white><height>",
+                                Placeholder.parsed("height", height.getHandsString())));
+                        itemMeta.lore(lore);
 
                         // Apply the updated meta to the item
                         event.getCurrentItem().setItemMeta(itemMeta);
@@ -348,9 +353,10 @@ public class BuildMenu implements Listener {
                         }
 
                         // Set the new lore
-                        List<String> lore = new ArrayList<>();
-                        lore.add(ChatColor.WHITE + equineHorse.getHeight().getHandsString());
-                        itemMeta.setLore(lore);
+                        List<Component> lore = new ArrayList<>();
+                        lore.add(ColorUtils.color("<white><height>",
+                                Placeholder.parsed("height", height.getHandsString())));
+                        itemMeta.lore(lore);
 
                         // Apply the updated meta to the item
                         event.getCurrentItem().setItemMeta(itemMeta);
@@ -365,9 +371,9 @@ public class BuildMenu implements Listener {
                 new ItemBuilder(Material.PAPER)
                         .name("&fTraits")
                         .lore(
-                                ChatColor.WHITE + "(1) " + equineHorse.getTraits()[0].getTraitName(),
-                                ChatColor.WHITE + "(2) " + equineHorse.getTraits()[1].getTraitName(),
-                                ChatColor.WHITE + "(3) " + equineHorse.getTraits()[2].getTraitName()
+                                ColorUtils.toColoredLegacy("<white>(1) " + equineHorse.getTraits()[0].getTraitName()),
+                                ColorUtils.toColoredLegacy("<white>(2) " + equineHorse.getTraits()[1].getTraitName()),
+                                ColorUtils.toColoredLegacy("<white>(3) " + equineHorse.getTraits()[2].getTraitName())
                         )
                         .build()
         )
@@ -390,7 +396,7 @@ public class BuildMenu implements Listener {
 
                     List<String> missingAttributes = new ArrayList<>();
 
-                    if (equineHorse.getName() == "") missingAttributes.add("Name");
+                    if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
                     if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
                     if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
                     if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
@@ -399,8 +405,8 @@ public class BuildMenu implements Listener {
 
                     if (!missingAttributes.isEmpty()) {
                         List<String> loreMessage = new ArrayList<>();
-                        loreMessage.add(ChatColor.RED + "Missing: " + String.join(", ", missingAttributes));
-                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "Horse details are incomplete!", null, loreMessage);
+                        loreMessage.add("§Missing: " + String.join(", ", missingAttributes));
+                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", "§4Horse details are incomplete!", null, loreMessage);
                         return;
                     }
                     if(plugin.getPlayerDataManager().getPlayerData(player).getTokens() < 1) {
@@ -410,13 +416,13 @@ public class BuildMenu implements Listener {
                             loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
                             loreMessage.add("§eCost: §a$§f" + plugin.getBuildMenuManager().getPlayerCost().get(player));
 
-                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", ChatColor.RED + "You don't have enough money!", null, loreMessage);
+                            ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", "§4You don't have enough money!", null, loreMessage);
                             return;
                         }
                         plugin.getEcon().withdrawPlayer(player, plugin.getBuildMenuManager().getPlayerCost().get(player));
                     } else {
                         plugin.getPlayerDataManager().getPlayerData(player).setTokens(plugin.getPlayerDataManager().getPlayerData(player).getTokens() - 1);
-                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7You used a token!"));
+                        player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>You used a token!"));
                     }
 
                     EquineHorseBuilder horseBuilder = new EquineHorseBuilder(plugin);
@@ -432,7 +438,7 @@ public class BuildMenu implements Listener {
         return new SGButton(
                 new ItemBuilder(Material.GOLD_INGOT)
                         .name("&f[&eToken&f]")
-                        .lore("&70")
+                        .lore("&7" + plugin.getTokenManager().getTokens(player))
                         .build()
         );
     }
