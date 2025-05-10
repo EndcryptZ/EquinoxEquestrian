@@ -13,5 +13,6 @@ public class CommandManager {
     public void registerCommands() {
         new EquineCommand(plugin);
         new HorseCommand(plugin);
+        new EquineAdminCommand(plugin);
     }
 }
