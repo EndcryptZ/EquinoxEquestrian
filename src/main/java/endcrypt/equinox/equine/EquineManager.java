@@ -1,0 +1,53 @@
+package endcrypt.equinox.equine;
+
+import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.crosstie.EquineCrossTie;
+import endcrypt.equinox.equine.gaits.EquineGaits;
+import endcrypt.equinox.equine.groom.EquineGroomManager;
+import endcrypt.equinox.equine.home.EquineHome;
+import endcrypt.equinox.equine.invulnerable.EquineInvulnerable;
+import endcrypt.equinox.equine.items.EquineItems;
+import endcrypt.equinox.equine.lunge.EquineLunge;
+
+public class EquineManager {
+
+    private final EquineHorseBuilder equineHorseBuilder;
+    private final EquineGaits equineGaits;
+    private final EquineCrossTie equineCrossTie;
+    private final EquineLunge equineLunge;
+    private final EquineHome equineHome;
+    private final EquineGroomManager equineGroomManager;
+    private final EquineItems equineItems;
+    private final EquineInvulnerable equineInvulnerable;
+    private final EquineSelector equineSelector;
+    private final EquineTeleport equineTeleport;
+
+    private final EquinoxEquestrian plugin;
+    public EquineManager(EquinoxEquestrian plugin) {
+        this.plugin = plugin;
+
+        equineHorseBuilder = new EquineHorseBuilder(plugin);
+        equineGaits = new EquineGaits(plugin);
+        equineCrossTie = new EquineCrossTie(plugin);
+        equineLunge = new EquineLunge(plugin);
+        equineHome = new EquineHome(plugin);
+        equineGroomManager = new EquineGroomManager(plugin);
+        equineItems = new EquineItems(plugin);
+        equineInvulnerable = new EquineInvulnerable(plugin);
+        equineSelector = new EquineSelector(plugin);
+        equineTeleport = new EquineTeleport(plugin);
+
+    }
+
+    public EquineLunge getEquineLunge() {
+        return equineLunge;
+    }
+
+    public EquineHome getEquineHome() {
+        return equineHome;
+    }
+
+    public EquineGroomManager getEquineGroomManager() {
+        return equineGroomManager;
+    }
+}

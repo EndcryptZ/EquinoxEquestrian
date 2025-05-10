@@ -42,10 +42,15 @@
           </execution>
         </executions>
         <configuration>
+          <minimizeJar>true</minimizeJar>
           <relocations>
             <relocation>
               <pattern>de.tr7zw.changeme.nbtapi</pattern>
-              <shadedPattern>endcrypt.equinoxEquestrian.nbtapi</shadedPattern>
+              <shadedPattern>endcrypt.equinox.shaded.nbtapi</shadedPattern>
+            </relocation>
+            <relocation>
+              <pattern>dev.jorel.commandapi</pattern>
+              <shadedPattern>endcrypt.equinox.shaded.commandapi</shadedPattern>
             </relocation>
           </relocations>
         </configuration>
