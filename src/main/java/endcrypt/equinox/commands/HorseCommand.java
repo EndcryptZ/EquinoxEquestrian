@@ -1,4 +1,4 @@
-package endcrypt.equinox.commands.horse;
+package endcrypt.equinox.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.PlayerArgument;

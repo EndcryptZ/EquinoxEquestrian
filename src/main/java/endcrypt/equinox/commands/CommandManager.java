@@ -1,7 +1,6 @@
 package endcrypt.equinox.commands;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.commands.horse.HorseCommand;
 
 public class CommandManager {
 
