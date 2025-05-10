@@ -25,7 +25,9 @@ public class EquineAdminCommand {
                         .withArguments(new MultiLiteralArgument("action", "set", "give", "take"))
                         .withArguments(new PlayerArgument("player"))
                         .withArguments(new IntegerArgument("amount"))
-                        .executes(this::token));
+                        .executes(this::token))
+
+                .register();
     }
 
     private void token(CommandSender commandSender, CommandArguments args) {

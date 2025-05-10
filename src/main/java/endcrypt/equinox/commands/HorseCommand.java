@@ -31,7 +31,9 @@ public class HorseCommand {
 
                 .withSubcommand(new CommandAPICommand("tokens")
                         .withArguments(new PlayerArgument("player").setOptional(true))
-                        .executes(this::tokens));
+                        .executes(this::tokens))
+
+                .register();
     }
 
     private void info(CommandSender sender, CommandArguments args) {
