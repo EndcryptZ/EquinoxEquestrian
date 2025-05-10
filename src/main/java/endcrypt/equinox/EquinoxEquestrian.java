@@ -65,6 +65,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        CommandAPI.onDisable();
         this.unloadDatabase();
     }
 
@@ -151,7 +152,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         return spiGUI;
     }
     public String getPrefix() {
-        return "§8[§bEquinox§8] ";
+        return "<dark_gray>[<aqua>Equinox<dark_gray>] ";
     }
     public Economy getEcon() {
         return econ;
