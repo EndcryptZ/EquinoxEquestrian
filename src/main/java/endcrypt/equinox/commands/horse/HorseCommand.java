@@ -1,46 +1,69 @@
 package endcrypt.equinox.commands.horse;
 
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.PlayerArgument;
+import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.commands.horse.subcommands.InfoCommand;
-import endcrypt.equinox.commands.horse.subcommands.ListCommand;
-import endcrypt.equinox.commands.horse.subcommands.TokensCommand;
+import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Player;
 
-public class HorseCommand implements CommandExecutor {
+public class HorseCommand {
 
 
     private final EquinoxEquestrian plugin;
-    private final ListCommand listCommand;
-    private final TokensCommand tokensCommand;
-    private final InfoCommand infoCommand;
-
     public HorseCommand(EquinoxEquestrian plugin) {
         this.plugin = plugin;
-        this.listCommand = new ListCommand(plugin);
-        this.tokensCommand = new TokensCommand(plugin);
-        this.infoCommand = new InfoCommand(plugin);
+        this.registerCommands();
     }
 
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (args.length >= 1) {
-            switch (args[0].toLowerCase()) {
-                case "list":
-                    listCommand.execute(commandSender, args);
-                    break;
-                case "tokens":
-                    tokensCommand.execute(commandSender, command, args);
-                    break;
-                case "info":
-                    infoCommand.execute(commandSender, args);
-                    break;
-                default:
-                    commandSender.sendMessage(ColorUtils.color("<red>Unknown command."));
-            }
-        }
-        return true;
+    private void registerCommands() {
+        new CommandAPICommand("horse")
+                .withAliases("h")
+                .withSubcommand(new CommandAPICommand("info")
+                        .executesPlayer(this::info))
+
+                .withSubcommand(new CommandAPICommand("list")
+                        .executesPlayer(this::list))
+
+                .withSubcommand(new CommandAPICommand("tokens")
+                        .withArguments(new PlayerArgument("player").setOptional(true))
+                        .executes(this::tokens));
     }
+
+    private void info(CommandSender sender, CommandArguments args) {
+        Player player = (Player) sender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
+            return;
+        }
+
+        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
+    }
+
+    private void list(CommandSender sender, CommandArguments args) {
+        Player player = (Player) sender;
+        plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE);
+    }
+
+    private void tokens(CommandSender sender, CommandArguments args) {
+        Player player = (Player) sender;
+        Player target = (Player) args.get("player");
+
+        if(target != null) {
+            sender.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green><target>'s tokens: <gold><tokens>",
+                    Placeholder.parsed("target", target.getName()),
+                    Placeholder.parsed("tokens", String.valueOf(plugin.getTokenManager().getTokens(target)))));
+            return;
+        }
+
+        sender.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Your tokens: <gold><tokens>",
+                Placeholder.parsed("tokens", String.valueOf(plugin.getTokenManager().getTokens(player)))));
+
+    }
+
 }
