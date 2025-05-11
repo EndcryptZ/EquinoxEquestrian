@@ -19,6 +19,7 @@ import endcrypt.equinox.menu.horse.HorseMenuManager;
 import endcrypt.equinox.player.data.PlayerDataListener;
 import endcrypt.equinox.player.data.PlayerDataManager;
 import endcrypt.equinox.token.TokenManager;
+import endcrypt.equinox.updater.horse.HorseNBTUpdaterListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -94,6 +95,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new HorseMenuListener(this);
         new EquineCrossTieListener(this);
         new EquineGroomListener(this);
+        new HorseNBTUpdaterListener(this);
 
     }
 
