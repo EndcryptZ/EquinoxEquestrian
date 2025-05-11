@@ -85,7 +85,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         tokenManager = new TokenManager(this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            playerDataManager.addPlayer(player);
+            playerDataManager.load(player);
         }
     }
 
