@@ -6,23 +6,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.sql.SQLException;
-
 public class PlayerDataListener implements Listener {
 
     private final EquinoxEquestrian plugin;
     public PlayerDataListener(EquinoxEquestrian plugin) {
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        plugin.getPlayerDataManager().addPlayer(event.getPlayer());
+        plugin.getPlayerDataManager().load(event.getPlayer());
     }
 
     @EventHandler
-    public void onLeave(PlayerQuitEvent event) throws SQLException {
-        plugin.getDatabaseManager().setTokenAmount(event.getPlayer(), plugin.getPlayerDataManager().getPlayerData(event.getPlayer()).getTokens());
-        plugin.getPlayerDataManager().getPlayerDataMap().remove(event.getPlayer());
+    public void onLeave(PlayerQuitEvent event) {
+        plugin.getPlayerDataManager().save(event.getPlayer());
     }
 }
