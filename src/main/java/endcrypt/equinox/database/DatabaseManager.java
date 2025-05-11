@@ -36,10 +36,17 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public void addLiveHorse(AbstractHorse horse) throws SQLException {
+    public void addHorse(AbstractHorse horse) throws SQLException {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO livehorses (uuid, owner_uuid) VALUES (?, ?)")) {
             preparedStatement.setString(1, horse.getUniqueId().toString());
             preparedStatement.setString(2, horse.getOwner().getUniqueId().toString());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void removeHorse(AbstractHorse horse) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM livehorses WHERE uuid = ?")) {
+            preparedStatement.setString(1, horse.getUniqueId().toString());
             preparedStatement.executeUpdate();
         }
     }
