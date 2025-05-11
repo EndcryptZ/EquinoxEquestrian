@@ -11,7 +11,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -50,12 +49,8 @@ public class EquineHorseBuilder {
 
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
 
-        // Add Horse to database
-        try {
-            plugin.getDatabaseManager().addLiveHorse(horse);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Add Horse to player data
+        plugin.getPlayerDataManager().getPlayerData(player).addOwnedHorse(horse.getUniqueId());
 
         NBT.modifyPersistentData(horse, nbt -> {
 
