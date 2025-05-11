@@ -266,6 +266,15 @@ public enum Breed {
         return names;
     }
 
+    public static Breed getBreedByName(String name) {
+        for (Breed breed : Breed.values()) {
+            if (breed.getName().equalsIgnoreCase(name)) {
+                return breed;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return name + " (" + type + ", " + size + ")";

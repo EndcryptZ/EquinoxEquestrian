@@ -107,4 +107,13 @@ public enum Trait {
     public int getPrice() {
         return price;
     }
+
+    public static Trait getTraitByName(String traitName) {
+        for (Trait trait : Trait.values()) {
+            if (trait.getTraitName().equalsIgnoreCase(traitName)) {
+                return trait;
+            }
+        }
+        return null;
+    }
 }

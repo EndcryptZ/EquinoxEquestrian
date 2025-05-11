@@ -45,6 +45,15 @@ public enum Discipline {
         return names;
     }
 
+    public static Discipline getDisciplineByName(String name) {
+        for (Discipline discipline : Discipline.values()) {
+            if (discipline.getDisciplineName().equalsIgnoreCase(name)) {
+                return discipline;
+            }
+        }
+        return null;
+    }
+
     public int getPrice() {
         return price;
     }
