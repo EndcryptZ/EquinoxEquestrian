@@ -5,6 +5,7 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorse;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.utils.HeadUtils;
@@ -130,13 +131,10 @@ public class    HorseListMenu {
     }
 
     private SGButton horseButton(Player player, AbstractHorse horse) {
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         boolean isSelected = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse() == horse;
         String displayName = "&f" + horse.getName() + (isSelected ? " &a(Selected)" : "");
-        List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
-        Random random = new Random();
-        int randomID = random.nextInt(idList.size());
-        String headID = idList.get(randomID);
-        ItemStack head = HeadUtils.getItemHead(headID);
+        ItemStack head = HeadUtils.getItemHead(equineLiveHorse.getSkullId());
 
 
         return new SGButton(
