@@ -66,9 +66,9 @@ public class EquineUtils {
             int age = nbt.getInteger("EQUINE_AGE");
             double heightHands = nbt.getDouble("EQUINE_HEIGHT");
 
-            Discipline discipline = Discipline.valueOf(nbt.getString("EQUINE_DISCIPLINE"));
-            Breed breed = Breed.valueOf(nbt.getString("EQUINE_BREED"));
-            Gender gender = Gender.valueOf(nbt.getString("EQUINE_GENDER"));
+            Discipline discipline = Discipline.getDisciplineByName(nbt.getString("EQUINE_DISCIPLINE"));
+            Breed breed = Breed.getBreedByName(nbt.getString("EQUINE_BREED"));
+            Gender gender = Gender.getGenderByName(nbt.getString("EQUINE_GENDER"));
 
             CoatColor coatColor = CoatColor.NONE;
             CoatModifier coatModifier = CoatModifier.NONE;
@@ -80,7 +80,7 @@ public class EquineUtils {
 
             Trait[] traits = new Trait[3];
             for (int i = 0; i < 3; i++) {
-                traits[i] = Trait.valueOf(nbt.getString("EQUINE_TRAIT_" + i));
+                traits[i] = Trait.getTraitByName(nbt.getString("EQUINE_TRAIT_" + i));
             }
 
             EquineHorse equineHorse = new EquineHorse(
