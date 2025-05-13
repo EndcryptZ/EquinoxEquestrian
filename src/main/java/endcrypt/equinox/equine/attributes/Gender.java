@@ -36,7 +36,7 @@ public enum Gender {
 
     public static Gender getGenderByName(String genderName) {
         for (Gender gender : Gender.values()) {
-            if (gender.getGenderName().equalsIgnoreCase(genderName)) {
+            if (gender.name().equalsIgnoreCase(genderName)) {
                 return gender;
             }
         }

@@ -110,7 +110,7 @@ public enum Trait {
 
     public static Trait getTraitByName(String traitName) {
         for (Trait trait : Trait.values()) {
-            if (trait.getTraitName().equalsIgnoreCase(traitName)) {
+            if (trait.name().equalsIgnoreCase(traitName)) {
                 return trait;
             }
         }

@@ -47,7 +47,7 @@ public enum Discipline {
 
     public static Discipline getDisciplineByName(String name) {
         for (Discipline discipline : Discipline.values()) {
-            if (discipline.getDisciplineName().equalsIgnoreCase(name)) {
+            if (discipline.name().equalsIgnoreCase(name)) {
                 return discipline;
             }
         }

@@ -268,7 +268,7 @@ public enum Breed {
 
     public static Breed getBreedByName(String name) {
         for (Breed breed : Breed.values()) {
-            if (breed.getName().equalsIgnoreCase(name)) {
+            if (breed.name().equalsIgnoreCase(name)) {
                 return breed;
             }
         }
