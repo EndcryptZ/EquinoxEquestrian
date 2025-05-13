@@ -2,6 +2,7 @@ package endcrypt.equinox.updater.horse;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,14 @@ public class HorseNBTUpdaterListener implements Listener {
         for (Entity entity : event.getChunk().getEntities()) {
             if(!(entity instanceof AbstractHorse)) {
                 continue;
+            }
+
+            if(!EquineUtils.isLivingEquineHorse((AbstractHorse) entity)) {
+                continue;
+            }
+
+            if(!(plugin.getDatabaseManager().horseExists((AbstractHorse) entity))) {
+                plugin.getDatabaseManager().addHorse((AbstractHorse) entity);
             }
 
             AbstractHorse horse = (AbstractHorse) entity;
