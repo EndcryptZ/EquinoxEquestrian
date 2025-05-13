@@ -76,7 +76,7 @@ public class AutoVetMenu {
 
         return new SGButton(
                 new ItemBuilder(Material.SHEARS)
-                        .name("&fGenetics")
+                        .name("&fGeld")
                         .lore(
                                 "&7Gelds the Horse.",
                                 "&a$50.00"
