@@ -91,7 +91,7 @@ public class EquineLiveHorse {
                     }
 
                     // Debug
-                    Bukkit.broadcast(ColorUtils.color(tag + " was missing and has been set to default."));
+                    // Bukkit.broadcast(ColorUtils.color(tag + " was missing and has been set to default."));
                 }
             }
         });
