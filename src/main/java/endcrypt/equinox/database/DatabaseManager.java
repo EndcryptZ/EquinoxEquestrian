@@ -36,11 +36,13 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public void addHorse(AbstractHorse horse) throws SQLException {
+    public void addHorse(AbstractHorse horse) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO livehorses (uuid, owner_uuid) VALUES (?, ?)")) {
             preparedStatement.setString(1, horse.getUniqueId().toString());
             preparedStatement.setString(2, horse.getOwner().getUniqueId().toString());
             preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -89,11 +91,14 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public boolean horseExists(AbstractHorse horse) throws SQLException {
+    public boolean horseExists(AbstractHorse horse) {
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM livehorses WHERE uuid = ?")) {
             preparedStatement.setString(1, horse.getUniqueId().toString());
             return preparedStatement.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     public void closeConnection() throws SQLException {
