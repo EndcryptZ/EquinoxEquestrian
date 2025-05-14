@@ -2,7 +2,7 @@ package endcrypt.equinox.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.attributes.CoatModifier;
+import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -81,11 +81,26 @@ public class EquineHorseBuilder {
         });
     }
 
+    // Assigns a horse a random skull for menus
     private String randomSkullId() {
         List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
         Random random = new Random();
         int randomID = random.nextInt(idList.size());
         String headID = idList.get(randomID);
         return headID;
+    }
+
+    public EquineHorse randomHorse(String name) {
+        Random random = new Random();
+
+        Discipline discipline = Discipline.values()[random.nextInt(Discipline.values().length)];
+        Breed breed = Breed.values()[random.nextInt(Breed.values().length)];
+        CoatColor coatColor = CoatColor.values()[random.nextInt(CoatColor.values().length)];
+        CoatModifier coatModifier = CoatModifier.values()[random.nextInt(CoatModifier.values().length)];
+        Gender gender = Gender.values()[random.nextInt(Gender.values().length)];
+        int age = random.nextInt(20) + 1;
+        Height height = Height.values()[random.nextInt(Height.values().length)];
+        Trait[] traits = Trait.values();
+        return new EquineHorse(name, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
     }
 }

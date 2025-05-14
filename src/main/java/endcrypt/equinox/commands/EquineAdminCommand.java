@@ -4,8 +4,10 @@ import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
+import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,6 +28,10 @@ public class EquineAdminCommand {
                         .withArguments(new PlayerArgument("player"))
                         .withArguments(new IntegerArgument("amount"))
                         .executes(this::token))
+
+                .withSubcommand(new CommandAPICommand("autospawn")
+                        .withArguments(new StringArgument("name"))
+                        .executes(this::autoSpawn))
 
                 .register();
     }
@@ -65,6 +71,15 @@ public class EquineAdminCommand {
         int currentTokens = plugin.getTokenManager().getTokens(player);
         int newAmount = Math.max(0, currentTokens - amount); // Prevent negative tokens
         plugin.getTokenManager().setTokens(player, newAmount);
+    }
+
+    private void autoSpawn(CommandSender sender, CommandArguments args) {
+        EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
+        Player player = (Player) sender;
+        String name = (String) args.get("name");
+        equineHorseBuilder.spawnHorse(player, equineHorseBuilder.randomHorse(name));
+        player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>You have spawned a randomized horse!"));
+
     }
 
 
