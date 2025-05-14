@@ -129,15 +129,15 @@ public class EquineGaits implements Listener {
     private String getGaitColor(Gaits gait) {
         switch (gait) {
             case WALK:
-                return "<green>"; // Green for walk
+                return "<reset><green>"; // Green for walk
             case TROT:
-                return "<yellow>"; // Yellow for trot
+                return "<reset><yellow>"; // Yellow for trot
             case CANTER:
-                return "<orange>"; // Orange for canter
+                return "<reset><gold>"; // Orange for canter
             case GALLOP:
-                return "<dark_red>"; // Red for gallop
+                return "<reset><dark_red>"; // Red for gallop
             default:
-                return "<gray>"; // Gray for default
+                return "<reset><gray>"; // Gray for default
         }
     }
 
@@ -159,7 +159,7 @@ public class EquineGaits implements Listener {
 
     // Progress bar builder
     private String getProgressBar(int progress, String color, String label) {
-        StringBuilder progressBar = new StringBuilder("§f[");
+        StringBuilder progressBar = new StringBuilder("<white>[");
 
         // The total progress is 50 (5 green + 10 yellow + 15 orange + 20 red)
         int totalBars = 30;
@@ -169,21 +169,21 @@ public class EquineGaits implements Listener {
         int remaining = totalBars - filled;
 
         // Green for first 5 bars
-        if (filled > 0) progressBar.append("§a§l").append("|".repeat(Math.min(filled, 4)));
+        if (filled > 0) progressBar.append("<green><bold>").append("|".repeat(Math.min(filled, 4)));
 
         // Yellow for next 10 bars
-        if (filled > 4) progressBar.append("§e§l").append("|".repeat(Math.min(filled - 4, 6)));
+        if (filled > 4) progressBar.append("<yellow><bold>").append("|".repeat(Math.min(filled - 4, 6)));
 
         // Orange for next 15 bars
-        if (filled > 10) progressBar.append("§6§l").append("|".repeat(Math.min(filled - 10, 8)));
+        if (filled > 10) progressBar.append("<gold><bold>").append("|".repeat(Math.min(filled - 10, 8)));
 
         // Red for the remaining 20 bars
-        if (filled > 18) progressBar.append("§4§l").append("|".repeat(Math.min(filled - 18, 12)));
+        if (filled > 18) progressBar.append("<dark_red><bold>").append("|".repeat(Math.min(filled - 18, 12)));
 
         // Fill remaining with gray
-        progressBar.append("§7§l").append("|".repeat(remaining));
+        progressBar.append("<gray><bold>").append("|".repeat(remaining));
 
-        progressBar.append("§f] ").append(color).append(label);
+        progressBar.append("<white>] ").append(color).append(label);
         return progressBar.toString();
     }
 
