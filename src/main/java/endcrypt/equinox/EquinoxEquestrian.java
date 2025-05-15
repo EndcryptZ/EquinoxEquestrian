@@ -120,6 +120,9 @@ public final class EquinoxEquestrian extends JavaPlugin {
         try {
             // Close the database connection when the plugin is disabled
             if (databaseManager != null) {
+                for(Player player : Bukkit.getOnlinePlayers()) {
+                    playerDataManager.save(player);
+                }
                 databaseManager.closeConnection();
             }
         } catch (SQLException e) {

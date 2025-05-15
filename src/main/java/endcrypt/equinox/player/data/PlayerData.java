@@ -9,7 +9,7 @@ public class PlayerData {
 
     private AbstractHorse selectedHorse;
     private int tokens;
-    private List<UUID> ownedHorses;
+    private final List<UUID> ownedHorses;
 
     public PlayerData(AbstractHorse selectedHorse, int tokens, List<UUID> ownedHorses) {
         this.selectedHorse = selectedHorse;
