@@ -46,13 +46,13 @@ public class HorseNBTUpdaterListener implements Listener {
             Player player = offlinePlayer.getPlayer();
             PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
 
-            if(playerData.getOwnedHorses().contains(entity.getUniqueId())) {
+            if(playerData.getOwnedHorses(player).contains(horse.getUniqueId())) {
                 return;
             }
 
-            playerData.addOwnedHorse(entity.getUniqueId());
+            plugin.getDatabaseManager().addHorse(horse);
 
-            new EquineLiveHorse(horse).updateDefault(horse);
+            new EquineLiveHorse(horse).updateDefault();
         }
 
     }
