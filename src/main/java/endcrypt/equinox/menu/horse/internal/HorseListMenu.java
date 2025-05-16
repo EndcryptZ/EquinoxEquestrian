@@ -17,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class    HorseListMenu {
@@ -36,7 +35,7 @@ public class    HorseListMenu {
     private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
         SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
 
-        List<UUID> horseIds = plugin.getPlayerDataManager().getPlayerData(player).getOwnedHorses();
+        List<UUID> horseIds = plugin.getPlayerDataManager().getPlayerData(player).getOwnedHorses(player);
 
         if (listOrganizeType == ListOrganizeType.AGE) {
             List<EquineHorse> equineHorses = horseIds.stream()
