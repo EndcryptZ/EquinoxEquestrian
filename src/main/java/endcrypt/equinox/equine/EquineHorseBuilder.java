@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.utils.ColorUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -11,9 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class EquineHorseBuilder {
@@ -50,7 +49,7 @@ public class EquineHorseBuilder {
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
 
         // Add Horse to player data
-        plugin.getPlayerDataManager().getPlayerData(player).addOwnedHorse(horse.getUniqueId());
+        plugin.getDatabaseManager().addHorse(horse);
 
         NBT.modifyPersistentData(horse, nbt -> {
 
@@ -58,9 +57,19 @@ public class EquineHorseBuilder {
             long currentTime = System.currentTimeMillis();
 
             nbt.setString("EQUINE_HORSE", "true");
-
             nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
-            nbt.setString("EQUINE_BREED", equineHorse.getBreed().name());
+
+            IntStream.range(0, equineHorse.getBreeds().length)
+                    .forEach(i -> {
+                    nbt.setString("EQUINE_BREED_" + i, equineHorse.getBreeds()[i].name());
+                    Bukkit.getServer().broadcast(ColorUtils.color("Set EQUINE_BREED_" + i + " of " + horse.getName() + " to " + equineHorse.getBreeds()[i].name()));
+                    });
+
+            if(equineHorse.getBreeds().length > 1) {
+                equineHorse.setProminentBreed(equineHorse.getBreeds()[new Random().nextInt(equineHorse.getBreeds().length)]);
+                nbt.setString("EQUINE_PROMINENT_BREED", equineHorse.getProminentBreed().name());
+            }
+
             nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
             nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
             nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getHands());
@@ -93,14 +102,15 @@ public class EquineHorseBuilder {
     public EquineHorse randomHorse(String name) {
         Random random = new Random();
 
-        Discipline discipline = Discipline.values()[random.nextInt(Discipline.values().length)];
-        Breed breed = Breed.values()[random.nextInt(Breed.values().length)];
-        CoatColor coatColor = CoatColor.values()[random.nextInt(CoatColor.values().length)];
-        CoatModifier coatModifier = CoatModifier.values()[random.nextInt(CoatModifier.values().length)];
-        Gender gender = Gender.values()[random.nextInt(Gender.values().length)];
-        int age = random.nextInt(20) + 1;
-        Height height = Height.values()[random.nextInt(Height.values().length)];
-        Trait[] traits = Trait.values();
-        return new EquineHorse(name, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
+        Discipline discipline = Discipline.random();
+        Breed[] breeds = Breed.random(random.nextInt(2) + 1);
+        CoatColor coatColor = CoatColor.random();
+        CoatModifier coatModifier = CoatModifier.random();
+        Gender gender = Gender.random();
+        int age = random.nextInt(10) + 1;
+        Height height = Height.getRandomHeight(breeds[0]);
+        Trait[] traits = Trait.random(random.nextInt(3) + 1);
+
+        return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
     }
 }
