@@ -10,27 +10,28 @@ import java.util.UUID;
 @Getter
 public class EquineHorse {
 
-    private String name;
-    private Discipline discipline;
-    private Breed breed;
-    private CoatColor coatColor;
-    private CoatModifier coatModifier;
-    private Gender gender;
-    private int age;
-    private Height height;
-    private Trait[] traits;
+        private String name;
+        private Discipline discipline;
+        private Breed[] breeds;
+        private Breed prominentBreed;
+        private CoatColor coatColor;
+        private CoatModifier coatModifier;
+        private Gender gender;
+        private int age;
+        private Height height;
+        private Trait[] traits;
 
-    private UUID uuid;
+        private UUID uuid;
 
-    public EquineHorse(String name, Discipline discipline, Breed breed, CoatColor coatColor, CoatModifier coatModifier, Gender gender, int age, Height height, Trait[] traits) {
-        this.name = name;
-        this.discipline = discipline;
-        this.breed = breed;
-        this.coatColor = coatColor;
-        this.coatModifier = coatModifier;
-        this.gender = gender;
-        this.age = age;
-        this.height = height;
-        this.traits = traits;
+        public EquineHorse(String name, Discipline discipline, Breed[] breeds, CoatColor coatColor, CoatModifier coatModifier, Gender gender, int age, Height height, Trait[] traits) {
+            this.name = name;
+            this.discipline = discipline;
+            this.breeds = breeds;
+            this.coatColor = coatColor;
+            this.coatModifier = coatModifier;
+            this.gender = gender;
+            this.age = age;
+            this.height = height;
+            this.traits = traits;
+        }
     }
-}
