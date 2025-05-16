@@ -5,7 +5,7 @@ import endcrypt.equinox.bedrock.menu.subforms.*;
 import endcrypt.equinox.equine.*;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.player.data.PlayerData;
-import org.bukkit.ChatColor;
+import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.form.CustomForm;
 import org.jetbrains.annotations.NotNull;
@@ -48,15 +48,15 @@ public class BedrockBuildForm {
 
         String name = "";
         Discipline discipline = Discipline.NONE;
-        Breed breed = Breed.NONE;
+        Breed[] breeds = {Breed.NONE, Breed.NONE};
         CoatColor coatColor = CoatColor.NONE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.NONE;
         Height height = null;
         int age = 4;
 
-        for (Height loopedHeight : Height.values()) {
-            if (loopedHeight.getHands() == breed.getMinimumHands()) {
+        for(Height loopedHeight : Height.values()) {
+            if(loopedHeight.getHands() == breeds[0].getMinimumHands()) {
                 height = loopedHeight;
                 break;
             }
@@ -64,7 +64,7 @@ public class BedrockBuildForm {
 
         Trait[] traits = {Trait.NONE, Trait.NONE, Trait.NONE};
 
-        EquineHorse equineHorse = new EquineHorse(name, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
+        EquineHorse equineHorse = new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
 
         plugin.getFloodgateApi().sendForm(player.getUniqueId(), mainForm(player, "", equineHorse));
     }
@@ -83,17 +83,42 @@ public class BedrockBuildForm {
             form.label(errorType);
         }
 
+        // Build breed display logic
+        StringBuilder breedBuilder = new StringBuilder();
+        Breed[] breeds = equineHorse.getBreeds();
+        Breed prominent = equineHorse.getProminentBreed();
+
+        if (breeds.length == 1) {
+            breedBuilder.append("§f").append(breeds[0].getName());
+        } else if (breeds.length == 2) {
+            breedBuilder.append("§fBreed 1: ").append(breeds[0].getName());
+            if (prominent == breeds[0]) {
+                breedBuilder.append(" (Prominent)");
+            }
+            breedBuilder.append("\n§fBreed 2: ").append(breeds[1].getName());
+            if (prominent == breeds[1]) {
+                breedBuilder.append(" (Prominent)");
+            }
+        } else {
+            breedBuilder.append("§cNo Breeds");
+        }
+
+        // Build traits display safely
+        String trait1 = equineHorse.getTraits().length > 0 ? equineHorse.getTraits()[0].getTraitName() : "None";
+        String trait2 = equineHorse.getTraits().length > 1 ? equineHorse.getTraits()[1].getTraitName() : "None";
+        String trait3 = equineHorse.getTraits().length > 2 ? equineHorse.getTraits()[2].getTraitName() : "None";
+
         form.label("§6Name: §f" + equineHorse.getName() +
                         "\n§6Discipline: §f" + equineHorse.getDiscipline().getDisciplineName() +
-                        "\n§6Breed: §f" + equineHorse.getBreed().getName() +
+                        "\n§6Breed:\n" + breedBuilder +
                         "\n§6Coat Color: §f" + equineHorse.getCoatColor().getCoatColorName() +
                         "\n§6Coat Modifier: §f" + equineHorse.getCoatModifier().getCoatModifierName() +
                         "\n§6Gender: §f" + equineHorse.getGender().getGenderName() +
                         "\n§6Age: §f" + equineHorse.getAge() +
                         "\n§6Height: §f" + equineHorse.getHeight().getHandsString() +
-                        "\n§6Trait 1: §f" + equineHorse.getTraits()[0].getTraitName() +
-                        "\n§6Trait 2: §f" + equineHorse.getTraits()[1].getTraitName() +
-                        "\n§6Trait 3: §f" + equineHorse.getTraits()[2].getTraitName() +
+                        "\n§6Trait 1: §f" + trait1 +
+                        "\n§6Trait 2: §f" + trait2 +
+                        "\n§6Trait 3: §f" + trait3 +
                         "\n\n§6Your Tokens: §e" + plugin.getPlayerDataManager().getPlayerData(player).getTokens() +
                         "\n§6Your Balance: §a$" + plugin.getEcon().getBalance(player) +
                         "\n§eCost: §a$" + calculateCost(equineHorse))
@@ -107,6 +132,7 @@ public class BedrockBuildForm {
 
         return form.build();
     }
+
 
 
     private void initializeSubmission(Player player, int toEdit, boolean isCreatingHorse, EquineHorse equineHorse) {
@@ -133,7 +159,7 @@ public class BedrockBuildForm {
                 plugin.getEcon().withdrawPlayer(player, price);
             } else {
                 data.setTokens(data.getTokens() - 1);
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&7You have used a token to create this horse."));
+                player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>You have used a token to create this horse."));
             }
 
             new EquineHorseBuilder(plugin).spawnHorse(player, equineHorse);
@@ -143,13 +169,13 @@ public class BedrockBuildForm {
         switch (toEdit) {
             case 0 -> nameForm.openForm(player, equineHorse);
             case 1 -> disciplineForm.openForm(player, equineHorse);
-            case 2 -> breedForm.openForm(player, equineHorse);
-            case 3 -> coatColorForm.openForm(player, equineHorse);
-            case 4 -> coatModifierForm.openForm(player, equineHorse);
-            case 5 -> genderForm.openForm(player, equineHorse);
-            case 6 -> ageForm.openForm(player, equineHorse);
-            case 7 -> heightForm.openForm(player, equineHorse);
-            case 8, 9, 10 -> traitForm.openForm(player, equineHorse, toEdit - 8);
+            case 2, 3 -> breedForm.openForm(player, equineHorse, toEdit - 2);
+            case 4 -> coatColorForm.openForm(player, equineHorse);
+            case 5 -> coatModifierForm.openForm(player, equineHorse);
+            case 6 -> genderForm.openForm(player, equineHorse);
+            case 7 -> ageForm.openForm(player, equineHorse);
+            case 8 -> heightForm.openForm(player, equineHorse);
+            case 9, 10, 11 -> traitForm.openForm(player, equineHorse, toEdit - 8);
         }
     }
 
@@ -158,10 +184,10 @@ public class BedrockBuildForm {
 
         if (equineHorse.getName().isEmpty()) missingAttributes.add("Name");
         if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-        if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
+        if (equineHorse.getBreeds().length == 0) missingAttributes.add("Breed(s)");
         if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
         if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-        if (Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) missingAttributes.add("Trait(s)");
+        if (equineHorse.getTraits().length == 0) missingAttributes.add("Trait(s)");
         return missingAttributes;
     }
 
