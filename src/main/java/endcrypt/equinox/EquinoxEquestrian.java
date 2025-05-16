@@ -33,6 +33,8 @@ import java.sql.SQLException;
 @Getter
 public final class EquinoxEquestrian extends JavaPlugin {
 
+    public static EquinoxEquestrian instance;
+
     private SpiGUI spiGUI;
     private Economy econ;
     private BedrockBuildForm bedrockBuildForm;
@@ -49,6 +51,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        instance = this;
         CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
                 .shouldHookPaperReload(true)
         );
