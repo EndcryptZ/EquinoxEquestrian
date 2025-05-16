@@ -109,4 +109,8 @@ public class EquineGroomManager implements Listener {
         return false;
     }
 
+    public AbstractHorse getHorse(Player player) {
+        return groomMap.get(player).getHorse();
+    }
+
 }
