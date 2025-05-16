@@ -67,26 +67,47 @@ public class EquineUtils {
             double heightHands = nbt.getDouble("EQUINE_HEIGHT");
 
             Discipline discipline = Discipline.getDisciplineByName(nbt.getString("EQUINE_DISCIPLINE"));
-            Breed breed = Breed.getBreedByName(nbt.getString("EQUINE_BREED"));
+
+            // Breeds handling
+            Breed breed1 = Breed.getBreedByName(nbt.getString("EQUINE_BREED_1"));
+            Breed breed2 = Breed.getBreedByName(nbt.getString("EQUINE_BREED_2"));
+
+            Breed[] breeds;
+            if (breed2 == null || breed2 == Breed.NONE) {
+                breeds = new Breed[] { breed1 };
+            } else {
+                breeds = new Breed[] { breed1, breed2 };
+            }
+
+            // Prominent breed
+            String prominentBreedName = nbt.getString("EQUINE_PROMINENT_BREED");
+            Breed prominentBreed = (prominentBreedName != null && !prominentBreedName.isEmpty())
+                    ? Breed.getBreedByName(prominentBreedName)
+                    : null;
+
             Gender gender = Gender.getGenderByName(nbt.getString("EQUINE_GENDER"));
 
             CoatColor coatColor = CoatColor.NONE;
             CoatModifier coatModifier = CoatModifier.NONE;
-
             if (horse instanceof Horse h) {
                 coatColor = CoatColor.getCoatColorFromHorseColor(h.getColor());
                 coatModifier = CoatModifier.getCoatModifierFromHorseStyle(h.getStyle());
             }
 
-            Trait[] traits = new Trait[3];
+            // Traits handling (dynamic, allows 0-3)
+            List<Trait> traitList = new ArrayList<>();
             for (int i = 0; i < 3; i++) {
-                traits[i] = Trait.getTraitByName(nbt.getString("EQUINE_TRAIT_" + i));
+                String traitName = nbt.getString("EQUINE_TRAIT_" + i);
+                if (traitName != null && !traitName.isEmpty() && !traitName.equalsIgnoreCase("NONE")) {
+                    traitList.add(Trait.getTraitByName(traitName));
+                }
             }
+            Trait[] traits = traitList.toArray(new Trait[0]);
 
             EquineHorse equineHorse = new EquineHorse(
                     name,
                     discipline,
-                    breed,
+                    breeds,
                     coatColor,
                     coatModifier,
                     gender,
@@ -95,9 +116,11 @@ public class EquineUtils {
                     traits
             );
 
+            equineHorse.setProminentBreed(prominentBreed);
             equineHorse.setUuid(horse.getUniqueId());
 
             return equineHorse;
         });
     }
+
 }
