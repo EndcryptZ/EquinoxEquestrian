@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public enum Discipline {
@@ -51,5 +52,13 @@ public enum Discipline {
             }
         }
         return null;
+    }
+
+    public static Discipline random() {
+        Discipline discipline = values()[new Random().nextInt(values().length)];
+        if (discipline == NONE) {
+            return random();
+        }
+        return discipline;
     }
 }
