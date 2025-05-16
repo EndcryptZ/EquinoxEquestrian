@@ -5,6 +5,7 @@ import org.bukkit.entity.Horse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public enum CoatModifier {
@@ -38,4 +39,10 @@ public enum CoatModifier {
         }
         return CoatModifier.NONE;
     }
+
+    public static CoatModifier random() {
+        return values()[new Random().nextInt(values().length)];
+    }
+
+
 }

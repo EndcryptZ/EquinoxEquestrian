@@ -5,6 +5,7 @@ import org.bukkit.entity.Horse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public enum CoatColor {
@@ -40,5 +41,13 @@ public enum CoatColor {
             }
         }
         return CoatColor.NONE;
+    }
+
+    public static CoatColor random() {
+        CoatColor coatColor = values()[new Random().nextInt(values().length)];
+        if (coatColor == NONE) {
+            return random();
+        }
+        return coatColor;
     }
 }

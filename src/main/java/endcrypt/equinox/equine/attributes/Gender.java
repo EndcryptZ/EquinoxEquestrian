@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 public enum Gender {
@@ -36,5 +37,13 @@ public enum Gender {
             }
         }
         return NONE;
+    }
+
+    public static Gender random() {
+        Gender gender = values()[new Random().nextInt(values().length)];
+        if (gender == NONE) {
+            return random();
+        }
+        return gender;
     }
 }

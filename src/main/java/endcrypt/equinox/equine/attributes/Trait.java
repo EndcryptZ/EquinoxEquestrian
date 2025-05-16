@@ -2,6 +2,10 @@ package endcrypt.equinox.equine.attributes;
 
 import lombok.Getter;
 
+import java.util.LinkedHashSet;
+import java.util.Random;
+import java.util.Set;
+
 @Getter
 public enum Trait {
 
@@ -103,4 +107,22 @@ public enum Trait {
         }
         return null;
     }
+
+    public static Trait[] random(int count) {
+        Random random = new Random();
+        Trait[] values = Trait.values();
+
+        if (count > values.length - 1) {
+            throw new IllegalArgumentException("Not enough unique breeds excluding NONE to fulfill the request.");
+        }
+
+        Set<Trait> selected = new LinkedHashSet<>();
+        while (selected.size() < count) {
+            Trait trait = values[random.nextInt(values.length - 1) + 1]; // Skip NONE at index 0
+            selected.add(trait); // Set will ignore duplicates
+        }
+
+        return selected.toArray(new Trait[0]);
+    }
+
 }

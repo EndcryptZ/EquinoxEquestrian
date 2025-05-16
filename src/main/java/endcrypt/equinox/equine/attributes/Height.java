@@ -107,4 +107,28 @@ public enum Height {
         }
         return null; // No previous height (if it's the first one)
     }
+
+
+    public static Height getRandomHeight(Breed breed) {
+        double minHands = breed.getMinimumHands();
+        double maxHands = breed.getMaximumHands();
+
+        double randomHands = minHands + (maxHands - minHands) * Math.random();
+        return getClosestHeight(randomHands);
+    }
+
+    public static Height getClosestHeight(double hands) {
+        Height closest = null;
+        double closestDiff = Double.MAX_VALUE;
+
+        for (Height height : Height.values()) {
+            double diff = Math.abs(height.getHands() - hands);
+            if (diff < closestDiff) {
+                closestDiff = diff;
+                closest = height;
+            }
+        }
+
+        return closest;
+    }
 }

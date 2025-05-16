@@ -2,8 +2,7 @@ package endcrypt.equinox.equine.attributes;
 
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 public enum Breed {
@@ -257,6 +256,33 @@ public enum Breed {
         }
         return null;
     }
+
+
+    public static Breed random() {
+        Breed breed = values()[new Random().nextInt(values().length)];
+        if (breed == NONE) {
+            return random();
+        }
+        return breed;
+    }
+
+    public static Breed[] random(int count) {
+        Random random = new Random();
+        Breed[] values = Breed.values();
+
+        if (count > values.length - 1) {
+            throw new IllegalArgumentException("Not enough unique breeds excluding NONE to fulfill the request.");
+        }
+
+        Set<Breed> selected = new LinkedHashSet<>();
+        while (selected.size() < count) {
+            Breed breed = values[random.nextInt(values.length - 1) + 1]; // Skip NONE at index 0
+            selected.add(breed); // Set will ignore duplicates
+        }
+
+        return selected.toArray(new Breed[0]);
+    }
+
 
     @Override
     public String toString() {
