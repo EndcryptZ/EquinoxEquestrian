@@ -77,7 +77,7 @@ public class BuildMenu implements Listener {
     private Inventory defaultMenu(Player player) {
         String name = "";
         Discipline discipline = Discipline.NONE;
-        Breed breed = Breed.NONE;
+        Breed[] breeds = {Breed.NONE, Breed.NONE};
         CoatColor coatColor = CoatColor.NONE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.NONE;
@@ -85,7 +85,7 @@ public class BuildMenu implements Listener {
         int age = 4;
 
         for(Height loopedHeight : Height.values()) {
-            if(loopedHeight.getHands() == breed.getMinimumHands()) {
+            if(loopedHeight.getHands() == breeds[0].getMinimumHands()) {
                 height = loopedHeight;
                 break;
             }
@@ -93,14 +93,14 @@ public class BuildMenu implements Listener {
 
         Trait[] traits = {Trait.NONE, Trait.NONE, Trait.NONE};
 
-        EquineHorse equineHorse = new EquineHorse(name, discipline, breed, coatColor, coatModifier, gender, age, height, traits);
+        EquineHorse equineHorse = new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
 
         return createMenu(player, equineHorse);
     }
 
     private Inventory menuWithParameters(Player player, EquineHorse equineHorse) {
-        double minHand = equineHorse.getBreed().getMinimumHands();
-        double maxHand = equineHorse.getBreed().getMaximumHands();
+        double minHand = equineHorse.getBreeds()[0].getMinimumHands();
+        double maxHand = equineHorse.getBreeds()[0].getMaximumHands();
         double currentHand = equineHorse.getHeight().getHands();
 
 
@@ -168,19 +168,16 @@ public class BuildMenu implements Listener {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
-                        .name("&fBreed")
-                        .lore(
-                                ColorUtils.toColoredLegacy("<white>" + equineHorse.getBreed().getName())
-                        )
+                        .name("&fBreeds")
+                        .lore(getBreedsLore(equineHorse))
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
-
                     plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
                     player.openInventory(plugin.getBuildMenuManager().getBreedSelectMenu().breedMenu(player, equineHorse));
-
                 });
+
     }
 
     private SGButton coatColorButton(EquineHorse equineHorse) {
@@ -318,7 +315,7 @@ public class BuildMenu implements Listener {
                         if(Height.getNextHeight(height.getSize()) != null) {
 
                             // Cancel if the next height exceeds the maximum height of the breed
-                            if(Height.getNextHeight(height.getSize()).getHands() > equineHorse.getBreed().getMaximumHands()) {
+                            if(Height.getNextHeight(height.getSize()).getHands() > equineHorse.getProminentBreed().getMaximumHands()) {
                                 return;
                             }
 
@@ -343,7 +340,7 @@ public class BuildMenu implements Listener {
                         if(Height.getPreviousHeight(height.getSize()) != null) {
 
                             // Cancel if the previous height exceeds the minimum height of the breed
-                            if(Height.getPreviousHeight(height.getSize()).getHands() < equineHorse.getBreed().getMinimumHands()) {
+                            if(Height.getPreviousHeight(height.getSize()).getHands() < equineHorse.getProminentBreed().getMinimumHands()) {
                                 return;
                             }
 
@@ -398,10 +395,10 @@ public class BuildMenu implements Listener {
 
                     if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
                     if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-                    if (equineHorse.getBreed() == Breed.NONE) missingAttributes.add("Breed");
+                    if (equineHorse.getBreeds().length == 0) missingAttributes.add("Breed");
                     if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
                     if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-                    if (Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) missingAttributes.add("Trait(s)");
+                    if (equineHorse.getTraits().length == 0) missingAttributes.add("Trait(s)");
 
                     if (!missingAttributes.isEmpty()) {
                         List<String> loreMessage = new ArrayList<>();
@@ -464,5 +461,21 @@ public class BuildMenu implements Listener {
                         .build()
         );
     }
+
+    private List<String> getBreedsLore(EquineHorse equineHorse) {
+        Breed[] breeds = equineHorse.getBreeds();
+        List<String> lore = new ArrayList<>();
+
+        if (breeds.length == 1) {
+            lore.add(ColorUtils.toColoredLegacy("<white>" + breeds[0].getName()));
+        } else {
+            // assuming first is prominent
+            lore.add(ColorUtils.toColoredLegacy("<white>" + breeds[0].getName() + " (Prominent)"));
+            lore.add(ColorUtils.toColoredLegacy("<white>" + breeds[1].getName()));
+        }
+
+        return lore;
+    }
+
 
 }

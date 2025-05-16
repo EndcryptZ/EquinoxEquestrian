@@ -6,11 +6,19 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.attributes.Breed;
+import endcrypt.equinox.equine.attributes.Trait;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class HorseInfoMenu {
 
@@ -68,20 +76,42 @@ public class HorseInfoMenu {
     private SGButton horseInformation2(AbstractHorse horse) {
         EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
 
+        StringBuilder breedBuilder = new StringBuilder();
+        Breed[] breeds = equineHorse.getBreeds();
+
+        for(Breed breed : Breed.random(new Random().nextInt(2) + 1)) {
+            Bukkit.getServer().broadcast(ColorUtils.color("breed: " + breed));
+        }
+
+        if (breeds.length == 1) {
+            breedBuilder.append("Breed: &7").append(breeds[0].getName());
+        } else if (breeds.length == 2) {
+            Breed prominent = equineHorse.getProminentBreed(); // only care if exactly 2 breeds
+
+            breedBuilder.append("Breed 1: &7").append(breeds[0].getName());
+            if (prominent != null && prominent == breeds[0]) {
+                breedBuilder.append(" (Prominent)");
+            }
+            breedBuilder.append("\n&7▸ &bBreed 2: &7").append(breeds[1].getName());
+            if (prominent != null && prominent == breeds[1]) {
+                breedBuilder.append(" (Prominent)");
+            }
+        } else {
+            breedBuilder.append("None");
+        }
+
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHorse Information 2")
                         .lore(
                                 "&7▸ &bName: &7" + horse.getName(),
                                 "&7▸ &bBarn-Name: &7WIP",
-                                "&7▸ &bBreed: &7" + equineHorse.getBreed().getName(),
+                                "&7▸ &b" + breedBuilder,
                                 "&7▸ &bAge: &7" + equineHorse.getAge(),
                                 "&7▸ &bGender: &7" + equineHorse.getGender().getGenderName(),
                                 "&7▸ &bCoat Colour: &7" + equineHorse.getCoatColor().getCoatColorName(),
                                 "&7▸ &bCoat Modifier: &7" + equineHorse.getCoatModifier().getCoatModifierName(),
                                 "&7▸ &bHeight: &7" + equineHorse.getHeight().getHandsString()
-
-
                         )
                         .build()
         );
@@ -90,22 +120,31 @@ public class HorseInfoMenu {
     private SGButton motionInformation(AbstractHorse horse){
         EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
 
+        String[] baseLore = {
+                "&7▸ &bSpeed: &7WIP",
+                "&7▸ &bJump: &7WIP",
+                "&7▸ &bStamina: &7WIP",
+                "&7▸ &bLevel: &7WIP",
+                "&7▸ &bDiscipline: &7" + equineHorse.getDiscipline().getDisciplineName(),
+                "&7▸ &bTraits:"
+        };
+
+        // Build dynamic trait display
+        List<String> loreList = new ArrayList<>(List.of(baseLore));
+        Trait[] traits = equineHorse.getTraits();
+
+        if (traits.length == 0) {
+            loreList.add("    &7▸ &bNone");
+        } else {
+            for (int i = 0; i < traits.length; i++) {
+                loreList.add("    &7▸ &bTrait " + (i + 1) + ": &7" + traits[i].getTraitName());
+            }
+        }
+
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fMotion")
-                        .lore(
-                                "&7▸ &bSpeed: &7WIP",
-                                "&7▸ &bJump: &7WIP",
-                                "&7▸ &bStamina: &7WIP",
-                                "&7▸ &bLevel: &7WIP",
-                                "&7▸ &bDiscipline: &7" + equineHorse.getDiscipline().getDisciplineName(),
-                                "&7▸ &bTraits:",
-                                "    &7▸ &bTrait 1: &7" + equineHorse.getTraits()[0].getTraitName(),
-                                "    &7▸ &bTrait 2: &7" + equineHorse.getTraits()[1].getTraitName(),
-                                "    &7▸ &bTrait 3: &7" + equineHorse.getTraits()[2].getTraitName()
-
-
-                        )
+                        .lore(loreList)
                         .build()
         );
     }
