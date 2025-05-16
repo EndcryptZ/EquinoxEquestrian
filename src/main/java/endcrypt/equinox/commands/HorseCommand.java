@@ -1,6 +1,7 @@
 package endcrypt.equinox.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
@@ -32,6 +33,25 @@ public class HorseCommand {
                 .withSubcommand(new CommandAPICommand("tokens")
                         .withArguments(new PlayerArgument("player").setOptional(true))
                         .executes(this::tokens))
+
+                .withSubcommand(new CommandAPICommand("lunge")
+                        .executesPlayer(this::lunge))
+
+                .withSubcommand(new CommandAPICommand("menu")
+                        .executes(this::openMenu))
+
+                .withSubcommand(new CommandAPICommand("sethome")
+                        .withArguments(new MultiLiteralArgument("home", "stall", "pasture"))
+                        .executesPlayer(this::horseSetHome))
+
+                .withSubcommand(new CommandAPICommand("tp")
+                        .withAliases("teleport")
+                        .withArguments(new MultiLiteralArgument("home", "stall", "pasture").setOptional(true))
+                        .executesPlayer(this::horseTeleportHome))
+
+                .withSubcommand(new CommandAPICommand("tphere")
+                        .withAliases("teleporthere")
+                        .executesPlayer(this::horseTeleportHere))
 
                 .register();
     }
@@ -66,6 +86,65 @@ public class HorseCommand {
         sender.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Your tokens: <gold><tokens>",
                 Placeholder.parsed("tokens", String.valueOf(plugin.getTokenManager().getTokens(player)))));
 
+    }
+
+
+    private void lunge(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        plugin.getEquineManager().getEquineLunge().lungeHorse(player);
+    }
+
+    private void openMenu(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        if (plugin.getFloodgateApi().isFloodgatePlayer(player.getUniqueId())) {
+            plugin.getBedrockBuildForm().openDefault(player);
+            return;
+        }
+        plugin.getBuildMenuManager().getBuildMenu().openDefault(player);
+    }
+
+    private void horseSetHome(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        String home = (String) args.get("home");
+        plugin.getEquineManager().getEquineHome().setHome(player, home);
+
+    }
+
+    private void horseTeleportHome(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        String home = (String) args.get("home");
+
+        if(home != null) {
+            plugin.getEquineManager().getEquineHome().teleportHome(player, home);
+            return;
+        }
+
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (horse == null) {
+            player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            return;
+        }
+
+        player.teleport(horse);
+        player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
+                Placeholder.parsed("prefix", plugin.getPrefix())));
+
+    }
+
+    private void horseTeleportHere(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if (horse == null) {
+            player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            return;
+        }
+
+        horse.teleport(player.getLocation());
+        player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
+                Placeholder.parsed("prefix", plugin.getPrefix())));
     }
 
 }
