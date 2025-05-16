@@ -55,14 +55,11 @@ public class TraitSelectMenu {
     private SGButton traitButton(Player player, Trait trait) {
         String traitName = trait.getTraitName();
 
-        // Determine if the player has selected this trait
-        boolean isTraitSelected = Arrays.stream(playerTraitMap.get(player)).toList().contains(trait);
-
-        // Change material based on whether the trait is selected or not
+        boolean isTraitSelected = Arrays.asList(playerTraitMap.get(player)).contains(trait);
         Material material = isTraitSelected ? Material.MAP : Material.PAPER;
 
         if (isTraitSelected) {
-            traitName = traitName + " &a(Selected)";
+            traitName += " &a(Selected)";
         }
 
         return new SGButton(
@@ -73,66 +70,39 @@ public class TraitSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
-
-                    // Get the current traits of the player
                     Trait[] playerTraits = playerTraitMap.get(player);
 
-                    // Check if the player already has 3 traits selected
-                    if (playerTraits != null && playerTraits.length == 3) {
-                        // If player has 3 traits, don't allow selecting an additional trait
-                        if (Arrays.stream(playerTraits).noneMatch(t -> t.equals(trait))) {
-                            List<String> defaultLore = new ArrayList<>();
-                            defaultLore.add("§7" + trait.getTraitType());
-
-                            ItemUtils.itemMessage(plugin,
-                                    event.getCurrentItem(),
-                                    "§f" + trait.getTraitName(),
-                                    "§cYou cannot select more than 3 traits.",
-                                    defaultLore,
-                                    null
-                            );
-                            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
-                            return;
-                        }
-                    }
-
-                    // If the trait is already selected, remove it from the player's traits
-                    if (Arrays.asList(playerTraits).contains(trait)) {
-                        // Remove the trait from the array
+                    if (isTraitSelected) {
+                        // remove trait
                         playerTraitMap.put(player, Arrays.stream(playerTraits)
-                                .filter(t -> !t.equals(trait)) // Filter out the selected trait
+                                .filter(t -> !t.equals(trait))
                                 .toArray(Trait[]::new));
 
-                        // Change the item back to paper and update display name
                         event.getCurrentItem().setType(Material.PAPER);
-                        meta.setDisplayName("§f" + trait.getTraitName()); // Update the display name
+                        meta.setDisplayName("§f" + trait.getTraitName());
                     } else {
-                        // If not selected yet, add it to the array and set the name as selected
                         if (playerTraits.length < 3) {
-                            playerTraitMap.put(player, Arrays.copyOf(playerTraits, playerTraits.length + 1));  // Resize the array
-                            playerTraitMap.get(player)[playerTraits.length] = trait;  // Add the new trait to the last position
+                            // add trait
+                            Trait[] newTraits = Arrays.copyOf(playerTraits, playerTraits.length + 1);
+                            newTraits[playerTraits.length] = trait;
+                            playerTraitMap.put(player, newTraits);
 
-                            // Change the item to map and set display name as selected
                             event.getCurrentItem().setType(Material.MAP);
                             meta.setDisplayName("§f" + trait.getTraitName() + " §a(Selected)");
                         } else {
-                            List<String> defaultLore = new ArrayList<>();
-                            defaultLore.add("§7" + trait.getTraitType());
-
                             ItemUtils.itemMessage(plugin,
                                     event.getCurrentItem(),
                                     "§f" + trait.getTraitName(),
-                                    "§cYou cannot select more than 3 traits.",
-                                    defaultLore,
+                                    "§cYou can select up to 3 traits only.",
+                                    Collections.singletonList("§7" + trait.getTraitType()),
                                     null
                             );
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
-                            event.setCancelled(true);  // Prevent further action
+                            event.setCancelled(true);
                             return;
                         }
                     }
 
-                    // Apply the updated meta to the item
                     event.getCurrentItem().setItemMeta(meta);
                 });
     }
@@ -144,17 +114,14 @@ public class TraitSelectMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    // Check if the player has exactly 3 traits
                     Trait[] playerTraits = playerTraitMap.get(player);
-                    if (playerTraits != null && playerTraits.length == 3) {
-                        // If the player has 3 traits, proceed with opening the menu
+                    if (playerTraits != null && playerTraits.length >= 1) {
                         equineHorse.setTraits(playerTraits);
                         plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                     } else {
-                        // If the player doesn't have 3 traits, play the BLOCK_ANVIL_LAND sound and cancel the event
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
-                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§a§lCONFIRM", "§cYou need exactly 3 traits to confirm.", null, null);
-                        event.setCancelled(true);  // Prevent further actions (optional)
+                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§a§lCONFIRM", "§cYou need to select at least 1 trait to confirm.", null, null);
+                        event.setCancelled(true);
                     }
                 });
     }
