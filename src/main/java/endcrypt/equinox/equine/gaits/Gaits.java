@@ -1,13 +1,16 @@
 package endcrypt.equinox.equine.gaits;
 
+import lombok.Getter;
+
+@Getter
 public enum Gaits {
     WALK("Walk", 1),
     TROT("Trot", 2),
     CANTER("Canter", 3),
     GALLOP("Gallop", 4);
 
-    private String name;
-    private double speed;
+    private final String name;
+    private final double speed;
 
     Gaits(String name, double speed) {
         this.name = name;
@@ -35,13 +38,5 @@ public enum Gaits {
             }
         }
         return null; // No previous gait (if it's the first one)
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getSpeed() {
-        return speed;
     }
 }

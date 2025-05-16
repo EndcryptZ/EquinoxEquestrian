@@ -1,8 +1,11 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public enum Gender {
     NONE("None", 0),
 
@@ -16,14 +19,6 @@ public enum Gender {
     Gender(String genderName, int price){
         this.genderName = genderName;
         this.price = price;
-    }
-
-    public String getGenderName() {
-        return genderName;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     public static List<String> getGenderNames() {

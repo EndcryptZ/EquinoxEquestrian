@@ -1,5 +1,8 @@
 package endcrypt.equinox.menu.horse.internal;
 
+import lombok.Getter;
+
+@Getter
 public enum ListOrganizeType {
 
     DISCIPLINE("Discipline"),
@@ -12,9 +15,5 @@ public enum ListOrganizeType {
 
     ListOrganizeType(String name) {
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 }

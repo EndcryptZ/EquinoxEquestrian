@@ -20,6 +20,7 @@ import endcrypt.equinox.player.data.PlayerDataListener;
 import endcrypt.equinox.player.data.PlayerDataManager;
 import endcrypt.equinox.token.TokenManager;
 import endcrypt.equinox.updater.horse.HorseNBTUpdaterListener;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.sql.SQLException;
 
+@Getter
 public final class EquinoxEquestrian extends JavaPlugin {
 
     private SpiGUI spiGUI;
@@ -153,42 +155,8 @@ public final class EquinoxEquestrian extends JavaPlugin {
         }
     }
 
-    public SpiGUI getSpiGUI() {
-        return spiGUI;
-    }
     public String getPrefix() {
         return "<dark_gray>[<aqua>Equinox<dark_gray>] ";
-    }
-    public Economy getEcon() {
-        return econ;
-    }
-    public BedrockBuildForm getBedrockBuildForm() {
-        return bedrockBuildForm;
-    }
-    public FloodgateApi getFloodgateApi() {
-        return floodgateApi;
-    }
-
-    public BuildMenuManager getBuildMenuManager() {
-        return buildMenuManager;
-    }
-    public EquineManager getEquineManager() {
-        return equineManager;
-    }
-    public PlayerDataManager getPlayerDataManager() {
-        return playerDataManager;
-    }
-    public HorseMenuManager getHorseMenuManager() {
-        return horseMenuManager;
-    }
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
-    }
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-    public TokenManager getTokenManager() {
-        return tokenManager;
     }
 
 }

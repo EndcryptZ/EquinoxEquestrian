@@ -1,5 +1,8 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
+
+@Getter
 public enum Trait {
 
     NONE("None", "Neutral", "None Value", 0),
@@ -90,22 +93,6 @@ public enum Trait {
         this.traitType = traitType;
         this.description = description;
         this.price = price;
-    }
-
-    public String getTraitName() {
-        return traitName;
-    }
-
-    public String getTraitType() {
-        return traitType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     public static Trait getTraitByName(String traitName) {

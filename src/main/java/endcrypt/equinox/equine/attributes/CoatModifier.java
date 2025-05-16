@@ -1,10 +1,12 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
 import org.bukkit.entity.Horse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public enum CoatModifier {
     NONE("None", null),
     SNIP("Snip", Horse.Style.WHITE),
@@ -18,14 +20,6 @@ public enum CoatModifier {
     CoatModifier(String coatModifierName, Horse.Style horseCoatModifier){
         this.coatModifierName = coatModifierName;
         this.horseCoatModifier = horseCoatModifier;
-    }
-
-    public String getCoatModifierName() {
-        return coatModifierName;
-    }
-
-    public Horse.Style getHorseCoatModifier() {
-        return horseCoatModifier;
     }
 
     public static List<String> getCoatModifierNames() {

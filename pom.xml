@@ -26,7 +26,15 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.38</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -156,6 +164,12 @@
             <groupId>dev.jorel</groupId>
             <artifactId>commandapi-bukkit-shade</artifactId>
             <version>10.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.38</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

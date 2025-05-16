@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.utils.ColorUtils;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class EquineGroomManager implements Listener {
 
     private final EquinoxEquestrian plugin;
@@ -105,14 +107,6 @@ public class EquineGroomManager implements Listener {
         }
 
         return false;
-    }
-
-    public AbstractHorse getHorse(Player player) {
-        return groomMap.get(player).getHorse();
-    }
-
-    public Map<Player, EquineGroomData> getGroomMap() {
-        return groomMap;
     }
 
 }

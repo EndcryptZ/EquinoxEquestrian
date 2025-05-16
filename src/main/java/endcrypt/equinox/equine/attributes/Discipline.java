@@ -1,8 +1,11 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public enum Discipline {
     NONE("None", 0),
 
@@ -33,10 +36,6 @@ public enum Discipline {
         this.price = price;
     }
 
-    public String getDisciplineName() {
-        return disciplineName;
-    }
-
     public static List<String> getDisciplineNames() {
         List<String> names = new ArrayList<>();
         for (Discipline discipline : Discipline.values()) {
@@ -52,9 +51,5 @@ public enum Discipline {
             }
         }
         return null;
-    }
-
-    public int getPrice() {
-        return price;
     }
 }

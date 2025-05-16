@@ -4,11 +4,14 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
-import org.bukkit.Bukkit;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.UUID;
 
+@Setter
+@Getter
 public class EquineLiveHorse {
 
 
@@ -95,77 +98,5 @@ public class EquineLiveHorse {
                 }
             }
         });
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Discipline getDiscipline() {
-        return discipline;
-    }
-
-    public Breed getBreed() {
-        return breed;
-    }
-
-    public CoatColor getCoatColor() {
-        return coatColor;
-    }
-
-    public CoatModifier getCoatModifier() {
-        return coatModifier;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public Height getHeight() {
-        return height;
-    }
-
-    public Trait[] getTraits() {
-        return traits;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public long getClaimTime() {
-        return claimTime;
-    }
-
-    public double getBaseJumpPower() {
-        return baseJumpPower;
-    }
-
-    public double getBaseSpeed() {
-        return baseSpeed;
-    }
-
-    public long getBirthTime() {
-        return birthTime;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public UUID getOwnerUUID() {
-        return ownerUUID;
-    }
-
-    public String getSkullId() {
-        return skullId;
-    }
-
-    public void setSkullId(String skullId) {
-        this.skullId = skullId;
     }
 }

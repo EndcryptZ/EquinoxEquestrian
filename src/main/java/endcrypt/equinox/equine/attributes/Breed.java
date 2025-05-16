@@ -1,8 +1,11 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public enum Breed {
 
     NONE("None", "None", "None", 13, 15), // Adjusted minimum hands
@@ -236,26 +239,6 @@ public enum Breed {
         this.size = size;
         this.minimumHands = minimumHands;
         this.maximumHands = maximumHands;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public double getMinimumHands() {
-        return minimumHands;
-    }
-
-    public double getMaximumHands() {
-        return maximumHands;
     }
 
     public static List<String> getBreedNames() {

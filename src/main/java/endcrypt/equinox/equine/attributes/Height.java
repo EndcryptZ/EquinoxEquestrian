@@ -1,5 +1,8 @@
 package endcrypt.equinox.equine.attributes;
 
+import lombok.Getter;
+
+@Getter
 public enum Height {
     SIZE_0_7(0.7, 9.0),
     SIZE_0_71(0.71, 9.1),
@@ -57,14 +60,6 @@ public enum Height {
     Height(double size, double hands) {
         this.size = size;
         this.hands = hands;
-    }
-
-    public double getSize() {
-        return size;
-    }
-
-    public double getHands() {
-        return hands;
     }
 
     public String getHandsString() {

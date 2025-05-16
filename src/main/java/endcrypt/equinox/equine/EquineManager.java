@@ -8,7 +8,9 @@ import endcrypt.equinox.equine.home.EquineHome;
 import endcrypt.equinox.equine.invulnerable.EquineInvulnerable;
 import endcrypt.equinox.equine.items.EquineItems;
 import endcrypt.equinox.equine.lunge.EquineLunge;
+import lombok.Getter;
 
+@Getter
 public class EquineManager {
 
     private final EquineHorseBuilder equineHorseBuilder;
@@ -39,15 +41,4 @@ public class EquineManager {
 
     }
 
-    public EquineLunge getEquineLunge() {
-        return equineLunge;
-    }
-
-    public EquineHome getEquineHome() {
-        return equineHome;
-    }
-
-    public EquineGroomManager getEquineGroomManager() {
-        return equineGroomManager;
-    }
 }

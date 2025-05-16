@@ -5,7 +5,9 @@ import endcrypt.equinox.menu.horse.internal.HorseInfoMenu;
 import endcrypt.equinox.menu.horse.internal.HorseListMenu;
 import endcrypt.equinox.menu.horse.internal.ListOrganizerMenu;
 import endcrypt.equinox.menu.horse.submenus.*;
+import lombok.Getter;
 
+@Getter
 public class HorseMenuManager {
 
     private final EquinoxEquestrian plugin;
@@ -31,41 +33,5 @@ public class HorseMenuManager {
         horseListMenu = new HorseListMenu(plugin);
         horseInfoMenu = new HorseInfoMenu(plugin);
         listOrganizerMenu = new ListOrganizerMenu(plugin);
-    }
-
-    public HorseMenu getHorseMenu() {
-        return horseMenu;
-    }
-
-    public ListOrganizerMenu getListOrganizerMenu() {
-        return listOrganizerMenu;
-    }
-
-    public HorseInfoMenu getHorseInfoMenu() {
-        return horseInfoMenu;
-    }
-
-    public AutoVetMenu getAutoVetMenu() {
-        return autoVetMenu;
-    }
-
-    public GroomMenu getGroomMenu() {
-        return groomMenu;
-    }
-
-    public HealthMenu getHealthMenu() {
-        return healthMenu;
-    }
-
-    public HomeMenu getHomeMenu() {
-        return homeMenu;
-    }
-
-    public HorseListMenu getHorseListMenu() {
-        return horseListMenu;
-    }
-
-    public InventoryHorseMenu getInventoryHorseMenu() {
-        return inventoryHorseMenu;
     }
 }
