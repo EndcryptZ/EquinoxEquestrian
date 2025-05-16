@@ -6,6 +6,7 @@ import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.UUID;
@@ -18,7 +19,8 @@ public class EquineLiveHorse {
     // Attributes
     private String name;
     private Discipline discipline;
-    private Breed breed;
+    private Breed[] breeds;
+    private Breed prominentBreed;
     private CoatColor coatColor;
     private CoatModifier coatModifier;
     private Gender gender;
@@ -36,13 +38,16 @@ public class EquineLiveHorse {
     private double baseJumpPower;
     private String skullId;
 
+    private final AbstractHorse horse;
+
 
     public EquineLiveHorse(AbstractHorse horse) {
         EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
 
         this.name = horse.getName();
         this.discipline = equineHorse.getDiscipline();
-        this.breed = equineHorse.getBreed();
+        this.breeds = equineHorse.getBreeds();
+        this.prominentBreed = equineHorse.getProminentBreed();
         this.coatColor = equineHorse.getCoatColor();
         this.coatModifier = equineHorse.getCoatModifier();
         this.gender = equineHorse.getGender();
@@ -51,6 +56,7 @@ public class EquineLiveHorse {
         this.traits = equineHorse.getTraits();
 
         this.uuid = horse.getUniqueId();
+        this.horse = horse;
 
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong("EQUINE_CLAIM_TIME"));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong("EQUINE_BIRTH_TIME"));
@@ -61,7 +67,7 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString("EQUINE_SKULL_ID"));
     }
 
-    public void update(AbstractHorse horse) {
+    public void update() {
 
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setLong("EQUINE_CLAIM_TIME", this.claimTime);
@@ -74,11 +80,21 @@ public class EquineLiveHorse {
         });
     }
 
-    public void updateDefault(AbstractHorse horse) {
+    public void updateDefault() {
         NBT.modifyPersistentData(horse, nbt -> {
             for (Keys key : Keys.values()) {
                 String tag = key.getKey();
                 Object value = key.getDefaultValue();
+
+                // Temporary updater
+                if(tag.equalsIgnoreCase("EQUINE_BREED")) {
+                    Breed currentBreed = Breed.getBreedByName(nbt.getString("EQUINE_BREED"));
+                    nbt.setString("EQUINE_BREED_1", currentBreed.name());
+                    nbt.removeKey("EQUINE_BREED");
+                    Bukkit.getServer().getConsoleSender().sendMessage(ColorUtils.color(
+                            "<green>Updated BREED NBT of " + horse.getName()
+                    ));
+                }
 
                 if (!nbt.hasTag(tag)) {
                     if (value instanceof String str) {
