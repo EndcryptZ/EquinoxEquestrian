@@ -2,15 +2,12 @@ package endcrypt.equinox.player.data;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class PlayerDataManager implements Listener {
 
@@ -32,37 +29,20 @@ public class PlayerDataManager implements Listener {
 
     public void save(Player player) {
         this.saveTokens(player);
-        this.savePlayerHorses(player);
         this.playerDataMap.remove(player);
     }
 
     public void loadPlayer(Player player) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             try {
-                List<UUID> playerHorses = plugin.getDatabaseManager().getPlayerHorses(player);
+
                 plugin.getDatabaseManager().addPlayer(player);
-                playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getTokenAmount(player), playerHorses));
+                playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getTokenAmount(player)));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
     }
-
-    public void savePlayerHorses(Player player) {
-        PlayerData playerData = playerDataMap.get(player);
-        List<UUID> playerHorses = playerData.getOwnedHorses();
-        try {
-            List<UUID> databaseHorses = plugin.getDatabaseManager().getPlayerHorses(player);
-            List<UUID> newHorses = playerHorses.stream().filter(horse -> !databaseHorses.contains(horse)).toList();
-
-            for (UUID uuid : newHorses) {
-                plugin.getDatabaseManager().addHorse((AbstractHorse) Bukkit.getEntity(uuid));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void saveTokens(Player player) {
         PlayerData playerData = playerDataMap.get(player);
         try {
