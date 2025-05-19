@@ -123,4 +123,8 @@ public class EquineUtils {
         });
     }
 
+    public static double blocksToMnecraftSpeed(double blocksPerSecond) {
+        return blocksPerSecond * 0.02777777777777778;
+    }
+
 }
