@@ -2,10 +2,7 @@ package endcrypt.equinox.commands;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.IntegerArgument;
-import dev.jorel.commandapi.arguments.MultiLiteralArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
@@ -13,7 +10,9 @@ import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -52,6 +51,11 @@ public class EquineAdminCommand {
                         .withArguments(new MultiLiteralArgument("item", equineItems))
                         .withArguments(new IntegerArgument("amount", 1).setOptional(true))
                         .executes(this::giveEquineItem))
+
+                .withSubcommand(new CommandAPICommand("speed")
+                        .withPermission("equinox.cmd.equineadmin.speed")
+                        .withArguments(new DoubleArgument("speed"))
+                        .executes(this::speed))
 
                 .register();
     }
@@ -134,6 +138,31 @@ public class EquineAdminCommand {
                 Placeholder.parsed("amount", String.valueOf(amount)),
                 Placeholder.parsed("item", item.name()),
                 Placeholder.parsed("player", target.getName())));
+    }
+
+    private void speed(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the speed!"));
+            return;
+        }
+
+        double speed = (double) args.get("speed");
+        if(speed < 0.1) {
+            commandSender.sendMessage(ColorUtils.color("<red>Speed must be greater than 0.1!"));
+            return;
+        }
+
+        NBT.modifyPersistentData(horse, nbt -> {
+            horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(EquineUtils.blocksToMnecraftSpeed(speed));
+            nbt.setDouble("EQUINE_BASE_SPEED", EquineUtils.blocksToMnecraftSpeed(speed));
+        });
+
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s to <speed> blocks per second!",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("speed", String.valueOf(speed))
+        ));
     }
 
 
