@@ -2,9 +2,7 @@ package endcrypt.equinox.equine.attributes;
 
 import lombok.Getter;
 
-import java.util.LinkedHashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public enum Trait {
@@ -108,7 +106,7 @@ public enum Trait {
         return null;
     }
 
-    public static Trait[] random(int count) {
+    public static List<Trait> random(int count) {
         Random random = new Random();
         Trait[] values = Trait.values();
 
@@ -122,7 +120,7 @@ public enum Trait {
             selected.add(trait); // Set will ignore duplicates
         }
 
-        return selected.toArray(new Trait[0]);
+        return new ArrayList<>(selected);
     }
 
 }

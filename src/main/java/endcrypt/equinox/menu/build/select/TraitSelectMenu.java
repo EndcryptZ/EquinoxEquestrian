@@ -6,7 +6,9 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorse;
 import endcrypt.equinox.equine.attributes.Trait;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.ItemUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -24,22 +26,24 @@ public class TraitSelectMenu {
         this.plugin = plugin;
     }
 
-    private Map<Player, Trait[]> playerTraitMap = new HashMap<>();
+    private final Map<Player, List<Trait>> playerTraitMap = new HashMap<>();
 
     // Select Traits Menu
     public Inventory traitMenu(Player player, EquineHorse equineHorse) {
 
         SGMenu gui = plugin.getSpiGUI().create("Select Traits", 6, "Trait Menu");
 
-        if(Arrays.asList(equineHorse.getTraits()).contains(Trait.NONE)) {
-            equineHorse.setTraits(new Trait[0]);
+        if (equineHorse.getTraits() != null && equineHorse.getTraits().contains(Trait.NONE)) {
+            equineHorse.setTraits(new ArrayList<>());
         }
 
-        playerTraitMap.put(player, equineHorse.getTraits());
+        playerTraitMap.put(player, new ArrayList<>());
+
+        Bukkit.getServer().broadcast(ColorUtils.color(playerTraitMap.get(player).toString()));
 
         int slot = 0;
-        for(Trait trait : Trait.values()) {
-            if(trait == Trait.NONE) continue;
+        for (Trait trait : Trait.values()) {
+            if (trait == Trait.NONE) continue;
             SGButton traitButton = traitButton(player, trait);
             gui.setButton(slot, traitButton);
             slot++;
@@ -55,7 +59,7 @@ public class TraitSelectMenu {
     private SGButton traitButton(Player player, Trait trait) {
         String traitName = trait.getTraitName();
 
-        boolean isTraitSelected = Arrays.asList(playerTraitMap.get(player)).contains(trait);
+        boolean isTraitSelected = playerTraitMap.get(player).contains(trait);
         Material material = isTraitSelected ? Material.MAP : Material.PAPER;
 
         if (isTraitSelected) {
@@ -70,22 +74,20 @@ public class TraitSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     ItemMeta meta = event.getCurrentItem().getItemMeta();
-                    Trait[] playerTraits = playerTraitMap.get(player);
+                    boolean isTraitCurrentlySelected = playerTraitMap.get(player).contains(trait);
+                    List<Trait> playerTraits = playerTraitMap.get(player);
 
-                    if (isTraitSelected) {
+
+                    if (isTraitCurrentlySelected) {
                         // remove trait
-                        playerTraitMap.put(player, Arrays.stream(playerTraits)
-                                .filter(t -> !t.equals(trait))
-                                .toArray(Trait[]::new));
+                        playerTraits.remove(trait);
 
                         event.getCurrentItem().setType(Material.PAPER);
                         meta.setDisplayName("§f" + trait.getTraitName());
                     } else {
-                        if (playerTraits.length < 3) {
+                        if (playerTraits.size() < 3) {
                             // add trait
-                            Trait[] newTraits = Arrays.copyOf(playerTraits, playerTraits.length + 1);
-                            newTraits[playerTraits.length] = trait;
-                            playerTraitMap.put(player, newTraits);
+                            playerTraits.add(trait);
 
                             event.getCurrentItem().setType(Material.MAP);
                             meta.setDisplayName("§f" + trait.getTraitName() + " §a(Selected)");
@@ -114,8 +116,8 @@ public class TraitSelectMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    Trait[] playerTraits = playerTraitMap.get(player);
-                    if (playerTraits != null && playerTraits.length >= 1) {
+                    List<Trait> playerTraits = playerTraitMap.get(player);
+                    if (playerTraits != null && playerTraits.size() >= 1) {
                         equineHorse.setTraits(playerTraits);
                         plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                     } else {

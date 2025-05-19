@@ -266,7 +266,7 @@ public enum Breed {
         return breed;
     }
 
-    public static Breed[] random(int count) {
+    public static List<Breed> random(int count) {
         Random random = new Random();
         Breed[] values = Breed.values();
 
@@ -280,7 +280,7 @@ public enum Breed {
             selected.add(breed); // Set will ignore duplicates
         }
 
-        return selected.toArray(new Breed[0]);
+        return new ArrayList<>(selected);
     }
 
 

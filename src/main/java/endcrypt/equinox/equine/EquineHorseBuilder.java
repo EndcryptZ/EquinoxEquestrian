@@ -59,22 +59,22 @@ public class EquineHorseBuilder {
             nbt.setString("EQUINE_HORSE", "true");
             nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
 
-            IntStream.range(0, equineHorse.getBreeds().length)
+            IntStream.range(0, equineHorse.getBreeds().size())
                     .forEach(i -> {
-                    nbt.setString("EQUINE_BREED_" + i, equineHorse.getBreeds()[i].name());
-                    Bukkit.getServer().broadcast(ColorUtils.color("Set EQUINE_BREED_" + i + " of " + horse.getName() + " to " + equineHorse.getBreeds()[i].name()));
+                    nbt.setString("EQUINE_BREED_" + i, equineHorse.getBreeds().get(i).name());
+                    Bukkit.getServer().broadcast(ColorUtils.color("Set EQUINE_BREED_" + i + " of " + horse.getName() + " to " + equineHorse.getBreeds().get(i).name()));
                     });
 
-            if(equineHorse.getBreeds().length > 1) {
-                equineHorse.setProminentBreed(equineHorse.getBreeds()[new Random().nextInt(equineHorse.getBreeds().length)]);
+            if(equineHorse.getBreeds().size() > 1) {
+                equineHorse.setProminentBreed(equineHorse.getBreeds().get(new Random().nextInt(equineHorse.getBreeds().size())));
                 nbt.setString("EQUINE_PROMINENT_BREED", equineHorse.getProminentBreed().name());
             }
 
             nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
             nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
             nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getHands());
-            IntStream.range(0, equineHorse.getTraits().length)
-                            .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits()[i].name()));
+            IntStream.range(0, equineHorse.getTraits().size())
+                            .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits().get(i).name()));
 
 
             nbt.setLong("EQUINE_CLAIM_TIME", currentTime);
@@ -103,13 +103,13 @@ public class EquineHorseBuilder {
         Random random = new Random();
 
         Discipline discipline = Discipline.random();
-        Breed[] breeds = Breed.random(random.nextInt(2) + 1);
+        List<Breed> breeds = Breed.random(random.nextInt(2) + 1);
         CoatColor coatColor = CoatColor.random();
         CoatModifier coatModifier = CoatModifier.random();
         Gender gender = Gender.random();
         int age = random.nextInt(10) + 1;
-        Height height = Height.getRandomHeight(breeds[0]);
-        Trait[] traits = Trait.random(random.nextInt(3) + 1);
+        Height height = Height.getRandomHeight(breeds.get(0));
+        List<Trait> traits = Trait.random(random.nextInt(3) + 1);
 
         return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
     }

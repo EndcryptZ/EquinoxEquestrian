@@ -48,7 +48,7 @@ public class BedrockBuildForm {
 
         String name = "";
         Discipline discipline = Discipline.NONE;
-        Breed[] breeds = {Breed.NONE, Breed.NONE};
+        List<Breed> breeds = Arrays.asList(Breed.NONE, Breed.NONE);
         CoatColor coatColor = CoatColor.NONE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.NONE;
@@ -56,13 +56,13 @@ public class BedrockBuildForm {
         int age = 4;
 
         for(Height loopedHeight : Height.values()) {
-            if(loopedHeight.getHands() == breeds[0].getMinimumHands()) {
+            if(loopedHeight.getHands() == breeds.get(0).getMinimumHands()) {
                 height = loopedHeight;
                 break;
             }
         }
 
-        Trait[] traits = {Trait.NONE, Trait.NONE, Trait.NONE};
+        List<Trait> traits = Arrays.asList(Trait.NONE, Trait.NONE, Trait.NONE);
 
         EquineHorse equineHorse = new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
 
@@ -85,18 +85,18 @@ public class BedrockBuildForm {
 
         // Build breed display logic
         StringBuilder breedBuilder = new StringBuilder();
-        Breed[] breeds = equineHorse.getBreeds();
+        List<Breed> breeds = equineHorse.getBreeds();
         Breed prominent = equineHorse.getProminentBreed();
 
-        if (breeds.length == 1) {
-            breedBuilder.append("§f").append(breeds[0].getName());
-        } else if (breeds.length == 2) {
-            breedBuilder.append("§fBreed 1: ").append(breeds[0].getName());
-            if (prominent == breeds[0]) {
+        if (breeds.size() == 1) {
+            breedBuilder.append("§f").append(breeds.get(0).getName());
+        } else if (breeds.size() == 2) {
+            breedBuilder.append("§fBreed 1: ").append(breeds.get(0).getName());
+            if (prominent == breeds.get(0)) {
                 breedBuilder.append(" (Prominent)");
             }
-            breedBuilder.append("\n§fBreed 2: ").append(breeds[1].getName());
-            if (prominent == breeds[1]) {
+            breedBuilder.append("\n§fBreed 2: ").append(breeds.get(0).getName());
+            if (prominent == breeds.get(1)) {
                 breedBuilder.append(" (Prominent)");
             }
         } else {
@@ -104,9 +104,9 @@ public class BedrockBuildForm {
         }
 
         // Build traits display safely
-        String trait1 = equineHorse.getTraits().length > 0 ? equineHorse.getTraits()[0].getTraitName() : "None";
-        String trait2 = equineHorse.getTraits().length > 1 ? equineHorse.getTraits()[1].getTraitName() : "None";
-        String trait3 = equineHorse.getTraits().length > 2 ? equineHorse.getTraits()[2].getTraitName() : "None";
+        String trait1 = equineHorse.getTraits() != null && equineHorse.getTraits().size() > 0 ? equineHorse.getTraits().get(0).getTraitName() : "None";
+        String trait2 = equineHorse.getTraits() != null && equineHorse.getTraits().size() > 1 ? equineHorse.getTraits().get(1).getTraitName() : "None";
+        String trait3 = equineHorse.getTraits() != null && equineHorse.getTraits().size() > 2 ? equineHorse.getTraits().get(2).getTraitName() : "None";
 
         form.label("§6Name: §f" + equineHorse.getName() +
                         "\n§6Discipline: §f" + equineHorse.getDiscipline().getDisciplineName() +
@@ -184,10 +184,10 @@ public class BedrockBuildForm {
 
         if (equineHorse.getName().isEmpty()) missingAttributes.add("Name");
         if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-        if (equineHorse.getBreeds().length == 0) missingAttributes.add("Breed(s)");
+        if (equineHorse.getBreeds().isEmpty()) missingAttributes.add("Breed(s)");
         if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
         if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-        if (equineHorse.getTraits().length == 0) missingAttributes.add("Trait(s)");
+        if (equineHorse.getTraits().isEmpty()) missingAttributes.add("Trait(s)");
         return missingAttributes;
     }
 
@@ -200,7 +200,11 @@ public class BedrockBuildForm {
         int genderPrice = equineHorse.getGender().getPrice();
         int agePrice = 1000;
         int heightPrice = 1000;
-        int traitsPrice = equineHorse.getTraits()[0].getPrice() + equineHorse.getTraits()[1].getPrice() + equineHorse.getTraits()[2].getPrice();
+        int traitsPrice = (equineHorse.getTraits() != null && !equineHorse.getTraits().isEmpty()) ?
+                equineHorse.getTraits().stream()
+                        .limit(3)
+                        .mapToInt(trait -> trait != null ? trait.getPrice() : 0)
+                        .sum() : 0;
 
         return namePrice + disciplinePrice + coatColorPrice + coatStylePrice + genderPrice + agePrice + heightPrice + traitsPrice;
     }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class BreedForm {
 
-    private EquinoxEquestrian plugin;
+    private final EquinoxEquestrian plugin;
 
     public BreedForm(EquinoxEquestrian plugin) {
         this.plugin = plugin;
@@ -32,8 +32,8 @@ public class BreedForm {
             form.label("§cYou must select a valid Breed");
         }
 
-        Breed[] currentBreeds = equineHorse.getBreeds();
-        Breed otherBreed = currentBreeds[1 - index];
+        List<Breed> currentBreeds = equineHorse.getBreeds();
+        Breed otherBreed = currentBreeds.get(index == 0 ? 1 : 0);
 
         List<String> breedNames = new ArrayList<>();
         List<Breed> breeds = new ArrayList<>();
@@ -44,7 +44,7 @@ public class BreedForm {
                 // Allow NONE only for Breed 2 if you want
                 breedNames.add(breed.getName());
                 breeds.add(breed);
-                if (currentBreeds[index] == breed) {
+                if (currentBreeds.get(index) == breed) {
                     selectedIndex = breedNames.size() - 1;
                 }
                 continue;
@@ -53,7 +53,7 @@ public class BreedForm {
             if (breed != Breed.NONE && breed != otherBreed) {
                 breedNames.add(breed.getName());
                 breeds.add(breed);
-                if (currentBreeds[index] == breed) {
+                if (currentBreeds.get(index) == breed) {
                     selectedIndex = breedNames.size() - 1;
                 }
             }
@@ -77,12 +77,12 @@ public class BreedForm {
             return;
         }
 
-        Breed[] breeds = equineHorse.getBreeds();
-        breeds[index] = breed;
+        List<Breed> breeds = equineHorse.getBreeds();
+        breeds.set(index, breed);
         equineHorse.setBreeds(breeds);
 
         // Adjust height only if we change Breed 1
-        if (index == 0 && breed != Breed.NONE) {
+        if (index == 0) {
             double minHands = breed.getMinimumHands();
             double maxHands = breed.getMaximumHands();
 

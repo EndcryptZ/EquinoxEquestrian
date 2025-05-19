@@ -72,11 +72,10 @@ public class EquineUtils {
             Breed breed1 = Breed.getBreedByName(nbt.getString("EQUINE_BREED_1"));
             Breed breed2 = Breed.getBreedByName(nbt.getString("EQUINE_BREED_2"));
 
-            Breed[] breeds;
-            if (breed2 == null || breed2 == Breed.NONE) {
-                breeds = new Breed[] { breed1 };
-            } else {
-                breeds = new Breed[] { breed1, breed2 };
+            List<Breed> breeds = new ArrayList<>();
+            breeds.add(breed1);
+            if (breed2 != null && breed2 != Breed.NONE) {
+                breeds.add(breed2);
             }
 
             // Prominent breed
@@ -102,8 +101,7 @@ public class EquineUtils {
                     traitList.add(Trait.getTraitByName(traitName));
                 }
             }
-            Trait[] traits = traitList.toArray(new Trait[0]);
-
+            List<Trait> traits = traitList.isEmpty() ? null : traitList;
             EquineHorse equineHorse = new EquineHorse(
                     name,
                     discipline,

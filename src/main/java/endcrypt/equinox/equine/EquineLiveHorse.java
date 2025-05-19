@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
 
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -19,14 +20,14 @@ public class EquineLiveHorse {
     // Attributes
     private String name;
     private Discipline discipline;
-    private Breed[] breeds;
+    private List<Breed> breeds;
     private Breed prominentBreed;
     private CoatColor coatColor;
     private CoatModifier coatModifier;
     private Gender gender;
     private int age;
     private Height height;
-    private Trait[] traits;
+    private List<Trait> traits;
 
     // Others
     private UUID uuid;

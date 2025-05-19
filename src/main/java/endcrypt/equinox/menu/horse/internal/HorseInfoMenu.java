@@ -77,23 +77,23 @@ public class HorseInfoMenu {
         EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
 
         StringBuilder breedBuilder = new StringBuilder();
-        Breed[] breeds = equineHorse.getBreeds();
+        List<Breed> breeds = equineHorse.getBreeds();
 
         for(Breed breed : Breed.random(new Random().nextInt(2) + 1)) {
             Bukkit.getServer().broadcast(ColorUtils.color("breed: " + breed));
         }
 
-        if (breeds.length == 1) {
-            breedBuilder.append("Breed: &7").append(breeds[0].getName());
-        } else if (breeds.length == 2) {
+        if (breeds.size() == 1) {
+            breedBuilder.append("Breed: &7").append(breeds.get(0).getName());
+        } else if (breeds.size() == 2) {
             Breed prominent = equineHorse.getProminentBreed(); // only care if exactly 2 breeds
 
-            breedBuilder.append("Breed 1: &7").append(breeds[0].getName());
-            if (prominent != null && prominent == breeds[0]) {
+            breedBuilder.append("Breed 1: &7").append(breeds.get(0).getName());
+            if (prominent != null && prominent == breeds.get(0)) {
                 breedBuilder.append(" (Prominent)");
             }
-            breedBuilder.append("\n&7▸ &bBreed 2: &7").append(breeds[1].getName());
-            if (prominent != null && prominent == breeds[1]) {
+            breedBuilder.append("\n&7▸ &bBreed 2: &7").append(breeds.get(1).getName());
+            if (prominent != null && prominent == breeds.get(1)) {
                 breedBuilder.append(" (Prominent)");
             }
         } else {
@@ -131,13 +131,13 @@ public class HorseInfoMenu {
 
         // Build dynamic trait display
         List<String> loreList = new ArrayList<>(List.of(baseLore));
-        Trait[] traits = equineHorse.getTraits();
+        List<Trait> traits = equineHorse.getTraits();
 
-        if (traits.length == 0) {
+        if (traits.isEmpty()) {
             loreList.add("    &7▸ &bNone");
         } else {
-            for (int i = 0; i < traits.length; i++) {
-                loreList.add("    &7▸ &bTrait " + (i + 1) + ": &7" + traits[i].getTraitName());
+            for (int i = 0; i < traits.size(); i++) {
+                loreList.add("    &7▸ &bTrait " + (i + 1) + ": &7" + traits.get(i).getTraitName());
             }
         }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class TraitForm {
 
 
-    private EquinoxEquestrian plugin;
+    private final EquinoxEquestrian plugin;
     public TraitForm(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
@@ -35,21 +35,21 @@ public class TraitForm {
         List<Trait> traits = new ArrayList<>();
         int selectedIndex = 0;
 
-        Trait[] currentTraits = equineHorse.getTraits();
+        List<Trait> currentTraits = equineHorse.getTraits();
 
         for (Trait trait : Trait.values()) {
             if (trait == Trait.NONE) {
                 traitNames.add(trait.getTraitName());
                 traits.add(trait);
-                if (currentTraits[index] == trait) {
+                if (currentTraits.get(index) == trait) {
                     selectedIndex = traitNames.size() - 1;
                 }
                 continue;
             }
 
             boolean alreadyUsed = false;
-            for (int i = 0; i < currentTraits.length; i++) {
-                if (i != index && currentTraits[i] == trait) {
+            for (int i = 0; i < currentTraits.size(); i++) {
+                if (i != index && currentTraits.get(i) == trait) {
                     alreadyUsed = true;
                     break;
                 }
@@ -58,7 +58,7 @@ public class TraitForm {
             if (!alreadyUsed) {
                 traitNames.add(trait.getTraitName());
                 traits.add(trait);
-                if (currentTraits[index] == trait) {
+                if (currentTraits.get(index) == trait) {
                     selectedIndex = traitNames.size() - 1;
                 }
             }
@@ -81,8 +81,8 @@ public class TraitForm {
             return;
         }
 
-        Trait[] traits = equineHorse.getTraits();
-        traits[index] = trait;
+        List<Trait> traits = equineHorse.getTraits();
+        traits.set(index, trait);
         equineHorse.setTraits(traits);
         plugin.getBedrockBuildForm().openMainFormWithParameters(player, equineHorse);
     }

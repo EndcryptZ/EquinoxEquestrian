@@ -24,8 +24,8 @@ public class HeightForm {
         CustomForm.Builder form = CustomForm.builder()
                 .title("Horse Height");
 
-        Double minHeight = equineHorse.getBreeds()[0].getMinimumHands();
-        Double maxHeight = equineHorse.getBreeds()[0].getMaximumHands();
+        Double minHeight = equineHorse.getBreeds().get(0).getMinimumHands();
+        Double maxHeight = equineHorse.getBreeds().get(0).getMaximumHands();
 
         List<Height> heightOptions = new ArrayList<>();
         List<String> handsOptions = new ArrayList<>();
