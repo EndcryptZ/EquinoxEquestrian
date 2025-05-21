@@ -10,11 +10,11 @@ public enum Gaits {
     GALLOP("Gallop", 4);
 
     private final String name;
-    private final double speed;
+    private final double speedMultiplier;
 
-    Gaits(String name, double speed) {
+    Gaits(String name, double speedMultiplier) {
         this.name = name;
-        this.speed = speed;
+        this.speedMultiplier = speedMultiplier;
     }
 
     // Get the next height (or null if none exists)

@@ -100,7 +100,7 @@ public class EquineGaits implements Listener {
            if (Gaits.getNextGait(currentGait) != null) {
 
                playerCurrentGaits.put(player, Gaits.getNextGait(currentGait));
-               ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeed() * EquineUtils.getBaseSpeed(equineHorse));
+               ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
            }
         }
 
@@ -109,7 +109,7 @@ public class EquineGaits implements Listener {
 
             if (Gaits.getPreviousGait(currentGait) != null) {
                 playerCurrentGaits.put(player, Gaits.getPreviousGait(currentGait));
-                ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeed() * EquineUtils.getBaseSpeed(equineHorse));
+                ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
             }
         }
     }
@@ -211,7 +211,7 @@ public class EquineGaits implements Listener {
             ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0);
             return;
         }
-        ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeed() * EquineUtils.getBaseSpeed(equineHorse));
+        ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
 
     }
 
@@ -251,7 +251,7 @@ public class EquineGaits implements Listener {
 
         AbstractHorse equineHorse = (AbstractHorse) player.getVehicle();
         playerCurrentGaits.put(player, Gaits.WALK);
-        ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeed() * EquineUtils.getBaseSpeed(equineHorse));
+        ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
     }
 
     @EventHandler
