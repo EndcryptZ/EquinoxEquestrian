@@ -79,10 +79,6 @@ public class HorseInfoMenu {
         StringBuilder breedBuilder = new StringBuilder();
         List<Breed> breeds = equineHorse.getBreeds();
 
-        for(Breed breed : Breed.random(new Random().nextInt(2) + 1)) {
-            Bukkit.getServer().broadcast(ColorUtils.color("breed: " + breed));
-        }
-
         if (breeds.size() == 1) {
             breedBuilder.append("Breed: &7").append(breeds.get(0).getName());
         } else if (breeds.size() == 2) {
