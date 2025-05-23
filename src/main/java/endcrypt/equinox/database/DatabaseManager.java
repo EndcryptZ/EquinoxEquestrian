@@ -18,12 +18,30 @@ public class DatabaseManager implements Listener {
         this.plugin = plugin;
         this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS players (" +
+            statement.execute("CREATE TABLE IF NOT EXISTS PLAYERS (" +
                     "uuid TEXT PRIMARY KEY, " +
                     "token int NOT NULL DEFAULT 0)");
-            statement.execute("CREATE TABLE IF NOT EXISTS livehorses (" +
+
+            statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
                     "uuid TEXT PRIMARY KEY, " +
-                    "owner_uuid varchar(255) NOT NULL)");
+                    "owner_uuid VARCHAR(255) NOT NULL, " +
+                    "discipline TEXT, " +
+                    "breed_1 TEXT, " +
+                    "breed_2 TEXT, " +
+                    "prominent_breed TEXT, " +
+                    "gender TEXT, " +
+                    "age INTEGER, " +
+                    "height DOUBLE, " +
+                    "trait_1 TEXT, " +
+                    "trait_2 TEXT, " +
+                    "trait_3 TEXT, " +
+                    "claim_time LONG, " +
+                    "birth_time LONG, " +
+                    "owner_name TEXT, " +
+                    "base_speed DOUBLE, " +
+                    "base_jump_power DOUBLE, " +
+                    "skull_id TEXT, " +
+                    ")");
         }
     }
 
