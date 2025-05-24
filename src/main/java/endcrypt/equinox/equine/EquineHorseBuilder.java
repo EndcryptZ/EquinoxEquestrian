@@ -3,6 +3,7 @@ package endcrypt.equinox.equine;
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -52,42 +53,40 @@ public class EquineHorseBuilder {
         plugin.getDatabaseManager().addHorse(horse);
 
         NBT.modifyPersistentData(horse, nbt -> {
-
-
             long currentTime = System.currentTimeMillis();
 
-            nbt.setString("EQUINE_HORSE", "true");
-            nbt.setString("EQUINE_DISCIPLINE", equineHorse.getDiscipline().name());
+            nbt.setString(Keys.IS_EQUINE.getKey(), (String) Keys.IS_EQUINE.getDefaultValue());
+            nbt.setString(Keys.DISCIPLINE.getKey(), equineHorse.getDiscipline().name());
 
             IntStream.range(0, equineHorse.getBreeds().size())
                     .forEach(i -> {
-                    nbt.setString("EQUINE_BREED_" + i, equineHorse.getBreeds().get(i).name());
-                    Bukkit.getServer().broadcast(ColorUtils.color("Set EQUINE_BREED_" + i + " of " + horse.getName() + " to " + equineHorse.getBreeds().get(i).name()));
+                        nbt.setString(Keys.BREED_PREFIX.getKey() + i, equineHorse.getBreeds().get(i).name());
+                        Bukkit.getServer().broadcast(ColorUtils.color("Set " + Keys.BREED_PREFIX.getKey() + i + " of " + horse.getName() + " to " + equineHorse.getBreeds().get(i).name()));
                     });
 
-            if(equineHorse.getBreeds().size() > 1) {
+            if (equineHorse.getBreeds().size() > 1) {
                 equineHorse.setProminentBreed(equineHorse.getBreeds().get(new Random().nextInt(equineHorse.getBreeds().size())));
-                nbt.setString("EQUINE_PROMINENT_BREED", equineHorse.getProminentBreed().name());
+                nbt.setString(Keys.PROMINENT_BREED.getKey(), equineHorse.getProminentBreed().name());
             }
 
-            nbt.setString("EQUINE_GENDER", equineHorse.getGender().name());
-            nbt.setInteger("EQUINE_AGE", equineHorse.getAge());
-            nbt.setDouble("EQUINE_HEIGHT", equineHorse.getHeight().getHands());
+            nbt.setString(Keys.GENDER.getKey(), equineHorse.getGender().name());
+            nbt.setInteger(Keys.AGE.getKey(), equineHorse.getAge());
+            nbt.setDouble(Keys.HEIGHT.getKey(), equineHorse.getHeight().getHands());
             IntStream.range(0, equineHorse.getTraits().size())
-                            .forEach(i -> nbt.setString("EQUINE_TRAIT_" + i, equineHorse.getTraits().get(i).name()));
+                    .forEach(i -> nbt.setString(Keys.TRAIT_PREFIX.getKey() + i, equineHorse.getTraits().get(i).name()));
 
+            nbt.setLong(Keys.CLAIM_TIME.getKey(), currentTime);
+            nbt.setLong(Keys.BIRTH_TIME.getKey(), currentTime - (MILLIS_PER_YEAR * equineHorse.getAge()));
+            nbt.setString(Keys.OWNER_UUID.getKey(), player.getUniqueId().toString());
+            nbt.setString(Keys.OWNER_NAME.getKey(), player.getName());
+            nbt.setDouble(Keys.BASE_SPEED.getKey(), horse.getAttribute(Attribute.MOVEMENT_SPEED).getBaseValue());
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), horse.getJumpStrength());
+            nbt.setString(Keys.SKULL_ID.getKey(), randomSkullId());
 
-            nbt.setLong("EQUINE_CLAIM_TIME", currentTime);
-            nbt.setLong("EQUINE_BIRTH_TIME", currentTime - (MILLIS_PER_YEAR * equineHorse.getAge()));
-            nbt.setString("EQUINE_OWNER_UUID", player.getUniqueId().toString());
-            nbt.setString("EQUINE_OWNER_NAME", player.getName());
-            nbt.setDouble("EQUINE_BASE_SPEED", horse.getAttribute(Attribute.MOVEMENT_SPEED).getBaseValue());
-            nbt.setDouble("EQUINE_BASE_JUMP_POWER", horse.getJumpStrength());
-            nbt.setString("EQUINE_SKULL_ID", randomSkullId());
-
-            nbt.setString("EQUINE_IS_CROSS_TIED", "false");
-
+            nbt.setString(Keys.IS_CROSS_TIED.getKey(), (String) Keys.IS_CROSS_TIED.getDefaultValue());
         });
+
+
     }
 
     // Assigns a horse a random skull for menus
