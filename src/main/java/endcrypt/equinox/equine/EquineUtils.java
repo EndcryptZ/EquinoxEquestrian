@@ -52,10 +52,10 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(NBT.get(item, nbt -> (String) nbt.getString(Keys.IS_GROOM_ITEM.getKey())));
     }
 
-    public static String getHorseClaimDate(AbstractHorse horse) {
+    public static String getHorseClaimDate(EquineLiveHorse horse) {
         if (horse == null) return "Unknown";
 
-        long claimEpoch = Keys.readPersistentData(horse, Keys.CLAIM_TIME);
+        long claimEpoch = horse.getClaimTime();
         return new SimpleDateFormat("dd MMM yyyy").format(new Date(claimEpoch));
     }
 
