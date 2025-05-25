@@ -2,6 +2,9 @@ package endcrypt.equinox.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
+
+import java.util.ArrayList;
+
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;
@@ -40,6 +43,28 @@ public class EquineLiveHorse {
     private String skullId;
 
     private final AbstractHorse horse;
+    
+    public EquineLiveHorse() {
+        this.horse = null;
+        this.name = null;
+        this.discipline = null;
+        this.breeds = null;
+        this.prominentBreed = null;
+        this.coatColor = null;
+        this.coatModifier = null;
+        this.gender = null;
+        this.age = 0;
+        this.height = null;
+        this.traits = new ArrayList<>();
+        this.uuid = null;
+        this.claimTime = 0L;
+        this.birthTime = 0L;
+        this.ownerName = null;
+        this.ownerUUID = null;
+        this.baseSpeed = 0.0;
+        this.baseJumpPower = 0.0;
+        this.skullId = null;
+    }
 
 
     public EquineLiveHorse(AbstractHorse horse) {
