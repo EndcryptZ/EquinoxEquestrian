@@ -1,6 +1,8 @@
 package endcrypt.equinox.database;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -27,6 +29,7 @@ public class DatabaseManager implements Listener {
             statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
                     "uuid TEXT PRIMARY KEY, " +
                     "owner_uuid VARCHAR(255) NOT NULL, " +
+                    "display_name TEXT, " +
                     "discipline TEXT, " +
                     "breed_1 TEXT, " +
                     "breed_2 TEXT, " +
@@ -60,6 +63,7 @@ public class DatabaseManager implements Listener {
         boolean isSuccess = NBT.getPersistentData(horse, nbt -> {
             String uuid = horse.getUniqueId().toString();
             String ownerUuid = nbt.getString(Keys.OWNER_UUID.getKey());
+            String displayName = horse.getCustomName();
             String discipline = nbt.getString(Keys.DISCIPLINE.getKey());
             String breed1 = nbt.getString(Keys.BREED_PREFIX.getKey() + "0");
             String breed2 = nbt.getString(Keys.BREED_PREFIX.getKey() + "1");
@@ -78,28 +82,29 @@ public class DatabaseManager implements Listener {
             String skullId = nbt.getString(Keys.SKULL_ID.getKey());
 
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO EQUINE_HORSES (uuid, owner_uuid, discipline, breed_1, breed_2, prominent_breed, gender, " +
+                    "INSERT INTO EQUINE_HORSES (uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, gender, " +
                             "age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, " +
-                            "base_jump_power, skull_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                            "base_jump_power, skull_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
                 ps.setString(1, uuid);
                 ps.setString(2, ownerUuid);
-                ps.setString(3, discipline);
-                ps.setString(4, breed1);
-                ps.setString(5, breed2);
-                ps.setString(6, prominentBreed);
-                ps.setString(7, gender);
-                ps.setInt(8, age);
-                ps.setDouble(9, height);
-                ps.setString(10, trait1);
-                ps.setString(11, trait2);
-                ps.setString(12, trait3);
-                ps.setLong(13, claimTime);
-                ps.setLong(14, birthTime);
-                ps.setString(15, ownerName);
-                ps.setDouble(16, baseSpeed);
-                ps.setDouble(17, baseJump);
-                ps.setString(18, skullId);
+                ps.setString(3, displayName);
+                ps.setString(4, discipline);
+                ps.setString(5, breed1);
+                ps.setString(6, breed2);
+                ps.setString(7, prominentBreed);
+                ps.setString(8, gender);
+                ps.setInt(9, age);
+                ps.setDouble(10, height);
+                ps.setString(11, trait1);
+                ps.setString(12, trait2);
+                ps.setString(13, trait3);
+                ps.setLong(14, claimTime);
+                ps.setLong(15, birthTime);
+                ps.setString(16, ownerName);
+                ps.setDouble(17, baseSpeed);
+                ps.setDouble(18, baseJump);
+                ps.setString(19, skullId);
 
                 ps.executeUpdate();
                 return true;
@@ -118,16 +123,47 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public List<UUID> getPlayerHorses(Player player) throws SQLException {
-        List<UUID> horseUUIDs = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT uuid FROM EQUINE_HORSES WHERE owner_uuid = ?")) {
+
+    public List<EquineLiveHorse> getPlayerHorses(Player player) throws SQLException {
+        List<EquineLiveHorse> horses = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?")) {
             preparedStatement.setString(1, player.getUniqueId().toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                horseUUIDs.add(UUID.fromString(resultSet.getString("uuid")));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    EquineLiveHorse horse = new EquineLiveHorse();
+                    horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
+                    horse.setOwnerUUID(UUID.fromString(resultSet.getString("owner_uuid")));
+                    horse.setName(resultSet.getString("display_name"));
+                    horse.setDiscipline(Discipline.valueOf(resultSet.getString("discipline")));
+                    List<Breed> breeds = new ArrayList<>();
+                    String breed1 = resultSet.getString("breed_1");
+                    String breed2 = resultSet.getString("breed_2");
+                    if (breed1 != null) breeds.add(Breed.valueOf(breed1));
+                    if (breed2 != null) breeds.add(Breed.valueOf(breed2));
+                    horse.setBreeds(breeds);
+                    horse.setProminentBreed(Breed.valueOf(resultSet.getString("prominent_breed")));
+                    horse.setGender(Gender.valueOf(resultSet.getString("gender")));
+                    horse.setAge(resultSet.getInt("age"));
+                    horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
+                    List<Trait> traits = new ArrayList<>();
+                    String trait1 = resultSet.getString("trait_1");
+                    String trait2 = resultSet.getString("trait_2");
+                    String trait3 = resultSet.getString("trait_3");
+                    if (trait1 != null) traits.add(Trait.valueOf(trait1));
+                    if (trait2 != null) traits.add(Trait.valueOf(trait2));
+                    if (trait3 != null) traits.add(Trait.valueOf(trait3));
+                    horse.setTraits(traits);
+                    horse.setClaimTime(resultSet.getLong("claim_time"));
+                    horse.setBirthTime(resultSet.getLong("birth_time"));
+                    horse.setOwnerName(resultSet.getString("owner_name"));
+                    horse.setBaseSpeed(resultSet.getDouble("base_speed"));
+                    horse.setBaseJumpPower(resultSet.getDouble("base_jump_power"));
+                    horse.setSkullId(resultSet.getString("skull_id"));
+                    horses.add(horse);
+                }
             }
         }
-        return horseUUIDs;
+        return horses;
     }
 
     public void setTokenAmount(Player player, int tokenAmount) throws SQLException {
