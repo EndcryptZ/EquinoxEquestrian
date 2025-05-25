@@ -1,5 +1,6 @@
 package endcrypt.equinox.player.data;
 
+import endcrypt.equinox.equine.EquineLiveHorse;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -7,7 +8,6 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.UUID;
 
 import static endcrypt.equinox.EquinoxEquestrian.instance;
 
@@ -17,7 +17,7 @@ public class PlayerData {
 
     private AbstractHorse selectedHorse;
     private int tokens;
-    private List<UUID> ownedHorses; // List of UUIDs of horses owned by the player
+    private List<EquineLiveHorse> ownedHorses; // EquineLiveHorse List of horses owned by the player
 
     public PlayerData(AbstractHorse selectedHorse, int tokens) {
         this.selectedHorse = selectedHorse;
@@ -25,7 +25,7 @@ public class PlayerData {
     }
 
     @SneakyThrows
-    public List<UUID> getOwnedHorses(Player player) {
+    public List<EquineLiveHorse> getOwnedHorses(Player player) {
         return instance.getDatabaseManager().getPlayerHorses(player);
     }
 }
