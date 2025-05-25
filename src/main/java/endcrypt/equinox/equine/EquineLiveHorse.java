@@ -59,25 +59,25 @@ public class EquineLiveHorse {
         this.uuid = horse.getUniqueId();
         this.horse = horse;
 
-        NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong("EQUINE_CLAIM_TIME"));
-        NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong("EQUINE_BIRTH_TIME"));
-        NBT.getPersistentData(horse, nbt -> this.ownerName = nbt.getString("EQUINE_OWNER_NAME"));
-        NBT.getPersistentData(horse, nbt -> this.ownerUUID = nbt.getUUID("EQUINE_OWNER_UUID"));
-        NBT.getPersistentData(horse, nbt -> this.baseSpeed = nbt.getDouble("EQUINE_BASE_SPEED"));
-        NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble("EQUINE_BASE_JUMP_POWER"));
-        NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString("EQUINE_SKULL_ID"));
+        NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.ownerName = nbt.getString(Keys.OWNER_NAME.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.ownerUUID = nbt.getUUID(Keys.OWNER_UUID.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.baseSpeed = nbt.getDouble(Keys.BASE_SPEED.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble(Keys.BASE_JUMP.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
     }
 
     public void update() {
 
         NBT.modifyPersistentData(horse, nbt -> {
-            nbt.setLong("EQUINE_CLAIM_TIME", this.claimTime);
-            nbt.setLong("EQUINE_BIRTH_TIME", this.birthTime);
-            nbt.setString("EQUINE_OWNER_NAME", this.ownerName);
-            nbt.setUUID("EQUINE_OWNER_UUID", this.ownerUUID);
-            nbt.setDouble("EQUINE_BASE_SPEED", this.baseSpeed);
-            nbt.setDouble("EQUINE_BASE_JUMP_POWER", this.baseJumpPower);
-            nbt.setString("EQUINE_SKULL_ID", this.skullId);
+            nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
+            nbt.setLong(Keys.BIRTH_TIME.getKey(), this.birthTime);
+            nbt.setString(Keys.OWNER_NAME.getKey(), this.ownerName);
+            nbt.setUUID(Keys.OWNER_UUID.getKey(), this.ownerUUID);
+            nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);
+            nbt.setString(Keys.SKULL_ID.getKey(), this.skullId);
         });
     }
 
