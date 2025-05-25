@@ -4,21 +4,17 @@ import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineHorse;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Breed;
 import endcrypt.equinox.equine.attributes.Trait;
-import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class HorseInfoMenu {
 
@@ -27,12 +23,12 @@ public class HorseInfoMenu {
         this.plugin = plugin;
     }
 
-    public void open(Player player, AbstractHorse horse, ListOrganizeType listOrganizeType) {
+    public void open(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType) {
         player.openInventory(createMenu(player, horse, listOrganizeType));
 
     }
 
-    private Inventory createMenu(Player player, AbstractHorse horse, ListOrganizeType listOrganizeType) {
+    private Inventory createMenu(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType) {
 
         SGMenu gui = plugin.getSpiGUI().create(horse.getName() + "'s Info", 4, "Horse Info");
 
@@ -50,7 +46,7 @@ public class HorseInfoMenu {
         return gui.getInventory();
     }
 
-    private SGButton horseHead(AbstractHorse horse) {
+    private SGButton horseHead(EquineLiveHorse horse) {
         return new SGButton(
                 new ItemBuilder(HeadUtils.getItemHead("3919"))
                         .name("&f" + horse.getName())
@@ -59,12 +55,12 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton horseInformation1(AbstractHorse horse) {
+    private SGButton horseInformation1(EquineLiveHorse horse) {
         return new SGButton(
                 new ItemBuilder(Material.FILLED_MAP)
                         .name("&fHorse Information")
                         .lore(
-                                "&7▸ &bOwner: &7" + horse.getOwner().getName(),
+                                "&7▸ &bOwner: &7" + horse.getOwnerName(),
                                 "&7▸ &bRegistered: &7WIP",
                                 "&7▸ &bID: &7WIP",
                                 "&7▸ &bClaim Date: &7" + EquineUtils.getHorseClaimDate(horse)
@@ -73,9 +69,7 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton horseInformation2(AbstractHorse horse) {
-        EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
-
+    private SGButton horseInformation2(EquineLiveHorse equineHorse) {
         StringBuilder breedBuilder = new StringBuilder();
         List<Breed> breeds = equineHorse.getBreeds();
 
@@ -100,7 +94,7 @@ public class HorseInfoMenu {
                 new ItemBuilder(Material.MAP)
                         .name("&fHorse Information 2")
                         .lore(
-                                "&7▸ &bName: &7" + horse.getName(),
+                                "&7▸ &bName: &7" + equineHorse.getName(),
                                 "&7▸ &bBarn-Name: &7WIP",
                                 "&7▸ &b" + breedBuilder,
                                 "&7▸ &bAge: &7" + equineHorse.getAge(),
@@ -113,8 +107,7 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton motionInformation(AbstractHorse horse){
-        EquineHorse equineHorse = EquineUtils.fromAbstractHorse(horse);
+    private SGButton motionInformation(EquineLiveHorse equineHorse){
 
         String[] baseLore = {
                 "&7▸ &bSpeed: &7WIP",
@@ -145,7 +138,7 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton welfareInformation(AbstractHorse horse) {
+    private SGButton welfareInformation(EquineLiveHorse horse) {
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fWelfare")
@@ -162,7 +155,7 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton horseInformation3(AbstractHorse horse) {
+    private SGButton horseInformation3(EquineLiveHorse horse) {
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHorse Information 3")
@@ -180,7 +173,7 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton healthInformation(AbstractHorse horse) {
+    private SGButton healthInformation(EquineLiveHorse horse) {
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHealth")
