@@ -131,7 +131,7 @@ public class DatabaseManager implements Listener {
     }
 
 
-    public List<EquineLiveHorse> getPlayerHorses(Player player) throws SQLException {
+    public List<EquineLiveHorse> getPlayerHorses(Player player) {
         List<EquineLiveHorse> horses = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?")) {
             preparedStatement.setString(1, player.getUniqueId().toString());
@@ -171,6 +171,8 @@ public class DatabaseManager implements Listener {
                     horses.add(horse);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return horses;
     }
