@@ -3,12 +3,10 @@ package endcrypt.equinox.updater.horse;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
-import endcrypt.equinox.player.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -43,10 +41,7 @@ public class HorseNBTUpdaterListener implements Listener {
                 continue;
             }
 
-            Player player = offlinePlayer.getPlayer();
-            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
-
-            if(playerData.getOwnedHorses(player).contains(horse.getUniqueId())) {
+            if(plugin.getDatabaseManager().horseExists(horse)) {
                 return;
             }
 
