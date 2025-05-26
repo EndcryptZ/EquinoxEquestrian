@@ -16,7 +16,7 @@ public class EquineUtils {
 
     public static boolean isLivingEquineHorse(AbstractHorse horse) {
         if (horse == null) return false;
-        return Keys.readPersistentData(horse, Keys.IS_EQUINE);
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_EQUINE));
     }
 
     public static double getBaseSpeed(AbstractHorse horse) {
@@ -29,7 +29,7 @@ public class EquineUtils {
 
     public static boolean isCrossTied(AbstractHorse horse) {
         if (horse == null) return false;
-        return Keys.readPersistentData(horse, Keys.IS_CROSS_TIED);
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_CROSS_TIED));
     }
 
     public static boolean isLunging(AbstractHorse horse) {
