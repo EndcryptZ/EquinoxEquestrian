@@ -50,7 +50,6 @@ public class EquineHorseBuilder {
         horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
 
         // Add Horse to player data
-        plugin.getDatabaseManager().addHorse(horse);
 
         NBT.modifyPersistentData(horse, nbt -> {
             long currentTime = System.currentTimeMillis();
@@ -63,7 +62,6 @@ public class EquineHorseBuilder {
             IntStream.range(0, equineHorse.getBreeds().size())
                     .forEach(i -> {
                         nbt.setString(Keys.BREED_PREFIX.getKey() + i, equineHorse.getBreeds().get(i).name());
-                        Bukkit.getServer().broadcast(ColorUtils.color("Set " + Keys.BREED_PREFIX.getKey() + i + " of " + horse.getName() + " to " + equineHorse.getBreeds().get(i).name()));
                     });
 
             // Set prominent breed for multi-breed horses
@@ -97,6 +95,8 @@ public class EquineHorseBuilder {
             // Set state flags
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), (String) Keys.IS_CROSS_TIED.getDefaultValue());
         });
+
+        plugin.getDatabaseManager().addHorse(horse);
 
 
     }
