@@ -6,8 +6,10 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.attributes.Gender;
+import endcrypt.equinox.player.data.PlayerData;
 import endcrypt.equinox.utils.HeadUtils;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -31,46 +33,55 @@ public class    HorseListMenu {
     private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
         SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
 
-        List<EquineLiveHorse> horseIds = plugin.getPlayerDataManager().getPlayerData(player).getOwnedHorses(player);
+        List<EquineLiveHorse> horseIds = plugin.getDatabaseManager().getPlayerHorses(player);
+        List<EquineLiveHorse> sortedHorses;
 
-        if (listOrganizeType == ListOrganizeType.AGE) {
-            List<EquineLiveHorse> equineHorses = horseIds.stream()
+        switch (listOrganizeType) {
+            case AGE -> sortedHorses = horseIds.stream()
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparingInt(EquineLiveHorse::getAge))
                     .toList();
-
-            for (int i = 0; i < equineHorses.size(); i++) {
-                gui.setButton(i, horseButton(player, equineHorses.get(i)));
-            }
-
-        } else if (listOrganizeType == ListOrganizeType.ALPHABETICAL) {
-            List<EquineLiveHorse> sorted = horseIds.stream()
+            case ALPHABETICAL -> sortedHorses = horseIds.stream()
                     .sorted(Comparator.comparing(h -> h.getName() != null ? h.getName() : ""))
                     .toList();
-
-            for (int i = 0; i < sorted.size(); i++) {
-                gui.setButton(i, horseButton(player, sorted.get(i)));
+            case GENDER -> {
+                Map<Gender, Integer> genderOrder = Map.of(
+                        Gender.MARE, 0,
+                        Gender.GELDING, 1,
+                        Gender.STALLION, 2
+                );
+                sortedHorses = horseIds.stream()
+                        .filter(Objects::nonNull)
+                        .sorted(Comparator.comparingInt(h -> genderOrder.getOrDefault(h.getGender(), 3)))
+                        .toList();
             }
-
-        } else if (listOrganizeType == ListOrganizeType.GENDER) {
-            // Define gender order: Mare = 0, Gelding = 1, Stallion = 2, None = 3
-            Map<Gender, Integer> genderOrder = Map.of(
-                    Gender.MARE, 0,
-                    Gender.GELDING, 1,
-                    Gender.STALLION, 2
-            );
-
-            List<EquineLiveHorse> sortedByGender = horseIds.stream()
-                    .filter(Objects::nonNull)
-                    .sorted(Comparator.comparingInt(h -> genderOrder.getOrDefault(h.getGender(), 3)))
-                    .toList();
-
-            for (int i = 0; i < sortedByGender.size(); i++) {
-                gui.setButton(i, horseButton(player, sortedByGender.get(i)));
-            }
+            default -> sortedHorses = new ArrayList<>(horseIds);
         }
 
+        // Set the organizer button in the last row
         gui.setButton(31, menuOrganiserButton(listOrganizeType));
+
+        int tempoSlot = 0;
+        int slot = 0;
+        for (EquineLiveHorse equineHorse : sortedHorses ) {
+            if(tempoSlot == 0) {
+                gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType));
+            }
+            SGButton horseButton = horseButton(player, equineHorse);
+            if(tempoSlot == 27) {
+                slot += 9;
+                tempoSlot = 0;
+                gui.setButton(slot, horseButton);
+                continue;
+            }
+
+
+            gui.setButton(slot, horseButton);
+            tempoSlot++;
+            slot++;
+        }
+
+        gui.setAutomaticPaginationEnabled(true);
 
         return gui.getInventory();
     }
@@ -107,7 +118,10 @@ public class    HorseListMenu {
     }
 
     private SGButton horseButton(Player player, EquineLiveHorse equineLiveHorse) {
-        boolean isSelected = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse().getUniqueId() == equineLiveHorse.getUuid();
+        boolean isSelected;
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        AbstractHorse selectedHorse = playerData.getSelectedHorse();
+        isSelected = selectedHorse != null && selectedHorse.getUniqueId().equals(equineLiveHorse.getUuid());
         String displayName = "&f" + equineLiveHorse.getName() + (isSelected ? " &a(Selected)" : "");
         ItemStack head = HeadUtils.getItemHead(equineLiveHorse.getSkullId());
 
