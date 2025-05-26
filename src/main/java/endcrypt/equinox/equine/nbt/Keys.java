@@ -24,7 +24,9 @@ public enum Keys {
     BASE_JUMP("EQUINE_BASE_JUMP_POWER", 0.0),
     IS_CROSS_TIED("EQUINE_IS_CROSS_TIED", "false"),
     IS_GROOM_ITEM("EQUINE_GROOM_ITEM", "false"),
-    IS_LUNGING("EQUINE_IS_LUNGING", "false");
+    IS_LUNGING("EQUINE_IS_LUNGING", "false"),
+    COAT_COLOR("EQUINE_COAT_COLOR", ""),
+    COAT_MODIFIER("EQUINE_COAT_MODIFIER", "");
 
     public final String key;
     public final Object defaultValue;
@@ -51,7 +53,16 @@ public enum Keys {
             } else {
                 value = null;
             }
-            return (T) value;
+
+            if (value instanceof String stringValue) {
+                if ("true".equals(stringValue)) {
+                    value = true;
+                } else if ("false".equals(stringValue)) {
+                    value = false;
+                }
+            }
+        
+            return value != null ? (T) value : (T) nbtKey.getDefaultValue();
         });
     }
 
