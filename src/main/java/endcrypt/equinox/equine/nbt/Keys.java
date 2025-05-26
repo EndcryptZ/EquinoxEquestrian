@@ -53,14 +53,6 @@ public enum Keys {
             } else {
                 value = null;
             }
-
-            if (value instanceof String stringValue) {
-                if ("true".equals(stringValue)) {
-                    value = true;
-                } else if ("false".equals(stringValue)) {
-                    value = false;
-                }
-            }
         
             return value != null ? (T) value : (T) nbtKey.getDefaultValue();
         });
