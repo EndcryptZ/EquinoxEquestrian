@@ -309,14 +309,15 @@ public class BuildMenu implements Listener {
         )
                 .withListener((InventoryClickEvent event) -> {
                     Height height = equineHorse.getHeight();
+                    Breed breedToCheck = equineHorse.getBreeds().get(0);
 
                     ItemMeta itemMeta = event.getCurrentItem().getItemMeta();
                     if (event.getClick().isLeftClick()) {
 
-                        if(Height.getNextHeight(height.getSize()) != null) {
+                        if (Height.getNextHeight(height.getSize()) != null) {
 
                             // Cancel if the next height exceeds the maximum height of the breed
-                            if(Height.getNextHeight(height.getSize()).getHands() > equineHorse.getProminentBreed().getMaximumHands()) {
+                            if (Height.getNextHeight(height.getSize()).getHands() > breedToCheck.getMaximumHands()) {
                                 return;
                             }
 
@@ -338,10 +339,10 @@ public class BuildMenu implements Listener {
 
                     if (event.getClick().isRightClick()) {
 
-                        if(Height.getPreviousHeight(height.getSize()) != null) {
+                        if (Height.getPreviousHeight(height.getSize()) != null) {
 
                             // Cancel if the previous height exceeds the minimum height of the breed
-                            if(Height.getPreviousHeight(height.getSize()).getHands() < equineHorse.getProminentBreed().getMinimumHands()) {
+                            if (Height.getPreviousHeight(height.getSize()).getHands() < breedToCheck.getMinimumHands()) {
                                 return;
                             }
 
@@ -355,7 +356,7 @@ public class BuildMenu implements Listener {
                         lore.add(ColorUtils.color("<white><height>",
                                 Placeholder.parsed("height", height.getHandsString())));
                         itemMeta.lore(lore);
-
+    
                         // Apply the updated meta to the item
                         event.getCurrentItem().setItemMeta(itemMeta);
                     }
