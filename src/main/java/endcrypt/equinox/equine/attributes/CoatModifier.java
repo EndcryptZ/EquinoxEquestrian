@@ -45,4 +45,12 @@ public enum CoatModifier {
     }
 
 
+    public static CoatModifier getByName(String name) {
+        for (CoatModifier modifier : values()) {
+            if (modifier.getCoatModifierName().equalsIgnoreCase(name)) {
+                return modifier;
+            }
+        }
+        return NONE;
+    }
 }

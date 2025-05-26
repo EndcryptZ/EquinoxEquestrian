@@ -50,4 +50,14 @@ public enum CoatColor {
         }
         return coatColor;
     }
+
+    public static CoatColor getByName(String name) {
+        if (name == null) return NONE;
+        for (CoatColor color : values()) {
+            if (color.getCoatColorName().equalsIgnoreCase(name)) {
+                return color;
+            }
+        }
+        return NONE;
+    }
 }
