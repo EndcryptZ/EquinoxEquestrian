@@ -34,6 +34,8 @@ public class DatabaseManager implements Listener {
                     "breed_1 TEXT, " +
                     "breed_2 TEXT, " +
                     "prominent_breed TEXT, " +
+                    "coat_color TEXT, " +
+                    "coat_modifier TEXT, " +
                     "gender TEXT, " +
                     "age INTEGER, " +
                     "height DOUBLE, " +
@@ -45,7 +47,7 @@ public class DatabaseManager implements Listener {
                     "owner_name TEXT, " +
                     "base_speed DOUBLE, " +
                     "base_jump_power DOUBLE, " +
-                    "skull_id TEXT, " +
+                    "skull_id TEXT" +
                     ")");
         }
     }
@@ -68,6 +70,8 @@ public class DatabaseManager implements Listener {
             String breed1 = nbt.getString(Keys.BREED_PREFIX.getKey() + "0");
             String breed2 = nbt.getString(Keys.BREED_PREFIX.getKey() + "1");
             String prominentBreed = nbt.getString(Keys.PROMINENT_BREED.getKey());
+            String coatColor = nbt.getString(Keys.COAT_COLOR.getKey());
+            String coatModifier = nbt.getString(Keys.COAT_MODIFIER.getKey());
             String gender = nbt.getString(Keys.GENDER.getKey());
             int age = nbt.getInteger(Keys.AGE.getKey());
             double height = nbt.getDouble(Keys.HEIGHT.getKey());
@@ -82,9 +86,10 @@ public class DatabaseManager implements Listener {
             String skullId = nbt.getString(Keys.SKULL_ID.getKey());
 
             try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO EQUINE_HORSES (uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, gender, " +
-                            "age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, " +
-                            "base_jump_power, skull_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                    "INSERT INTO EQUINE_HORSES (" +
+                            "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
+                            "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, skull_id) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
 
                 ps.setString(1, uuid);
                 ps.setString(2, ownerUuid);
@@ -93,18 +98,20 @@ public class DatabaseManager implements Listener {
                 ps.setString(5, breed1);
                 ps.setString(6, breed2);
                 ps.setString(7, prominentBreed);
-                ps.setString(8, gender);
-                ps.setInt(9, age);
-                ps.setDouble(10, height);
-                ps.setString(11, trait1);
-                ps.setString(12, trait2);
-                ps.setString(13, trait3);
-                ps.setLong(14, claimTime);
-                ps.setLong(15, birthTime);
-                ps.setString(16, ownerName);
-                ps.setDouble(17, baseSpeed);
-                ps.setDouble(18, baseJump);
-                ps.setString(19, skullId);
+                ps.setString(8, coatColor);        // added
+                ps.setString(9, coatModifier);     // added
+                ps.setString(10, gender);
+                ps.setInt(11, age);
+                ps.setDouble(12, height);
+                ps.setString(13, trait1);
+                ps.setString(14, trait2);
+                ps.setString(15, trait3);
+                ps.setLong(16, claimTime);
+                ps.setLong(17, birthTime);
+                ps.setString(18, ownerName);
+                ps.setDouble(19, baseSpeed);
+                ps.setDouble(20, baseJump);
+                ps.setString(21, skullId);
 
                 ps.executeUpdate();
                 return true;
@@ -134,14 +141,16 @@ public class DatabaseManager implements Listener {
                     horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
                     horse.setOwnerUUID(UUID.fromString(resultSet.getString("owner_uuid")));
                     horse.setName(resultSet.getString("display_name"));
-                    horse.setDiscipline(Discipline.valueOf(resultSet.getString("discipline")));
+                    horse.setDiscipline(Discipline.getDisciplineByName(resultSet.getString("discipline")));
                     List<Breed> breeds = new ArrayList<>();
                     String breed1 = resultSet.getString("breed_1");
                     String breed2 = resultSet.getString("breed_2");
-                    if (breed1 != null) breeds.add(Breed.valueOf(breed1));
-                    if (breed2 != null) breeds.add(Breed.valueOf(breed2));
+                    if (breed1 != null) breeds.add(Breed.getBreedByName(breed1));
+                    if (breed2 != null) breeds.add(Breed.getBreedByName(breed2));
                     horse.setBreeds(breeds);
-                    horse.setProminentBreed(Breed.valueOf(resultSet.getString("prominent_breed")));
+                    horse.setProminentBreed(Breed.getBreedByName(resultSet.getString("prominent_breed")));
+                    horse.setCoatColor(CoatColor.getByName(resultSet.getString("coat_color")));       // added
+                    horse.setCoatModifier(CoatModifier.getByName(resultSet.getString("coat_modifier"))); // added
                     horse.setGender(Gender.valueOf(resultSet.getString("gender")));
                     horse.setAge(resultSet.getInt("age"));
                     horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
@@ -149,9 +158,9 @@ public class DatabaseManager implements Listener {
                     String trait1 = resultSet.getString("trait_1");
                     String trait2 = resultSet.getString("trait_2");
                     String trait3 = resultSet.getString("trait_3");
-                    if (trait1 != null) traits.add(Trait.valueOf(trait1));
-                    if (trait2 != null) traits.add(Trait.valueOf(trait2));
-                    if (trait3 != null) traits.add(Trait.valueOf(trait3));
+                    if (trait1 != null) traits.add(Trait.getTraitByName(trait1));
+                    if (trait2 != null) traits.add(Trait.getTraitByName(trait2));
+                    if (trait3 != null) traits.add(Trait.getTraitByName(trait3));
                     horse.setTraits(traits);
                     horse.setClaimTime(resultSet.getLong("claim_time"));
                     horse.setBirthTime(resultSet.getLong("birth_time"));
