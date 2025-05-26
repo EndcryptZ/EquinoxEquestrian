@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.MultiLiteralArgument;
 import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -59,12 +60,13 @@ public class HorseCommand {
     private void info(CommandSender sender, CommandArguments args) {
         Player player = (Player) sender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         if(horse == null) {
             player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
             return;
         }
 
-        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, horse, ListOrganizeType.AGE);
+        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE);
     }
 
     private void list(CommandSender sender, CommandArguments args) {
