@@ -70,42 +70,52 @@ public class HorseInfoMenu {
     }
 
     private SGButton horseInformation2(EquineLiveHorse equineHorse) {
-        StringBuilder breedBuilder = new StringBuilder();
+        List<String> loreList = new ArrayList<>();
+
+        loreList.add("&7▸ &bName: &7" + equineHorse.getName());
+        loreList.add("&7▸ &bBarn-Name: &7WIP");
+
+        // Breed section (3rd line starts here)
+        loreList.add("&7▸ &bBreeds:");
         List<Breed> breeds = equineHorse.getBreeds();
+        Breed prominent = equineHorse.getProminentBreed();
 
-        if (breeds.size() == 1) {
-            breedBuilder.append("Breed: &7").append(breeds.get(0).getName());
-        } else if (breeds.size() == 2) {
-            Breed prominent = equineHorse.getProminentBreed(); // only care if exactly 2 breeds
-
-            breedBuilder.append("Breed 1: &7").append(breeds.get(0).getName());
-            if (prominent != null && prominent == breeds.get(0)) {
-                breedBuilder.append(" (Prominent)");
-            }
-            breedBuilder.append("\n&7▸ &bBreed 2: &7").append(breeds.get(1).getName());
-            if (prominent != null && prominent == breeds.get(1)) {
-                breedBuilder.append(" (Prominent)");
-            }
+        if (breeds.isEmpty()) {
+            loreList.add("    &7▸ &bNone");
         } else {
-            breedBuilder.append("None");
+            if (breeds.size() >= 1 && breeds.get(0) != null) {
+                String line = "    &7▸ &bBreed 1: &7" + breeds.get(0).getName();
+                if (prominent != null && prominent == breeds.get(0)) {
+                    line += " (Prominent)";
+                }
+                loreList.add(line);
+            }
+
+            if (breeds.size() >= 2 && breeds.get(1) != null) {
+                String line = "    &7▸ &bBreed 2: &7" + breeds.get(1).getName();
+                if (prominent != null && prominent == breeds.get(1)) {
+                    line += " (Prominent)";
+                }
+                loreList.add(line);
+            }
         }
+
+        // Remaining static lines
+        loreList.add("&7▸ &bAge: &7" + equineHorse.getAge());
+        loreList.add("&7▸ &bGender: &7" + equineHorse.getGender().getGenderName());
+        loreList.add("&7▸ &bCoat Colour: &7" + equineHorse.getCoatColor().getCoatColorName());
+        loreList.add("&7▸ &bCoat Modifier: &7" + equineHorse.getCoatModifier().getCoatModifierName());
+        loreList.add("&7▸ &bHeight: &7" + equineHorse.getHeight().getHandsString());
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHorse Information 2")
-                        .lore(
-                                "&7▸ &bName: &7" + equineHorse.getName(),
-                                "&7▸ &bBarn-Name: &7WIP",
-                                "&7▸ &b" + breedBuilder,
-                                "&7▸ &bAge: &7" + equineHorse.getAge(),
-                                "&7▸ &bGender: &7" + equineHorse.getGender().getGenderName(),
-                                "&7▸ &bCoat Colour: &7" + equineHorse.getCoatColor().getCoatColorName(),
-                                "&7▸ &bCoat Modifier: &7" + equineHorse.getCoatModifier().getCoatModifierName(),
-                                "&7▸ &bHeight: &7" + equineHorse.getHeight().getHandsString()
-                        )
+                        .lore(loreList)
                         .build()
         );
     }
+
+
 
     private SGButton motionInformation(EquineLiveHorse equineHorse){
 
@@ -125,7 +135,8 @@ public class HorseInfoMenu {
         if (traits.isEmpty()) {
             loreList.add("    &7▸ &bNone");
         } else {
-            for (int i = 0; i < traits.size(); i++) {
+            for (int i = 0; i < traits.size() - 1; i++) {
+                if( traits.get(i) == null ) continue;
                 loreList.add("    &7▸ &bTrait " + (i + 1) + ": &7" + traits.get(i).getTraitName());
             }
         }
