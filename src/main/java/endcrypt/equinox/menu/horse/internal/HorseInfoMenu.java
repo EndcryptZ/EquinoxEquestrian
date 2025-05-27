@@ -48,7 +48,7 @@ public class HorseInfoMenu {
 
     private SGButton horseHead(EquineLiveHorse horse) {
         return new SGButton(
-                new ItemBuilder(HeadUtils.getItemHead("3919"))
+                new ItemBuilder(HeadUtils.getItemHead(horse.getSkullId()))
                         .name("&f" + horse.getName())
                         .lore("&7▸ ?")
                         .build()
