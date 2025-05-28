@@ -190,9 +190,9 @@ public class EquineAdminCommand {
             nbt.setDouble(Keys.BASE_JUMP.getKey(), jumpStrength);
         });
 
-        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpStrength>!",
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength>!",
                 Placeholder.parsed("horse", horse.getName()),
-                Placeholder.parsed("jumpStrength", String.valueOf(jumpStrength))
+                Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
         ));
     }
 
