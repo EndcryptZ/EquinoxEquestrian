@@ -162,7 +162,7 @@ public class EquineAdminCommand {
 
         NBT.modifyPersistentData(horse, nbt -> {
             horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(EquineUtils.blocksToMnecraftSpeed(speed));
-            nbt.setDouble(Keys.BASE_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(speed));
+            nbt.setDouble(Keys.BASE_SPEED.getKey(), speed);
         });
 
         commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s to <speed> blocks per second!",
@@ -186,11 +186,11 @@ public class EquineAdminCommand {
         }
 
         NBT.modifyPersistentData(horse, nbt -> {
-            horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(jumpStrength);
-            nbt.setDouble(Keys.BASE_JUMP.getKey(), jumpStrength);
+            horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
         });
 
-        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength>!",
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength> blocks!",
                 Placeholder.parsed("horse", horse.getName()),
                 Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
         ));

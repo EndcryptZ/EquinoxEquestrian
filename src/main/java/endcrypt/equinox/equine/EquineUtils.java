@@ -127,4 +127,8 @@ public class EquineUtils {
         return blocksPerSecond * 0.02777777777777778;
     }
 
+    public static double blocksToMinecraftJumpStrength(double blocks) {
+        return blocks * 0.18181818181818182; // 1 / 5.5
+    }
+
 }
