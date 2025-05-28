@@ -8,6 +8,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.items.Item;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.attribute.Attribute;
@@ -56,6 +57,11 @@ public class EquineAdminCommand {
                         .withPermission("equinox.cmd.equineadmin.speed")
                         .withArguments(new DoubleArgument("speed"))
                         .executes(this::speed))
+
+                .withSubcommand(new CommandAPICommand("jump")
+                        .withPermission("equinox.cmd.equineadmin.jump")
+                        .withArguments(new DoubleArgument("jump"))
+                        .executes(this::jumpStrength))
 
                 .register();
     }
@@ -156,7 +162,7 @@ public class EquineAdminCommand {
 
         NBT.modifyPersistentData(horse, nbt -> {
             horse.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(EquineUtils.blocksToMnecraftSpeed(speed));
-            nbt.setDouble("EQUINE_BASE_SPEED", EquineUtils.blocksToMnecraftSpeed(speed));
+            nbt.setDouble(Keys.BASE_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(speed));
         });
 
         commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s to <speed> blocks per second!",
@@ -164,6 +170,32 @@ public class EquineAdminCommand {
                 Placeholder.parsed("speed", String.valueOf(speed))
         ));
     }
+
+    private void jumpStrength(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the jump strength!"));
+            return;
+        }
+
+        double jumpStrength = (double) args.get("jump");
+        if(jumpStrength < 0.1) {
+            commandSender.sendMessage(ColorUtils.color("<red>Jump Power must be greater than 0.1!"));
+            return;
+        }
+
+        NBT.modifyPersistentData(horse, nbt -> {
+            horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(jumpStrength);
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), jumpStrength);
+        });
+
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpStrength>!",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("jumpStrength", String.valueOf(jumpStrength))
+        ));
+    }
+
 
 
 
