@@ -58,9 +58,9 @@ public class EquineAdminCommand {
                         .withArguments(new DoubleArgument("speed"))
                         .executes(this::speed))
 
-                .withSubcommand(new CommandAPICommand("jump")
-                        .withPermission("equinox.cmd.equineadmin.jump")
-                        .withArguments(new DoubleArgument("jump"))
+                .withSubcommand(new CommandAPICommand("jumpstrength")
+                        .withPermission("equinox.cmd.equineadmin.jumpstrength")
+                        .withArguments(new DoubleArgument("jumpstrength"))
                         .executes(this::jumpStrength))
 
                 .register();
@@ -179,7 +179,7 @@ public class EquineAdminCommand {
             return;
         }
 
-        double jumpStrength = (double) args.get("jump");
+        double jumpStrength = (double) args.get("jumpstrength");
         if(jumpStrength < 0.1) {
             commandSender.sendMessage(ColorUtils.color("<red>Jump Power must be greater than 0.1!"));
             return;
