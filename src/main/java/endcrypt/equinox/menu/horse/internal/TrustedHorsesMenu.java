@@ -16,7 +16,7 @@ public class TrustedHorsesMenu {
 
     }
 
-    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
+    private Inventory createMenu(Player player) {
         SGMenu gui = plugin.getSpiGUI().create("Trusted Horses", 3, "Trusted Horses");
 
         return gui.getInventory();
