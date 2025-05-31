@@ -8,9 +8,13 @@ import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Breed;
 import endcrypt.equinox.equine.attributes.Trait;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
@@ -52,7 +56,19 @@ public class HorseInfoMenu {
                         .name("&f" + horse.getName())
                         .lore("&7▸ ?")
                         .build()
-        );
+        )
+                .withListener((InventoryClickEvent event ) -> {
+                    Player player = (Player) event.getWhoClicked();
+                    AbstractHorse abstractHorse = (AbstractHorse) Bukkit.getEntity(horse.getUuid());
+
+                    if(abstractHorse == null) {
+                        player.sendMessage(ColorUtils.color("Your horse named " + horse.getName() + " is not found!"));
+                        return;
+                    }
+                    plugin.getEquineManager().getEquineSelector().selectHorse(player, abstractHorse);
+
+
+                });
     }
 
     private SGButton horseInformation1(EquineLiveHorse horse) {
