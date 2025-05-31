@@ -10,6 +10,7 @@ import endcrypt.equinox.commands.CommandManager;
 import endcrypt.equinox.database.DatabaseManager;
 import endcrypt.equinox.equine.crosstie.EquineCrossTieListener;
 import endcrypt.equinox.equine.groom.EquineGroomListener;
+import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
 import endcrypt.equinox.hooks.placeholderapi.Placeholders;
 import endcrypt.equinox.equine.EquineManager;
@@ -103,6 +104,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineGroomListener(this);
         new HorseNBTUpdaterListener(this);
         new EquineSelectorListener(this);
+        new EquinePrivacyListener(this);
 
     }
 
