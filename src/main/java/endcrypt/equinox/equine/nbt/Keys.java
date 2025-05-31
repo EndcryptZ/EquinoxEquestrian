@@ -26,7 +26,10 @@ public enum Keys {
     IS_GROOM_ITEM("EQUINE_GROOM_ITEM", "false"),
     IS_LUNGING("EQUINE_IS_LUNGING", "false"),
     COAT_COLOR("EQUINE_COAT_COLOR", ""),
-    COAT_MODIFIER("EQUINE_COAT_MODIFIER", "");
+    COAT_MODIFIER("EQUINE_COAT_MODIFIER", ""),
+    LAST_LOCATION_X("EQUINE_LAST_LOCATION_X", ""),
+    LAST_LOCATION_Y("EQUINE_LAST_LOCATION_Y", ""),
+    LAST_LOCATION_Z("EQUINE_LAST_LOCATION_Z", "");
 
     public final String key;
     public final Object defaultValue;
