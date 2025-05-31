@@ -9,12 +9,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerDataManager implements Listener {
+public class PlayerDataManager {
 
     private final EquinoxEquestrian plugin;
     public PlayerDataManager(EquinoxEquestrian plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     private final Map<Player, PlayerData> playerDataMap = new HashMap<>();
