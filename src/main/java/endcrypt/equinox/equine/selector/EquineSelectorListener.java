@@ -12,6 +12,7 @@ public class EquineSelectorListener implements Listener {
     private final EquinoxEquestrian plugin;
     public EquineSelectorListener(EquinoxEquestrian plugin) {
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
