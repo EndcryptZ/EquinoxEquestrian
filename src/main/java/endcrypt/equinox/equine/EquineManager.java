@@ -8,6 +8,7 @@ import endcrypt.equinox.equine.home.EquineHome;
 import endcrypt.equinox.equine.invulnerable.EquineInvulnerable;
 import endcrypt.equinox.equine.items.EquineItems;
 import endcrypt.equinox.equine.lunge.EquineLunge;
+import endcrypt.equinox.equine.selector.EquineSelector;
 import lombok.Getter;
 
 @Getter
