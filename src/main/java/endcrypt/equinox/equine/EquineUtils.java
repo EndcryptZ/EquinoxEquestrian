@@ -38,7 +38,7 @@ public class EquineUtils {
 
     public static boolean isLunging(AbstractHorse horse) {
         if (horse == null) return false;
-        return Keys.readPersistentData(horse, Keys.IS_LUNGING);
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_LUNGING));
     }
 
     public static List<Entity> getLeashedEntities(Player player) {
