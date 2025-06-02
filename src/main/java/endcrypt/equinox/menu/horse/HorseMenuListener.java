@@ -1,6 +1,7 @@
 package endcrypt.equinox.menu.horse;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -25,11 +26,17 @@ public class HorseMenuListener implements Listener {
 
     @EventHandler
     public void onHorseClick(PlayerInteractEntityEvent event) {
-        if(!(event.getRightClicked() instanceof AbstractHorse)) {
+        if(!(event.getRightClicked() instanceof AbstractHorse horse)) {
             return;
         }
 
         if(allowedHorseRightClickItems.contains(event.getPlayer().getInventory().getItemInMainHand().getType())){
+            return;
+        }
+
+        if(horse.getOwner() != null && horse.getOwner().getUniqueId() != event.getPlayer().getUniqueId()) {
+            event.getPlayer().sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You can't interact with this horse!"));
+            event.setCancelled(true);
             return;
         }
 
