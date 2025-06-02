@@ -39,8 +39,6 @@ public class TraitSelectMenu {
 
         playerTraitMap.put(player, new ArrayList<>());
 
-        Bukkit.getServer().broadcast(ColorUtils.color(playerTraitMap.get(player).toString()));
-
         int slot = 0;
         for (Trait trait : Trait.values()) {
             if (trait == Trait.NONE) continue;
