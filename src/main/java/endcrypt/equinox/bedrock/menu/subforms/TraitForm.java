@@ -41,7 +41,7 @@ public class TraitForm {
             if (trait == Trait.NONE) {
                 traitNames.add(trait.getTraitName());
                 traits.add(trait);
-                if (currentTraits.get(index) == trait) {
+                if (!currentTraits.isEmpty() && currentTraits.size() >= index + 1 && currentTraits.get(index) == trait) {
                     selectedIndex = traitNames.size() - 1;
                 }
                 continue;
@@ -58,7 +58,7 @@ public class TraitForm {
             if (!alreadyUsed) {
                 traitNames.add(trait.getTraitName());
                 traits.add(trait);
-                if (currentTraits.get(index) == trait) {
+                if (!currentTraits.isEmpty() && currentTraits.size() >= index + 1 && currentTraits.get(index) == trait) {
                     selectedIndex = traitNames.size() - 1;
                 }
             }
@@ -82,7 +82,11 @@ public class TraitForm {
         }
 
         List<Trait> traits = equineHorse.getTraits();
-        traits.set(index, trait);
+        if(traits.size() >= index + 1) {
+            traits.set(index, trait);
+        } else {
+            traits.add(trait);
+        }
         equineHorse.setTraits(traits);
         plugin.getBedrockBuildForm().openMainFormWithParameters(player, equineHorse);
     }

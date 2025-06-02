@@ -48,7 +48,7 @@ public class BedrockBuildForm {
 
         String name = "";
         Discipline discipline = Discipline.NONE;
-        List<Breed> breeds = Arrays.asList(Breed.NONE, Breed.NONE);
+        List<Breed> breeds = new ArrayList<>();
         CoatColor coatColor = CoatColor.NONE;
         CoatModifier coatModifier = CoatModifier.NONE;
         Gender gender = Gender.NONE;
@@ -56,13 +56,17 @@ public class BedrockBuildForm {
         int age = 4;
 
         for(Height loopedHeight : Height.values()) {
+            if(breeds.isEmpty()) {
+                height = loopedHeight;
+                break;
+            }
             if(loopedHeight.getHands() == breeds.get(0).getMinimumHands()) {
                 height = loopedHeight;
                 break;
             }
         }
 
-        List<Trait> traits = Arrays.asList(Trait.NONE, Trait.NONE, Trait.NONE);
+        List<Trait> traits = new ArrayList<>();
 
         EquineHorse equineHorse = new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
 
@@ -89,7 +93,7 @@ public class BedrockBuildForm {
         Breed prominent = equineHorse.getProminentBreed();
 
         if (breeds.size() == 1) {
-            breedBuilder.append("§f").append(breeds.get(0).getName());
+            breedBuilder.append("§6Breed 1: §f").append(breeds.get(0).getName());
         } else if (breeds.size() == 2) {
             breedBuilder.append("§6Breed 1: §f").append(breeds.get(0).getName());
             if (prominent == breeds.get(0)) {
@@ -100,7 +104,8 @@ public class BedrockBuildForm {
                 breedBuilder.append(" (Prominent)");
             }
         } else {
-            breedBuilder.append("§cNo Breeds");
+            breedBuilder.append("§6Breed 1: §fNone\n" +
+                    "§6Breed 2  : §fNone");
         }
 
         // Build traits display safely
@@ -169,13 +174,34 @@ public class BedrockBuildForm {
         switch (toEdit) {
             case 0 -> nameForm.openForm(player, equineHorse);
             case 1 -> disciplineForm.openForm(player, equineHorse);
-            case 2, 3 -> breedForm.openForm(player, equineHorse, toEdit - 2);
+            case 2 -> breedForm.openForm(player, equineHorse, 0);
+            case 3 -> {
+                if (equineHorse.getBreeds().isEmpty()) {
+                    plugin.getFloodgateApi().sendForm(player.getUniqueId(), mainForm(player, "§cYou must select breed 1 first", equineHorse));
+                    return;
+                }
+                breedForm.openForm(player, equineHorse, 1);
+            }
             case 4 -> coatColorForm.openForm(player, equineHorse);
             case 5 -> coatModifierForm.openForm(player, equineHorse);
             case 6 -> genderForm.openForm(player, equineHorse);
             case 7 -> ageForm.openForm(player, equineHorse);
             case 8 -> heightForm.openForm(player, equineHorse);
-            case 9, 10, 11 -> traitForm.openForm(player, equineHorse, toEdit - 8);
+            case 9 -> traitForm.openForm(player, equineHorse, 0);
+            case 10 -> {
+                if(equineHorse.getTraits().isEmpty()) {
+                    plugin.getFloodgateApi().sendForm(player.getUniqueId(), mainForm(player, "§cYou must select trait 1 first", equineHorse));
+                    return;
+                }
+                traitForm.openForm(player, equineHorse, 1);
+            }
+            case 11 -> {
+                if(equineHorse.getTraits().size() < 2) {
+                    plugin.getFloodgateApi().sendForm(player.getUniqueId(), mainForm(player, "§cYou must select trait 2 first", equineHorse));
+                    return;
+                }
+                traitForm.openForm(player, equineHorse, 2);
+            }
         }
     }
 
@@ -184,12 +210,12 @@ public class BedrockBuildForm {
 
         if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
         if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-        if (equineHorse.getBreeds().get(0) == Breed.NONE && equineHorse.getBreeds().get(1) == Breed.NONE) {
+        if (equineHorse.getBreeds().isEmpty()) {
             missingAttributes.add("Breed(s)");
         }
         if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
         if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-        if (equineHorse.getTraits().get(0) == Trait.NONE && equineHorse.getTraits().get(1) == Trait.NONE && equineHorse.getTraits().get(2) == Trait.NONE) {
+        if (equineHorse.getTraits().isEmpty()) {
             missingAttributes.add("Trait(s)");
         }
         return missingAttributes;

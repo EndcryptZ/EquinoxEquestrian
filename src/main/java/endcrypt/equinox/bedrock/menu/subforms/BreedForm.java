@@ -33,7 +33,7 @@ public class BreedForm {
         }
 
         List<Breed> currentBreeds = equineHorse.getBreeds();
-        Breed otherBreed = currentBreeds.get(index == 0 ? 1 : 0);
+        Breed otherBreed = !currentBreeds.isEmpty() ? currentBreeds.get(index == 0 ? 1 : 0) : null;
 
         List<String> breedNames = new ArrayList<>();
         List<Breed> breeds = new ArrayList<>();
@@ -44,7 +44,7 @@ public class BreedForm {
                 // Allow NONE only for Breed 2 if you want
                 breedNames.add(breed.getName());
                 breeds.add(breed);
-                if (currentBreeds.get(index) == breed) {
+                if (currentBreeds.size() >= index + 1 && currentBreeds.get(index) == breed) {
                     selectedIndex = breedNames.size() - 1;
                 }
                 continue;
@@ -53,7 +53,7 @@ public class BreedForm {
             if (breed != Breed.NONE && breed != otherBreed) {
                 breedNames.add(breed.getName());
                 breeds.add(breed);
-                if (currentBreeds.get(index) == breed) {
+                if (!currentBreeds.isEmpty() && currentBreeds.size() >= index + 1 && currentBreeds.get(index) == breed) {
                     selectedIndex = breedNames.size() - 1;
                 }
             }
@@ -78,7 +78,11 @@ public class BreedForm {
         }
 
         List<Breed> breeds = equineHorse.getBreeds();
-        breeds.set(index, breed);
+        if(breeds.size() >= index + 1) {
+            breeds.set(index, breed);
+        } else {
+            breeds.add(breed);
+        }
         equineHorse.setBreeds(breeds);
 
         // Adjust height only if we change Breed 1
