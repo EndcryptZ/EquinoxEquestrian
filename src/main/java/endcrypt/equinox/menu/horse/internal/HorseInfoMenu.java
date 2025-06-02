@@ -59,15 +59,13 @@ public class HorseInfoMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
-                    AbstractHorse abstractHorse = (AbstractHorse) Bukkit.getEntity(horse.getUuid());
+                    AbstractHorse abstractHorse = EquineUtils.findHorseByUuidAndLocation(horse.getUuid(), horse.getLastLocation());
 
                     if(abstractHorse == null) {
                         player.sendMessage(ColorUtils.color("Your horse named " + horse.getName() + " is not found!"));
                         return;
                     }
                     plugin.getEquineManager().getEquineSelector().selectHorse(player, abstractHorse);
-
-
                 });
     }
 
