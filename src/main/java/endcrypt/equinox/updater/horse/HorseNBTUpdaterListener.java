@@ -3,6 +3,7 @@ package endcrypt.equinox.updater.horse;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class HorseNBTUpdaterListener implements Listener {
 
@@ -41,14 +43,44 @@ public class HorseNBTUpdaterListener implements Listener {
                 continue;
             }
 
+            EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+            equineLiveHorse.setLastLocation(horse.getLocation());
+
             if(plugin.getDatabaseManager().horseExists(horse)) {
+                equineLiveHorse.update();
+                plugin.getDatabaseManager().updateHorse(horse);
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Updated horse in database: " + horse.getName()));
                 return;
             }
 
             plugin.getDatabaseManager().addHorse(horse);
+            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Added horse to database: " + horse.getName()));
 
-            new EquineLiveHorse(horse).updateDefault();
+            equineLiveHorse.update();
+            }
         }
 
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        for (Entity entity : event.getChunk().getEntities()) {
+            if (!(entity instanceof AbstractHorse horse)) {
+                continue;
+            }
+
+            if (!EquineUtils.isLivingEquineHorse(horse)) {
+                continue;
+            }
+
+            EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+            equineLiveHorse.setLastLocation(horse.getLocation());
+
+            if(plugin.getDatabaseManager().horseExists(horse)) {
+                equineLiveHorse.update();
+                plugin.getDatabaseManager().updateHorse(horse);
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Updated horse in database: " + horse.getName()));
+                return;
+            }
+
+        }
     }
 }
