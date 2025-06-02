@@ -91,11 +91,11 @@ public class BedrockBuildForm {
         if (breeds.size() == 1) {
             breedBuilder.append("§f").append(breeds.get(0).getName());
         } else if (breeds.size() == 2) {
-            breedBuilder.append("§fBreed 1: ").append(breeds.get(0).getName());
+            breedBuilder.append("§6Breed 1: §f").append(breeds.get(0).getName());
             if (prominent == breeds.get(0)) {
                 breedBuilder.append(" (Prominent)");
             }
-            breedBuilder.append("\n§fBreed 2: ").append(breeds.get(0).getName());
+            breedBuilder.append("\n§6Breed 2: §f").append(breeds.get(1).getName());
             if (prominent == breeds.get(1)) {
                 breedBuilder.append(" (Prominent)");
             }
@@ -110,7 +110,7 @@ public class BedrockBuildForm {
 
         form.label("§6Name: §f" + equineHorse.getName() +
                         "\n§6Discipline: §f" + equineHorse.getDiscipline().getDisciplineName() +
-                        "\n§6Breed:\n" + breedBuilder +
+                        "\n" + breedBuilder +
                         "\n§6Coat Color: §f" + equineHorse.getCoatColor().getCoatColorName() +
                         "\n§6Coat Modifier: §f" + equineHorse.getCoatModifier().getCoatModifierName() +
                         "\n§6Gender: §f" + equineHorse.getGender().getGenderName() +
@@ -122,7 +122,7 @@ public class BedrockBuildForm {
                         "\n\n§6Your Tokens: §e" + plugin.getPlayerDataManager().getPlayerData(player).getTokens() +
                         "\n§6Your Balance: §a$" + plugin.getEcon().getBalance(player) +
                         "\n§eCost: §a$" + calculateCost(equineHorse))
-                .dropdown("Select to Edit", "Name", "Discipline", "Breed", "Coat Color", "Coat Modifier", "Gender", "Age", "Height", "Trait 1", "Trait 2", "Trait 3")
+                .dropdown("Select to Edit", "Name", "Discipline", "Breed 1", "Breed 2", "Coat Color", "Coat Modifier", "Gender", "Age", "Height", "Trait 1", "Trait 2", "Trait 3")
                 .toggle("Create Horse (Submitting while this is on will create the horse)", false)
                 .validResultHandler(result -> {
                     int dropdownIndex = hasErrorLabel ? 2 : 1;
@@ -182,12 +182,16 @@ public class BedrockBuildForm {
     private static @NotNull List<String> getStrings(EquineHorse equineHorse) {
         List<String> missingAttributes = new ArrayList<>();
 
-        if (equineHorse.getName().isEmpty()) missingAttributes.add("Name");
+        if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
         if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-        if (equineHorse.getBreeds().isEmpty()) missingAttributes.add("Breed(s)");
+        if (equineHorse.getBreeds().get(0) == Breed.NONE && equineHorse.getBreeds().get(1) == Breed.NONE) {
+            missingAttributes.add("Breed(s)");
+        }
         if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
         if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-        if (equineHorse.getTraits().isEmpty()) missingAttributes.add("Trait(s)");
+        if (equineHorse.getTraits().get(0) == Trait.NONE && equineHorse.getTraits().get(1) == Trait.NONE && equineHorse.getTraits().get(2) == Trait.NONE) {
+            missingAttributes.add("Trait(s)");
+        }
         return missingAttributes;
     }
 

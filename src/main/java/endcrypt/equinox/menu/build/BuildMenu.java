@@ -400,14 +400,18 @@ public class BuildMenu implements Listener {
 
                     if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
                     if (equineHorse.getDiscipline() == Discipline.NONE) missingAttributes.add("Discipline");
-                    if (equineHorse.getBreeds().isEmpty()) missingAttributes.add("Breed");
+                    if (equineHorse.getBreeds().get(0) == Breed.NONE && equineHorse.getBreeds().get(1) == Breed.NONE) {
+                        missingAttributes.add("Breed(s)");
+                    }
                     if (equineHorse.getCoatColor() == CoatColor.NONE) missingAttributes.add("Coat Color");
                     if (equineHorse.getGender() == Gender.NONE) missingAttributes.add("Gender");
-                    if (equineHorse.getTraits().isEmpty()) missingAttributes.add("Trait(s)");
+                    if (equineHorse.getTraits().get(0) == Trait.NONE && equineHorse.getTraits().get(1) == Trait.NONE && equineHorse.getTraits().get(2) == Trait.NONE) {
+                        missingAttributes.add("Trait(s)");
+                    }
 
                     if (!missingAttributes.isEmpty()) {
                         List<String> loreMessage = new ArrayList<>();
-                        loreMessage.add("§Missing: " + String.join(", ", missingAttributes));
+                        loreMessage.add("§cMissing: " + String.join(", ", missingAttributes));
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", "§4Horse details are incomplete!", null, loreMessage);
                         return;
                     }
