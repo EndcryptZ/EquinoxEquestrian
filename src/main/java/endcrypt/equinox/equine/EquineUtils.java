@@ -3,6 +3,9 @@ package endcrypt.equinox.equine;
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EquineUtils {
@@ -129,6 +133,30 @@ public class EquineUtils {
 
     public static double blocksToMinecraftJumpStrength(double blocks) {
         return blocks * 0.18181818181818182; // 1 / 5.5
+    }
+
+    public static AbstractHorse findHorseByUuidAndLocation(UUID uuid, Location location) {
+        if(location == null) return null;
+
+        World world = location.getWorld();
+        if (world == null) return null;
+
+        int chunkX = location.getBlockX() >> 4;
+        int chunkZ = location.getBlockZ() >> 4;
+
+        // Load chunk if not loaded
+        if (!world.isChunkLoaded(chunkX, chunkZ)) {
+            world.loadChunk(chunkX, chunkZ, true); // force load
+        }
+
+        Chunk chunk = world.getChunkAt(chunkX, chunkZ);
+        for (Entity entity : chunk.getEntities()) {
+            if (entity instanceof AbstractHorse horse && entity.getUniqueId().equals(uuid)) {
+                return horse;
+            }
+        }
+
+        return null;
     }
 
 }
