@@ -6,10 +6,11 @@ import endcrypt.equinox.equine.attributes.*;
 import java.util.ArrayList;
 
 import endcrypt.equinox.equine.nbt.Keys;
-import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class EquineLiveHorse {
     private double baseSpeed;
     private double baseJumpPower;
     private String skullId;
+    private Location lastLocation;
 
     private final AbstractHorse horse;
     
@@ -64,6 +66,7 @@ public class EquineLiveHorse {
         this.baseSpeed = 0.0;
         this.baseJumpPower = 0.0;
         this.skullId = null;
+        this.lastLocation = null;
     }
 
 
@@ -91,9 +94,18 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.baseSpeed = nbt.getDouble(Keys.BASE_SPEED.getKey()));
         NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble(Keys.BASE_JUMP.getKey()));
         NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
+
+        World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
+        double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
+        double lastY = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Y.getKey()));
+        double lastZ = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Z.getKey()));
+
+        this.lastLocation = new Location(lastWorld, lastX, lastY, lastZ);
     }
 
     public void update() {
+
+        updateDefault();
 
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
@@ -103,6 +115,10 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
             nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);
             nbt.setString(Keys.SKULL_ID.getKey(), this.skullId);
+            nbt.setString(Keys.LAST_WORLD.getKey(), horse.getWorld().getName());
+            nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), horse.getLocation().getX());
+            nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
+            nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
         });
     }
 
@@ -111,16 +127,6 @@ public class EquineLiveHorse {
             for (Keys key : Keys.values()) {
                 String tag = key.getKey();
                 Object value = key.getDefaultValue();
-
-                // Temporary updater
-                if(tag.equalsIgnoreCase("EQUINE_BREED")) {
-                    Breed currentBreed = Breed.getBreedByName(nbt.getString("EQUINE_BREED"));
-                    nbt.setString("EQUINE_BREED_1", currentBreed.name());
-                    nbt.removeKey("EQUINE_BREED");
-                    Bukkit.getServer().getConsoleSender().sendMessage(ColorUtils.color(
-                            "<green>Updated BREED NBT of " + horse.getName()
-                    ));
-                }
 
                 if (!nbt.hasTag(tag)) {
                     if (value instanceof String str) {
