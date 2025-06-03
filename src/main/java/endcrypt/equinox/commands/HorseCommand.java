@@ -60,11 +60,12 @@ public class HorseCommand {
     private void info(CommandSender sender, CommandArguments args) {
         Player player = (Player) sender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         if(horse == null) {
             player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
             return;
         }
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
 
         plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE);
     }
