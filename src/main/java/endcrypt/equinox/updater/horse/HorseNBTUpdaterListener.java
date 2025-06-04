@@ -49,12 +49,12 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Updated horse in database: " + horse.getName()));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Load] Updated horse in database: " + horse.getName()));
                 return;
             }
 
             plugin.getDatabaseManager().addHorse(horse);
-            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Added horse to database: " + horse.getName()));
+            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Load] Added horse to database: " + horse.getName()));
 
             equineLiveHorse.update();
             }
@@ -77,7 +77,7 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>Updated horse in database: " + horse.getName()));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Unload] Updated horse in database: " + horse.getName()));
                 return;
             }
 
