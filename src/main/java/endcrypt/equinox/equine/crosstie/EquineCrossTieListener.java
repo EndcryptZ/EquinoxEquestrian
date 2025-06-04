@@ -5,6 +5,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquineCrossTieLeashEvent;
 import endcrypt.equinox.api.events.EquineCrossTieLeashRemovedEvent;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +34,12 @@ public class EquineCrossTieListener implements Listener {
         ItemStack heldItem = event.getPlayer().getInventory().getItemInMainHand();
         Player player = event.getPlayer();
 
+
+        // Bug Fixing Method
         if (!horse.isLeashed()) {
+            if(EquineUtils.isCrossTied(horse)) {
+                Bukkit.getPluginManager().callEvent(new EquineCrossTieLeashRemovedEvent(horse));
+            }
             return;
         }
 
@@ -88,7 +94,7 @@ public class EquineCrossTieListener implements Listener {
     @EventHandler
     public void onCrossTieRemoved(EquineCrossTieLeashRemovedEvent event) {
         NBT.modifyPersistentData(event.getHorse(), nbt -> {
-            nbt.setString("EQUINE_IS_CROSS_TIED", "false");
+            nbt.setString(Keys.IS_CROSS_TIED.getKey(), "false");
         });
 
         event.getHorse().setJumpStrength(EquineUtils.getBaseJumpPower(event.getHorse()));
@@ -98,7 +104,7 @@ public class EquineCrossTieListener implements Listener {
     @EventHandler
     public void onCrossTie(EquineCrossTieLeashEvent event) {
         NBT.modifyPersistentData(event.getHorse(), nbt -> {
-            nbt.setString("EQUINE_IS_CROSS_TIED", "true");
+            nbt.setString(Keys.IS_CROSS_TIED.getKey(), "true");
         });
 
         event.getHorse().setJumpStrength(0);
