@@ -30,6 +30,10 @@ public class    HorseListMenu {
 
     }
 
+    public void openToOther(Player player, Player target, ListOrganizeType listOrganizeType) {
+        player.openInventory(createMenu(target, listOrganizeType));
+    }
+
     private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
         SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
 
@@ -132,6 +136,9 @@ public class    HorseListMenu {
                         .build())
 
 
-                .withListener((InventoryClickEvent event) -> plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE));
+                .withListener((InventoryClickEvent event) -> {
+                    Player playerClick = (Player) event.getWhoClicked();
+                    plugin.getHorseMenuManager().getHorseInfoMenu().open(playerClick, equineLiveHorse, ListOrganizeType.AGE);
+                });
     }
 }
