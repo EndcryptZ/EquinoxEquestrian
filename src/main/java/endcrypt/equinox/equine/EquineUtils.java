@@ -3,6 +3,7 @@ package endcrypt.equinox.equine;
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -136,6 +137,11 @@ public class EquineUtils {
     }
 
     public static AbstractHorse findHorseByUuidAndLocation(UUID uuid, Location location) {
+        Entity firstEntity = Bukkit.getEntity(uuid);
+        if(firstEntity != null) {
+            return (AbstractHorse) firstEntity;
+        }
+
         if(location == null) return null;
 
         World world = location.getWorld();
