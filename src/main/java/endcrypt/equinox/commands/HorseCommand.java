@@ -29,6 +29,8 @@ public class HorseCommand {
                         .executesPlayer(this::info))
 
                 .withSubcommand(new CommandAPICommand("list")
+                        .withArguments(new PlayerArgument("player").setOptional(true)
+                                .withPermission("equinox.cmd.horse.list.others"))
                         .executesPlayer(this::list))
 
                 .withSubcommand(new CommandAPICommand("tokens")
@@ -72,6 +74,12 @@ public class HorseCommand {
 
     private void list(CommandSender sender, CommandArguments args) {
         Player player = (Player) sender;
+        Player target = (Player) args.get("player");
+
+        if(target != null) {
+            plugin.getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE);
+            return;
+        }
         plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE);
     }
 
