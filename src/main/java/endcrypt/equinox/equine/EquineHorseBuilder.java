@@ -32,6 +32,7 @@ public class EquineHorseBuilder {
 
         // Spawn the horse
         Horse horse = (Horse) world.spawnEntity(location, EntityType.HORSE);
+        horse.setPersistent(true);
 
         // Set the horse's custom name
         horse.customName(ColorUtils.color(equineHorse.getName()));
