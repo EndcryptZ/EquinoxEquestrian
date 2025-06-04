@@ -44,6 +44,10 @@ public class EquinePrivacyListener implements Listener {
             return;
         }
 
+        if(player.isOp()) {
+            return;
+        }
+
         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You can't interact with this horse!"));
         event.setCancelled(true);
 
