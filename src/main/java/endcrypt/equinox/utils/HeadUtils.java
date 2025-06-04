@@ -7,6 +7,9 @@ public class HeadUtils {
 
     public static ItemStack getItemHead(String id) {
         HeadDatabaseAPI headDatabaseAPI = new HeadDatabaseAPI();
+        if(id.isEmpty()) {
+            id = "7280";
+        }
         return headDatabaseAPI.getItemHead(id);
     }
 }
