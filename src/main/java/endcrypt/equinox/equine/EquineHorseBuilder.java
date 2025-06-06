@@ -5,7 +5,6 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -48,7 +47,7 @@ public class EquineHorseBuilder {
             horse.setStyle(equineHorse.getCoatModifier().getHorseCoatModifier());
         }
 
-        horse.getAttribute(Attribute.SCALE).setBaseValue(equineHorse.getHeight().getSize());
+        Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).    setBaseValue(equineHorse.getHeight().getSize());
 
         // Add Horse to player data
 
@@ -61,9 +60,7 @@ public class EquineHorseBuilder {
 
             // Set breed properties 
             IntStream.range(0, equineHorse.getBreeds().size())
-                    .forEach(i -> {
-                        nbt.setString(Keys.BREED_PREFIX.getKey() + i, equineHorse.getBreeds().get(i).name());
-                    });
+                    .forEach(i -> nbt.setString(Keys.BREED_PREFIX.getKey() + i, equineHorse.getBreeds().get(i).name()));
 
             // Set prominent breed for multi-breed horses
             if (equineHorse.getBreeds().size() > 1) {
@@ -89,12 +86,18 @@ public class EquineHorseBuilder {
             nbt.setString(Keys.OWNER_NAME.getKey(), player.getName());
 
             // Set base stats
-            nbt.setDouble(Keys.BASE_SPEED.getKey(), horse.getAttribute(Attribute.MOVEMENT_SPEED).getBaseValue());
+            nbt.setDouble(Keys.BASE_SPEED.getKey(), Objects.requireNonNull(horse.getAttribute(Attribute.MOVEMENT_SPEED)).getBaseValue());
             nbt.setDouble(Keys.BASE_JUMP.getKey(), horse.getJumpStrength());
             nbt.setString(Keys.SKULL_ID.getKey(), randomSkullId());
 
             // Set state flags
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), (String) Keys.IS_CROSS_TIED.getDefaultValue());
+
+            // Last Location
+            nbt.setString(Keys.LAST_WORLD.getKey(), horse.getWorld().getName());
+            nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), horse.getLocation().getX());
+            nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
+            nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
         });
 
         plugin.getDatabaseManager().addHorse(horse);
@@ -107,8 +110,7 @@ public class EquineHorseBuilder {
         List<String> idList = Arrays.asList("49654", "7280", "49652", "49651", "1154", "3920", "3919", "2912", "7649");
         Random random = new Random();
         int randomID = random.nextInt(idList.size());
-        String headID = idList.get(randomID);
-        return headID;
+        return idList.get(randomID);
     }
 
     public EquineHorse randomHorse(String name) {
@@ -120,7 +122,7 @@ public class EquineHorseBuilder {
         CoatModifier coatModifier = CoatModifier.random();
         Gender gender = Gender.random();
         int age = random.nextInt(10) + 1;
-        Height height = Height.getRandomHeight(breeds.get(0));
+        Height height = Height.getRandomHeight(breeds.getFirst());
         List<Trait> traits = Trait.random(random.nextInt(3) + 1);
 
         return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
