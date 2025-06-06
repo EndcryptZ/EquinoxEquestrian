@@ -67,7 +67,7 @@ public class EquineHome {
             String world = NBT.getPersistentData(horse, nbt -> nbt.getString("PASTURE_WORLD"));
 
             loc = new Location(plugin.getServer().getWorld(world), x, y, z);
-            player.sendMessage("You and your horse have been teleported to its pasture!");
+            player.sendMessage("Your horse have been teleported to its pasture!");
         } else if (type.equalsIgnoreCase("stall") && NBT.getPersistentData(horse, nbt -> nbt.getString("HAS_STALL")).equals("true")) {
             double x = NBT.getPersistentData(horse, nbt -> nbt.getDouble("STALL_X"));
             double y = NBT.getPersistentData(horse, nbt -> nbt.getDouble("STALL_Y"));
@@ -75,13 +75,12 @@ public class EquineHome {
             String world = NBT.getPersistentData(horse, nbt -> nbt.getString("STALL_WORLD"));
 
             loc = new Location(plugin.getServer().getWorld(world), x, y, z);
-            player.sendMessage("You and your horse have been teleported to its stall!");
+            player.sendMessage("Your horse have been teleported to its stall!");
         } else {
             player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
             return;
         }
 
-        player.teleport(loc);
         horse.teleport(loc);
     }
 
