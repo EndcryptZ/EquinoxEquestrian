@@ -62,7 +62,7 @@ public class HorseInfoMenu {
                     AbstractHorse abstractHorse = EquineUtils.findHorseByUuidAndLocation(horse.getUuid(), horse.getLastLocation());
 
                     if(abstractHorse == null) {
-                        player.sendMessage(ColorUtils.color("Your horse named " + horse.getName() + " is not found!"));
+                        player.sendMessage(ColorUtils.color("<red>Your horse named " + horse.getName() + " is not found! Please contact an administrator if this is an error!"));
                         return;
                     }
                     plugin.getEquineManager().getEquineSelector().selectHorse(player, abstractHorse);
