@@ -10,8 +10,8 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.EntitiesLoadEvent;
+import org.bukkit.event.world.EntitiesUnloadEvent;
 
 public class HorseNBTUpdaterListener implements Listener {
 
@@ -22,9 +22,9 @@ public class HorseNBTUpdaterListener implements Listener {
     }
 
     @EventHandler
-    public void onChunkLoad(ChunkLoadEvent event) {
+    public void onEntitiesLoad(EntitiesLoadEvent event) {
 
-        for (Entity entity : event.getChunk().getEntities()) {
+        for (Entity entity : event.getEntities()) {
             if(!(entity instanceof AbstractHorse horse)) {
                 continue;
             }
@@ -49,20 +49,20 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Load] Updated horse in database: " + horse.getName()));
-                return;
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: " + horse.getName()));
+                continue;
             }
 
             plugin.getDatabaseManager().addHorse(horse);
-            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Load] Added horse to database: " + horse.getName()));
+            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: " + horse.getName()));
 
             equineLiveHorse.update();
             }
         }
 
     @EventHandler
-    public void onChunkUnload(ChunkUnloadEvent event) {
-        for (Entity entity : event.getChunk().getEntities()) {
+    public void onEntitiesUnload(EntitiesUnloadEvent event) {
+        for (Entity entity : event.getEntities()) {
             if (!(entity instanceof AbstractHorse horse)) {
                 continue;
             }
@@ -77,10 +77,8 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Chunk Unload] Updated horse in database: " + horse.getName()));
-                return;
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: " + horse.getName()));
             }
-
         }
     }
 }
