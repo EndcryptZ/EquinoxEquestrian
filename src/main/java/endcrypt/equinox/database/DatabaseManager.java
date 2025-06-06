@@ -304,11 +304,10 @@ public class DatabaseManager implements Listener {
 
                 try (PreparedStatement ps = connection.prepareStatement(
                         "UPDATE EQUINE_HORSES SET " +
-                                "owner_uuid = ?, display_name = ?, discipline = ?, breed_1 = ?, breed_2 = ?, prominent_breed = ?, " +
+                                "WHERE uuid = ?, owner_uuid = ?, display_name = ?, discipline = ?, breed_1 = ?, breed_2 = ?, prominent_breed = ?, " +
                                 "coat_color = ?, coat_modifier = ?, gender = ?, age = ?, height = ?, trait_1 = ?, trait_2 = ?, " +
                                 "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
-                                "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ? " +
-                                "WHERE uuid = ?")) {
+                                "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ?")) {
 
                     ps.setString(1, uuid);
                     ps.setString(2, ownerUuid);
