@@ -38,7 +38,7 @@ public class EquineLiveHorse {
     private long claimTime;
     private long birthTime;
     private String ownerName;
-    private UUID ownerUUID;
+    private String ownerUUID;
     private double baseSpeed;
     private double baseJumpPower;
     private String skullId;
@@ -90,7 +90,7 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.ownerName = nbt.getString(Keys.OWNER_NAME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.ownerUUID = nbt.getUUID(Keys.OWNER_UUID.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.ownerUUID = nbt.getString(Keys.OWNER_UUID.getKey()));
         NBT.getPersistentData(horse, nbt -> this.baseSpeed = nbt.getDouble(Keys.BASE_SPEED.getKey()));
         NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble(Keys.BASE_JUMP.getKey()));
         NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
@@ -111,7 +111,7 @@ public class EquineLiveHorse {
             nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
             nbt.setLong(Keys.BIRTH_TIME.getKey(), this.birthTime);
             nbt.setString(Keys.OWNER_NAME.getKey(), this.ownerName);
-            nbt.setUUID(Keys.OWNER_UUID.getKey(), this.ownerUUID);
+            nbt.setString(Keys.OWNER_UUID.getKey(), horse.getOwnerUniqueId().toString());
             nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
             nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);
             nbt.setString(Keys.SKULL_ID.getKey(), this.skullId);
