@@ -7,6 +7,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
@@ -62,6 +63,10 @@ public class EquineAdminCommand {
                         .withPermission("equinox.cmd.equineadmin.jumpstrength")
                         .withArguments(new DoubleArgument("jumpstrength"))
                         .executes(this::jumpStrength))
+
+                .withSubcommand(new CommandAPICommand("bypass")
+                        .withPermission("equinox.cmd.equineadmin.bypass")
+                        .executesPlayer(this::bypass))
 
                 .register();
     }
@@ -196,7 +201,18 @@ public class EquineAdminCommand {
         ));
     }
 
-
+    private void bypass(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        if(!EquineBypass.hasBypass(player)) {
+            EquineBypass.add(player);
+            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass enabled. You can now interact with any horses!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+        } else {
+            EquineBypass.remove(player);
+            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass disabled. You can no longer interact with any horses!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+        }
+    }
 
 
 }
