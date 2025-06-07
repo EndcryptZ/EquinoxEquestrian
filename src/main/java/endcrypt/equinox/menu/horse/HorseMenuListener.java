@@ -1,6 +1,7 @@
 package endcrypt.equinox.menu.horse;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
@@ -34,7 +35,7 @@ public class HorseMenuListener implements Listener {
             return;
         }
 
-        if(horse.getOwner() != null && horse.getOwner().getUniqueId() != event.getPlayer().getUniqueId()) {
+        if(!EquineUtils.hasPermissionToHorse(event.getPlayer(), horse)) {
             event.getPlayer().sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You can't interact with this horse!"));
             event.setCancelled(true);
             return;

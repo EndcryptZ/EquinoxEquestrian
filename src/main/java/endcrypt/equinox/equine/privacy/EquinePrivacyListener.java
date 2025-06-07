@@ -38,13 +38,8 @@ public class EquinePrivacyListener implements Listener {
         if(heldItem.getType() != Material.LEAD) {
             return;
         }
-        
-        // isOwner
-        if(player == horse.getOwner()) {
-            return;
-        }
 
-        if(player.isOp()) {
+        if(EquineUtils.hasPermissionToHorse(player, horse)) {
             return;
         }
 

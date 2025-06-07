@@ -8,6 +8,7 @@ import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import endcrypt.equinox.bedrock.menu.BedrockBuildForm;
 import endcrypt.equinox.commands.CommandManager;
 import endcrypt.equinox.database.DatabaseManager;
+import endcrypt.equinox.equine.bypass.EquineBypassListener;
 import endcrypt.equinox.equine.crosstie.EquineCrossTieListener;
 import endcrypt.equinox.equine.groom.EquineGroomListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
@@ -105,6 +106,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new HorseNBTUpdaterListener(this);
         new EquineSelectorListener(this);
         new EquinePrivacyListener(this);
+        new EquineBypassListener(this);
 
     }
 

@@ -2,6 +2,7 @@ package endcrypt.equinox.equine;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
+import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -11,10 +12,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EquineUtils {
@@ -163,6 +161,14 @@ public class EquineUtils {
         }
 
         return null;
+    }
+
+    public static boolean hasPermissionToHorse(Player player, AbstractHorse horse) {
+        if (player == null || horse == null) return false;
+        if(EquineBypass.hasBypass(player)) return true;
+        if(horse.getOwner() == player) return true;
+
+        return false;
     }
 
 }
