@@ -30,7 +30,8 @@ public enum Keys {
     LAST_WORLD("EQUINE_LAST_WORLD", ""),
     LAST_LOCATION_X("EQUINE_LAST_LOCATION_X", ""),
     LAST_LOCATION_Y("EQUINE_LAST_LOCATION_Y", ""),
-    LAST_LOCATION_Z("EQUINE_LAST_LOCATION_Z", "");
+    LAST_LOCATION_Z("EQUINE_LAST_LOCATION_Z", ""),
+    IS_PUBLIC("EQUINE_IS_PUBLIC", "false");
 
     public final String key;
     public final Object defaultValue;
@@ -57,7 +58,7 @@ public enum Keys {
             } else {
                 value = null;
             }
-        
+
             return value != null ? (T) value : (T) nbtKey.getDefaultValue();
         });
     }
