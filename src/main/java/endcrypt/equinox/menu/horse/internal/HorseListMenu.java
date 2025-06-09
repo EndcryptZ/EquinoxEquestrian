@@ -69,6 +69,8 @@ public class    HorseListMenu {
         int slot = 0;
         for (EquineLiveHorse equineHorse : sortedHorses ) {
             if(tempoSlot == 0) {
+                if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
+                if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
                 gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType));
             }
             SGButton horseButton = horseButton(player, equineHorse);
@@ -85,7 +87,7 @@ public class    HorseListMenu {
             slot++;
         }
 
-        gui.setAutomaticPaginationEnabled(true);
+
 
         return gui.getInventory();
     }
@@ -139,6 +141,36 @@ public class    HorseListMenu {
                 .withListener((InventoryClickEvent event) -> {
                     Player playerClick = (Player) event.getWhoClicked();
                     plugin.getHorseMenuManager().getHorseInfoMenu().open(playerClick, equineLiveHorse, ListOrganizeType.AGE);
+                });
+    }
+
+    private SGButton previousPageButton(SGMenu gui) {
+        return new SGButton(
+                new ItemBuilder(Material.RED_CANDLE)
+                        .name("&c&lPrevious Page")
+                        .lore(
+                                "&aClick to move back to",
+                                "&apage " + (gui.getCurrentPage() - 1)
+                        )
+                        .build()
+        )
+                .withListener((InventoryClickEvent event) -> {
+                    gui.setCurrentPage(gui.getCurrentPage() - 1);
+                });
+    }
+
+    private SGButton nextPageButton(SGMenu gui) {
+        return new SGButton(
+                new ItemBuilder(Material.RED_CANDLE)
+                        .name("&a&lNext Page")
+                        .lore(
+                                "&aClick to move forward to",
+                                "&apage " + (gui.getCurrentPage() + 1)
+                        )
+                        .build()
+        )
+                .withListener((InventoryClickEvent event) -> {
+                    gui.setCurrentPage(gui.getCurrentPage() + 1);
                 });
     }
 }
