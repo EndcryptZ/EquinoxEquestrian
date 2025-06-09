@@ -40,6 +40,8 @@ public class EquineHorseBuilder {
         // Optional: Set horse as tamed
         horse.setTamed(true);
         horse.setOwner(player);
+        horse.setAge(equineHorse.getAge());
+        horse.setAgeLock(true);
 
         horse.setColor(equineHorse.getCoatColor().getHorseColor());
 
