@@ -25,19 +25,24 @@ public class    HorseListMenu {
     }
 
 
-    public void open(Player player, ListOrganizeType listOrganizeType) {
-        player.openInventory(createMenu(player, listOrganizeType));
+    public void open(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+        player.openInventory(createMenu(player, listOrganizeType, isTrustedHorses));
 
     }
 
-    public void openToOther(Player player, Player target, ListOrganizeType listOrganizeType) {
-        player.openInventory(createMenu(target, listOrganizeType));
+    public void openToOther(Player player, Player target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+        player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses));
     }
 
-    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType) {
-        SGMenu gui = plugin.getSpiGUI().create("Horse List", 4, "Horse List");
+    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+        String guiName = isTrustedHorses ? "Trusted Horses" : "Horse List";
 
-        List<EquineLiveHorse> horseIds = plugin.getDatabaseManager().getPlayerHorses(player);
+        SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
+
+        SGButton menu = isTrustedHorses ? horseListButton(listOrganizeType) : trustedHorsesButton(listOrganizeType);
+
+
+        List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getTrustedHorses(player) : plugin.getDatabaseManager().getPlayerHorses(player);
         List<EquineLiveHorse> sortedHorses;
 
         switch (listOrganizeType) {
@@ -62,20 +67,20 @@ public class    HorseListMenu {
             default -> sortedHorses = new ArrayList<>(horseIds);
         }
 
-        // Set the organizer button in the last row
-        gui.setButton(31, menuOrganiserButton(listOrganizeType));
-
         int tempoSlot = 0;
         int slot = 0;
+        gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType, isTrustedHorses));
+        gui.setButton(slot + 35, menu);
         for (EquineLiveHorse equineHorse : sortedHorses ) {
             if(tempoSlot == 0) {
                 if(gui.getMaxPage() > 1) {
                     if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
                     if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
                 }
-                gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType));
+                gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType, isTrustedHorses));
+                gui.setButton(slot + 35, menu);
             }
-            SGButton horseButton = horseButton(player, equineHorse);
+            SGButton horseButton = horseButton(player, equineHorse, isTrustedHorses);
             if(tempoSlot == 27) {
                 slot += 9;
                 tempoSlot = 0;
@@ -95,7 +100,7 @@ public class    HorseListMenu {
     }
 
 
-    private SGButton menuOrganiserButton(ListOrganizeType listOrganizeType) {
+    private SGButton menuOrganiserButton(ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
@@ -105,27 +110,49 @@ public class    HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player, listOrganizeType);
+                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player, listOrganizeType, isTrustedHorses);
 
 
                 });
     }
 
-    private SGButton trustedHorsesButton() {
+    private SGButton trustedHorsesButton(ListOrganizeType listOrganizeType) {
 
         return new SGButton(
                 new ItemBuilder(Material.WRITABLE_BOOK)
                         .name("&fTrusted Horses")
+                        .lore("&7View horses that other players",
+                                "&7have trusted you",
+                                "",
+                                "&eClick to view trusted horses")
                         .build()
         )
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
-
+                    plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, true);
 
                 });
     }
 
-    private SGButton horseButton(Player player, EquineLiveHorse equineLiveHorse) {
+
+    private SGButton horseListButton(ListOrganizeType listOrganizeType) {
+
+        return new SGButton(
+                new ItemBuilder(Material.WRITABLE_BOOK)
+                        .name("&fHorse List")
+                        .lore("&7View horses that you owned",
+                                "",
+                                "&eClick to view your owned horses")
+                        .build()
+        )
+                .withListener((InventoryClickEvent event ) -> {
+                    Player player = (Player) event.getWhoClicked();
+                    plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, false);
+
+                });
+    }
+
+    private SGButton horseButton(Player player, EquineLiveHorse equineLiveHorse, boolean isTrustedHorses) {
         boolean isSelected;
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
         AbstractHorse selectedHorse = playerData.getSelectedHorse();
@@ -142,7 +169,7 @@ public class    HorseListMenu {
 
                 .withListener((InventoryClickEvent event) -> {
                     Player playerClick = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getHorseInfoMenu().open(playerClick, equineLiveHorse, ListOrganizeType.AGE);
+                    plugin.getHorseMenuManager().getHorseInfoMenu().open(playerClick, equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
                 });
     }
 

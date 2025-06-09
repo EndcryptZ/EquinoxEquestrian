@@ -31,6 +31,10 @@ public class EquineSelector {
             return;
         }
 
+        if(plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse() != null) {
+
+        }
+
         player.sendMessage(ColorUtils.color("<prefix><green>You have selected <horse>!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", horse.getName())));

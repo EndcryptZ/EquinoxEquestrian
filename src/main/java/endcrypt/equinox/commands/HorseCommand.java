@@ -87,7 +87,7 @@ public class HorseCommand {
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
 
-        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE);
+        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE, false);
     }
 
     private void list(CommandSender sender, CommandArguments args) {
@@ -95,10 +95,10 @@ public class HorseCommand {
         Player target = (Player) args.get("player");
 
         if(target != null) {
-            plugin.getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE);
+            plugin.getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE, false);
             return;
         }
-        plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE);
+        plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE, false);
     }
 
     private void tokens(CommandSender sender, CommandArguments args) {

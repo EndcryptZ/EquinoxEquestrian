@@ -390,21 +390,6 @@ public class DatabaseManager implements Listener {
         return trusted;
     }
 
-    public List<UUID> getTrustedHorses(Player player) {
-        List<UUID> horses = new ArrayList<>();
-        String sql = "SELECT horse_uuid FROM EQUINE_TRUSTED_PLAYERS WHERE player_uuid = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, player.getUniqueId().toString());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                horses.add(UUID.fromString(rs.getString("horse_uuid")));
-            }
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to get trusted horses: " + e.getMessage());
-        }
-        return horses;
-    }
-
     public boolean isTrustedToHorse(AbstractHorse horse, Player player) {
         String sql = "SELECT * FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ? AND player_uuid = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -427,6 +412,63 @@ public class DatabaseManager implements Listener {
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to remove trusted player: " + e.getMessage());
         }
+    }
+
+    public List<EquineLiveHorse> getTrustedHorses(Player player) {
+        List<EquineLiveHorse> horses = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT h.* FROM EQUINE_HORSES h " +
+                        "INNER JOIN EQUINE_TRUSTED_PLAYERS t ON h.uuid = t.horse_uuid " +
+                        "WHERE t.player_uuid = ?")) {
+            preparedStatement.setString(1, player.getUniqueId().toString());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    EquineLiveHorse horse = new EquineLiveHorse();
+                    horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
+                    horse.setOwnerUUID(resultSet.getString("owner_uuid"));
+                    horse.setName(resultSet.getString("display_name"));
+                    horse.setDiscipline(Discipline.getDisciplineByName(resultSet.getString("discipline")));
+                    List<Breed> breeds = new ArrayList<>();
+                    String breed1 = resultSet.getString("breed_1");
+                    String breed2 = resultSet.getString("breed_2");
+                    if (breed1 != null) breeds.add(Breed.getBreedByName(breed1));
+                    if (breed2 != null) breeds.add(Breed.getBreedByName(breed2));
+                    horse.setBreeds(breeds);
+                    horse.setProminentBreed(Breed.getBreedByName(resultSet.getString("prominent_breed")));
+                    horse.setCoatColor(CoatColor.getByName(resultSet.getString("coat_color")));
+                    horse.setCoatModifier(CoatModifier.getByName(resultSet.getString("coat_modifier")));
+                    horse.setGender(Gender.valueOf(resultSet.getString("gender")));
+                    horse.setAge(resultSet.getInt("age"));
+                    horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
+                    List<Trait> traits = new ArrayList<>();
+                    String trait1 = resultSet.getString("trait_1");
+                    String trait2 = resultSet.getString("trait_2");
+                    String trait3 = resultSet.getString("trait_3");
+                    if (trait1 != null) traits.add(Trait.getTraitByName(trait1));
+                    if (trait2 != null) traits.add(Trait.getTraitByName(trait2));
+                    if (trait3 != null) traits.add(Trait.getTraitByName(trait3));
+                    horse.setTraits(traits);
+                    horse.setClaimTime(resultSet.getLong("claim_time"));
+                    horse.setBirthTime(resultSet.getLong("birth_time"));
+                    horse.setOwnerName(resultSet.getString("owner_name"));
+                    horse.setBaseSpeed(resultSet.getDouble("base_speed"));
+                    horse.setBaseJumpPower(resultSet.getDouble("base_jump_power"));
+                    horse.setSkullId(resultSet.getString("skull_id"));
+
+                    if (resultSet.getString("last_world") != null) {
+                        World world = Bukkit.getWorld(resultSet.getString("last_world"));
+                        double x = resultSet.getDouble("last_location_x");
+                        double y = resultSet.getDouble("last_location_y");
+                        double z = resultSet.getDouble("last_location_z");
+                        horse.setLastLocation(new Location(world, x, y, z));
+                    }
+                    horses.add(horse);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return horses;
     }
 
 

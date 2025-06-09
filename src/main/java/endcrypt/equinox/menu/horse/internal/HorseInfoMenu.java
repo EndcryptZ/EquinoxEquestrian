@@ -10,7 +10,6 @@ import endcrypt.equinox.equine.attributes.Breed;
 import endcrypt.equinox.equine.attributes.Trait;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -27,12 +26,12 @@ public class HorseInfoMenu {
         this.plugin = plugin;
     }
 
-    public void open(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType) {
-        player.openInventory(createMenu(player, horse, listOrganizeType));
+    public void open(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+        player.openInventory(createMenu(player, horse, listOrganizeType, isTrustedHorse));
 
     }
 
-    private Inventory createMenu(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType) {
+    private Inventory createMenu(Player player, EquineLiveHorse horse, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
 
         SGMenu gui = plugin.getSpiGUI().create(horse.getName() + "'s Info", 4, "Horse Info");
 
@@ -45,7 +44,7 @@ public class HorseInfoMenu {
         gui.setButton(16, horseInformation3(horse));
         gui.setButton(17, healthInformation(horse));
 
-        gui.setButton(31, backButton(player, listOrganizeType));
+        gui.setButton(31, backButton(player, listOrganizeType, isTrustedHorse));
 
         return gui.getInventory();
     }
@@ -217,12 +216,12 @@ public class HorseInfoMenu {
         );
     }
 
-    private SGButton backButton(Player player, ListOrganizeType listOrganizeType) {
+    private SGButton backButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         return new SGButton(
                 new ItemBuilder(Material.RED_CANDLE)
                         .name("&c&l&oBack")
                         .lore("&7Click to open your horse list menu")
                         .build()
-        ).withListener(event -> plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType));
+        ).withListener(event -> plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, isTrustedHorse));
     }
 }
