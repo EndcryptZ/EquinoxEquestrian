@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DatabaseManager implements Listener {
-    private final Connection connection;
+    private Connection connection = null;
     private final EquinoxEquestrian plugin;
 
     private final Map<String, String> EQUINE_HORSES_SCHEMA = new LinkedHashMap<>() {{
@@ -53,68 +53,82 @@ public class DatabaseManager implements Listener {
         put("PRIMARY KEY", "(horse_uuid, player_uuid)");
     }};
 
-    public DatabaseManager(EquinoxEquestrian plugin, String path) throws SQLException {
+    public DatabaseManager(EquinoxEquestrian plugin, String path) {
         this.plugin = plugin;
-        this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS PLAYERS (" +
-                    "uuid TEXT PRIMARY KEY, " +
-                    "token int NOT NULL DEFAULT 0)");
+        try {
+            this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("CREATE TABLE IF NOT EXISTS PLAYERS (" +
+                        "uuid TEXT PRIMARY KEY, " +
+                        "token int NOT NULL DEFAULT 0)");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
-                    "uuid TEXT PRIMARY KEY, " +
-                    "owner_uuid VARCHAR(255) NOT NULL" +
-                    ")");
+                statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
+                        "uuid TEXT PRIMARY KEY, " +
+                        "owner_uuid VARCHAR(255) NOT NULL" +
+                        ")");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_TRUSTED_PLAYERS (" +
-                    "horse_uuid TEXT NOT NULL, " +
-                    "player_uuid TEXT NOT NULL, " +
-                    "PRIMARY KEY (horse_uuid, player_uuid)" +
-                    ")");
+                statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_TRUSTED_PLAYERS (" +
+                        "horse_uuid TEXT NOT NULL, " +
+                        "player_uuid TEXT NOT NULL, " +
+                        "PRIMARY KEY (horse_uuid, player_uuid)" +
+                        ")");
 
-            updateTableSchema("EQUINE_HORSES", EQUINE_HORSES_SCHEMA);
-            updateTableSchema("EQUINE_TRUSTED_PLAYERS", EQUINE_TRUSTED_PLAYERS_SCHEMA);
+                updateTableSchema("EQUINE_HORSES", EQUINE_HORSES_SCHEMA);
+                updateTableSchema("EQUINE_TRUSTED_PLAYERS", EQUINE_TRUSTED_PLAYERS_SCHEMA);
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to create database tables: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to connect to database: " + e.getMessage());
         }
     }
 
-    private void updateTableSchema(String tableName, Map<String, String> desiredSchema) throws SQLException {
+    private void updateTableSchema(String tableName, Map<String, String> desiredSchema) {
         Set<String> existingColumns = new HashSet<>();
 
         // Get existing column names from the table
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("PRAGMA table_info(" + tableName + ")")) {
-            while (rs.next()) {
-                existingColumns.add(rs.getString("name").toLowerCase());
-            }
-        }
-
-        // Add only real columns (skip constraints like PRIMARY KEY)
-        try (Statement stmt = connection.createStatement()) {
-            for (Map.Entry<String, String> entry : desiredSchema.entrySet()) {
-                String columnName = entry.getKey();
-                String columnDefinition = entry.getValue();
-
-                // Skip constraint entries
-                if (columnName.equalsIgnoreCase("PRIMARY KEY")
-                        || columnName.startsWith("__constraint_")) {
-                    continue;
-                }
-
-                if (!existingColumns.contains(columnName.toLowerCase())) {
-                    String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition;
-                    stmt.execute(sql);
-                    System.out.println("Added missing column '" + columnName + "' to table '" + tableName + "'");
+        try {
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery("PRAGMA table_info(" + tableName + ")")) {
+                while (rs.next()) {
+                    existingColumns.add(rs.getString("name").toLowerCase());
                 }
             }
+
+            // Add only real columns (skip constraints like PRIMARY KEY)
+            try (Statement stmt = connection.createStatement()) {
+                for (Map.Entry<String, String> entry : desiredSchema.entrySet()) {
+                    String columnName = entry.getKey();
+                    String columnDefinition = entry.getValue();
+
+                    // Skip constraint entries
+                    if (columnName.equalsIgnoreCase("PRIMARY KEY")
+                            || columnName.startsWith("__constraint_")) {
+                        continue;
+                    }
+
+                    if (!existingColumns.contains(columnName.toLowerCase())) {
+                        String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition;
+                        stmt.execute(sql);
+                        System.out.println("Added missing column '" + columnName + "' to table '" + tableName + "'");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to update table schema for table '" + tableName + "': " + e.getMessage());
         }
     }
 
-    public void addPlayer(Player player) throws SQLException {
-        if (!playerExists(player)) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid) VALUES (?)")) {
-                preparedStatement.setString(1, player.getUniqueId().toString());
-                preparedStatement.executeUpdate();
+    public void addPlayer(Player player) {
+        try {
+            if (!playerExists(player)) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid) VALUES (?)")) {
+                    preparedStatement.setString(1, player.getUniqueId().toString());
+                    preparedStatement.executeUpdate();
+                }
             }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to add player to database: " + e.getMessage());
         }
     }
 
@@ -182,16 +196,19 @@ public class DatabaseManager implements Listener {
                 return true;
             } catch (SQLException e) {
                 System.err.println("Failed to insert horse into database: " + uuid);
-                e.printStackTrace();
                 return false;
             }
         });
     }
 
-    public void removeHorse(AbstractHorse horse) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM EQUINE_HORSES WHERE uuid = ?")) {
-            preparedStatement.setString(1, horse.getUniqueId().toString());
-            preparedStatement.executeUpdate();
+    public void removeHorse(AbstractHorse horse) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM EQUINE_HORSES WHERE uuid = ?")) {
+                preparedStatement.setString(1, horse.getUniqueId().toString());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to remove horse from database: " + e.getMessage());
         }
     }
 
@@ -202,78 +219,56 @@ public class DatabaseManager implements Listener {
             preparedStatement.setString(1, player.getUniqueId().toString());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    EquineLiveHorse horse = new EquineLiveHorse();
-                    horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
-                    horse.setOwnerUUID(resultSet.getString("owner_uuid"));
-                    horse.setName(resultSet.getString("display_name"));
-                    horse.setDiscipline(Discipline.getDisciplineByName(resultSet.getString("discipline")));
-                    List<Breed> breeds = new ArrayList<>();
-                    String breed1 = resultSet.getString("breed_1");
-                    String breed2 = resultSet.getString("breed_2");
-                    if (breed1 != null) breeds.add(Breed.getBreedByName(breed1));
-                    if (breed2 != null) breeds.add(Breed.getBreedByName(breed2));
-                    horse.setBreeds(breeds);
-                    horse.setProminentBreed(Breed.getBreedByName(resultSet.getString("prominent_breed")));
-                    horse.setCoatColor(CoatColor.getByName(resultSet.getString("coat_color")));       // added
-                    horse.setCoatModifier(CoatModifier.getByName(resultSet.getString("coat_modifier"))); // added
-                    horse.setGender(Gender.valueOf(resultSet.getString("gender")));
-                    horse.setAge(resultSet.getInt("age"));
-                    horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
-                    List<Trait> traits = new ArrayList<>();
-                    String trait1 = resultSet.getString("trait_1");
-                    String trait2 = resultSet.getString("trait_2");
-                    String trait3 = resultSet.getString("trait_3");
-                    if (trait1 != null) traits.add(Trait.getTraitByName(trait1));
-                    if (trait2 != null) traits.add(Trait.getTraitByName(trait2));
-                    if (trait3 != null) traits.add(Trait.getTraitByName(trait3));
-                    horse.setTraits(traits);
-                    horse.setClaimTime(resultSet.getLong("claim_time"));
-                    horse.setBirthTime(resultSet.getLong("birth_time"));
-                    horse.setOwnerName(resultSet.getString("owner_name"));
-                    horse.setBaseSpeed(resultSet.getDouble("base_speed"));
-                    horse.setBaseJumpPower(resultSet.getDouble("base_jump_power"));
-                    horse.setSkullId(resultSet.getString("skull_id"));
-
-                    if (resultSet.getString("last_world") != null) {
-                        World world = Bukkit.getWorld(resultSet.getString("last_world"));
-                        double x = resultSet.getDouble("last_location_x");
-                        double y = resultSet.getDouble("last_location_y");
-                        double z = resultSet.getDouble("last_location_z");
-                        horse.setLastLocation(new Location(world, x, y, z));
+                    EquineLiveHorse horse = mapResultSetToHorse(resultSet);
+                    if (horse != null) {
+                        horses.add(horse);
                     }
-                    horses.add(horse);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("Failed to get player horses: " + e.getMessage());
         }
         return horses;
     }
 
-    public void setTokenAmount(Player player, int tokenAmount) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET token = ? WHERE uuid = ?")) {
-            preparedStatement.setInt(1, tokenAmount);
-            preparedStatement.setString(2, player.getUniqueId().toString());
-            preparedStatement.executeUpdate();
+    public void setTokenAmount(Player player, int tokenAmount) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET token = ? WHERE uuid = ?")) {
+                preparedStatement.setInt(1, tokenAmount);
+                preparedStatement.setString(2, player.getUniqueId().toString());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to set token amount: " + e.getMessage());
         }
     }
 
-    public int getTokenAmount(Player player) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT token FROM players WHERE uuid = ?")) {
-            preparedStatement.setString(1, player.getUniqueId().toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt("token");
+    public int getTokenAmount(Player player) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT token FROM players WHERE uuid = ?")) {
+                preparedStatement.setString(1, player.getUniqueId().toString());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getInt("token");
+                }
             }
+            return 0;
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to get token amount: " + e.getMessage());
         }
         return 0;
     }
 
-    public boolean playerExists(Player player) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid = ?")) {
-            preparedStatement.setString(1, player.getUniqueId().toString());
-            return preparedStatement.executeQuery().next();
+    public boolean playerExists(Player player) {
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid = ?")) {
+                preparedStatement.setString(1, player.getUniqueId().toString());
+                return preparedStatement.executeQuery().next();
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to check player existence: " + e.getMessage());
         }
+        return false;
     }
 
     public boolean horseExists(AbstractHorse horse) {
@@ -281,7 +276,7 @@ public class DatabaseManager implements Listener {
             preparedStatement.setString(1, horse.getUniqueId().toString());
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("Failed to check horse existence: " + e.getMessage());
         }
         return false;
     }
@@ -358,7 +353,6 @@ public class DatabaseManager implements Listener {
                 return true;
             } catch (SQLException e) {
                 System.err.println("Failed to update horse in database: " + uuid);
-                e.printStackTrace();
                 return false;
             }
         });
@@ -423,52 +417,70 @@ public class DatabaseManager implements Listener {
             preparedStatement.setString(1, player.getUniqueId().toString());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    EquineLiveHorse horse = new EquineLiveHorse();
-                    horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
-                    horse.setOwnerUUID(resultSet.getString("owner_uuid"));
-                    horse.setName(resultSet.getString("display_name"));
-                    horse.setDiscipline(Discipline.getDisciplineByName(resultSet.getString("discipline")));
-                    List<Breed> breeds = new ArrayList<>();
-                    String breed1 = resultSet.getString("breed_1");
-                    String breed2 = resultSet.getString("breed_2");
-                    if (breed1 != null) breeds.add(Breed.getBreedByName(breed1));
-                    if (breed2 != null) breeds.add(Breed.getBreedByName(breed2));
-                    horse.setBreeds(breeds);
-                    horse.setProminentBreed(Breed.getBreedByName(resultSet.getString("prominent_breed")));
-                    horse.setCoatColor(CoatColor.getByName(resultSet.getString("coat_color")));
-                    horse.setCoatModifier(CoatModifier.getByName(resultSet.getString("coat_modifier")));
-                    horse.setGender(Gender.valueOf(resultSet.getString("gender")));
-                    horse.setAge(resultSet.getInt("age"));
-                    horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
-                    List<Trait> traits = new ArrayList<>();
-                    String trait1 = resultSet.getString("trait_1");
-                    String trait2 = resultSet.getString("trait_2");
-                    String trait3 = resultSet.getString("trait_3");
-                    if (trait1 != null) traits.add(Trait.getTraitByName(trait1));
-                    if (trait2 != null) traits.add(Trait.getTraitByName(trait2));
-                    if (trait3 != null) traits.add(Trait.getTraitByName(trait3));
-                    horse.setTraits(traits);
-                    horse.setClaimTime(resultSet.getLong("claim_time"));
-                    horse.setBirthTime(resultSet.getLong("birth_time"));
-                    horse.setOwnerName(resultSet.getString("owner_name"));
-                    horse.setBaseSpeed(resultSet.getDouble("base_speed"));
-                    horse.setBaseJumpPower(resultSet.getDouble("base_jump_power"));
-                    horse.setSkullId(resultSet.getString("skull_id"));
-
-                    if (resultSet.getString("last_world") != null) {
-                        World world = Bukkit.getWorld(resultSet.getString("last_world"));
-                        double x = resultSet.getDouble("last_location_x");
-                        double y = resultSet.getDouble("last_location_y");
-                        double z = resultSet.getDouble("last_location_z");
-                        horse.setLastLocation(new Location(world, x, y, z));
+                    EquineLiveHorse horse = mapResultSetToHorse(resultSet);
+                    if (horse != null) {
+                        horses.add(horse);
                     }
-                    horses.add(horse);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("Failed to get trusted horses: " + e.getMessage());
         }
         return horses;
+    }
+
+    private EquineLiveHorse mapResultSetToHorse(ResultSet resultSet) {
+        try {
+            EquineLiveHorse horse = new EquineLiveHorse();
+            horse.setUuid(UUID.fromString(resultSet.getString("uuid")));
+            horse.setOwnerUUID(resultSet.getString("owner_uuid"));
+            horse.setName(resultSet.getString("display_name"));
+            horse.setDiscipline(Discipline.getDisciplineByName(resultSet.getString("discipline")));
+
+            List<Breed> breeds = new ArrayList<>();
+            String breed1 = resultSet.getString("breed_1");
+            String breed2 = resultSet.getString("breed_2");
+            if (breed1 != null) breeds.add(Breed.getBreedByName(breed1));
+            if (breed2 != null) breeds.add(Breed.getBreedByName(breed2));
+            horse.setBreeds(breeds);
+
+            horse.setProminentBreed(Breed.getBreedByName(resultSet.getString("prominent_breed")));
+            horse.setCoatColor(CoatColor.getByName(resultSet.getString("coat_color")));
+            horse.setCoatModifier(CoatModifier.getByName(resultSet.getString("coat_modifier")));
+            horse.setGender(Gender.valueOf(resultSet.getString("gender")));
+            horse.setAge(resultSet.getInt("age"));
+            horse.setHeight(Height.getByHands(resultSet.getDouble("height")));
+
+            List<Trait> traits = new ArrayList<>();
+            String trait1 = resultSet.getString("trait_1");
+            String trait2 = resultSet.getString("trait_2");
+            String trait3 = resultSet.getString("trait_3");
+            if (trait1 != null) traits.add(Trait.getTraitByName(trait1));
+            if (trait2 != null) traits.add(Trait.getTraitByName(trait2));
+            if (trait3 != null) traits.add(Trait.getTraitByName(trait3));
+            horse.setTraits(traits);
+
+            horse.setClaimTime(resultSet.getLong("claim_time"));
+            horse.setBirthTime(resultSet.getLong("birth_time"));
+            horse.setOwnerName(resultSet.getString("owner_name"));
+            horse.setBaseSpeed(resultSet.getDouble("base_speed"));
+            horse.setBaseJumpPower(resultSet.getDouble("base_jump_power"));
+            horse.setSkullId(resultSet.getString("skull_id"));
+
+            String worldName = resultSet.getString("last_world");
+            if (worldName != null) {
+                World world = Bukkit.getWorld(worldName);
+                double x = resultSet.getDouble("last_location_x");
+                double y = resultSet.getDouble("last_location_y");
+                double z = resultSet.getDouble("last_location_z");
+                horse.setLastLocation(new Location(world, x, y, z));
+            }
+
+            return horse;
+        } catch (Exception e) {
+            plugin.getLogger().severe("Failed to map result set to horse: " + e.getMessage());
+            return null;
+        }
     }
 
 
