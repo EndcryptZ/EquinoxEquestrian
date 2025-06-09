@@ -1,16 +1,20 @@
 package endcrypt.equinox.api.events;
 
+import lombok.Getter;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class EquinePlayerSelectHorseEvent extends Event implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
-    private Player player;
-    private AbstractHorse horse;
+    @Getter
+    private final Player player;
+    @Getter
+    private final AbstractHorse horse;
 
     private boolean cancelled;
 
@@ -20,20 +24,8 @@ public class EquinePlayerSelectHorseEvent extends Event implements Cancellable {
         this.horse = horse;
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    public AbstractHorse getHorse() {
-        return horse;
-    }
-
     @Override
-    public HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
-
-    public static HandlerList getHandlerList() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
 
