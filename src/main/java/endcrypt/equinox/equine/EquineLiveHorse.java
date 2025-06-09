@@ -43,6 +43,7 @@ public class EquineLiveHorse {
     private double baseJumpPower;
     private String skullId;
     private Location lastLocation;
+    private boolean isPublic;
 
     private final AbstractHorse horse;
     
@@ -67,6 +68,7 @@ public class EquineLiveHorse {
         this.baseJumpPower = 0.0;
         this.skullId = null;
         this.lastLocation = null;
+        this.isPublic = false;
     }
 
 
@@ -86,6 +88,7 @@ public class EquineLiveHorse {
 
         this.uuid = horse.getUniqueId();
         this.horse = horse;
+        this.isPublic = EquineUtils.isHorsePublic(horse);
 
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
@@ -119,6 +122,7 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), horse.getLocation().getX());
             nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
+            nbt.setString(Keys.IS_PUBLIC.getKey(), String.valueOf(isPublic));
         });
     }
 
