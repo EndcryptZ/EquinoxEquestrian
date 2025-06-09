@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.privacy;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Material;
@@ -47,5 +48,13 @@ public class EquinePrivacyListener implements Listener {
         event.setCancelled(true);
 
         
+    }
+
+    @EventHandler
+    public void onUntrust(EquinePlayerUntrustEvent event) {
+        event.getHorse().setPassenger(null);
+        if(event.getHorse().getLeashHolder() != null) {
+            event.getHorse().getLeashHolder().remove();
+        }
     }
 }
