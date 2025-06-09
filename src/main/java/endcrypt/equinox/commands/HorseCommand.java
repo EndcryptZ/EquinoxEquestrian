@@ -6,6 +6,7 @@ import dev.jorel.commandapi.arguments.PlayerArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -55,6 +56,10 @@ public class HorseCommand {
                 .withSubcommand(new CommandAPICommand("tphere")
                         .withAliases("teleporthere")
                         .executesPlayer(this::horseTeleportHere))
+
+                .withSubcommand(new CommandAPICommand("set")
+                        .withArguments(new MultiLiteralArgument("privacy", "private", "public"))
+                        .executesPlayer(this::horseSetPrivacy))
 
                 .register();
     }
@@ -156,6 +161,42 @@ public class HorseCommand {
         horse.teleport(player.getLocation());
         player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
                 Placeholder.parsed("prefix", plugin.getPrefix())));
+    }
+
+    private void horseSetPrivacy(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        String privacy = (String) args.get("privacy");
+
+        String prefix = plugin.getPrefix();
+
+        if (horse == null) {
+            player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
+                    Placeholder.parsed("prefix", prefix)));
+            return;
+        }
+
+        boolean isPublic = EquineUtils.isHorsePublic(horse);
+
+        if (privacy.equalsIgnoreCase("public")) {
+            if (isPublic) {
+                player.sendMessage(ColorUtils.color("<prefix><red>Your horse is already public!",
+                        Placeholder.parsed("prefix", prefix)));
+            } else {
+                plugin.getEquineManager().getEquinePrivacy().setPrivacy(true, horse);
+                player.sendMessage(ColorUtils.color("<prefix><green>Your horse is now public!",
+                        Placeholder.parsed("prefix", prefix)));
+            }
+        } else if (privacy.equalsIgnoreCase("private")) {
+            if (!isPublic) {
+                player.sendMessage(ColorUtils.color("<prefix><red>Your horse is already private!",
+                        Placeholder.parsed("prefix", prefix)));
+            } else {
+                plugin.getEquineManager().getEquinePrivacy().setPrivacy(false, horse);
+                player.sendMessage(ColorUtils.color("<prefix><green>Your horse is now private!",
+                        Placeholder.parsed("prefix", prefix)));
+            }
+        }
     }
 
 }
