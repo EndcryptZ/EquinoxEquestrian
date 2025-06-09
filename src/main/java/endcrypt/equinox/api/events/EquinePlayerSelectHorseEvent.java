@@ -29,6 +29,10 @@ public class EquinePlayerSelectHorseEvent extends Event implements Cancellable {
         return HANDLER_LIST;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
+
     @Override
     public boolean isCancelled() {
         return cancelled;

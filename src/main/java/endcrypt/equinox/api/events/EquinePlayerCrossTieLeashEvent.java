@@ -22,4 +22,7 @@ public class EquinePlayerCrossTieLeashEvent extends Event {
         return HANDLER_LIST;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
 }

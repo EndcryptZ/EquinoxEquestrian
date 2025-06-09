@@ -29,5 +29,9 @@ public class EquinePlayerUntrustEvent extends Event {
         return HANDLER_LIST;
     }
 
+    public static HandlerList getHandlerList() {
+        return HANDLER_LIST;
+    }
+
 }
 
