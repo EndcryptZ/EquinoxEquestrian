@@ -52,9 +52,11 @@ public class EquinePrivacyListener implements Listener {
 
     @EventHandler
     public void onUntrust(EquinePlayerUntrustEvent event) {
-        event.getHorse().setPassenger(null);
-        if(event.getHorse().getLeashHolder() != null) {
-            event.getHorse().getLeashHolder().remove();
+        if (event.getHorse().getPassengers().contains(event.getTrustedPlayer())) {
+            event.getHorse().removePassenger(event.getTrustedPlayer());
+        }
+        if(event.getHorse().isLeashed() && event.getHorse().getLeashHolder() == event.getTrustedPlayer()) {
+            event.getHorse().setLeashHolder(null);
         }
     }
 }
