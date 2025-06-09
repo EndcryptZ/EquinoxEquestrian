@@ -79,6 +79,8 @@ public class DatabaseManager implements Listener {
 
     private void updateTableSchema(String tableName, Map<String, String> desiredSchema) throws SQLException {
         Set<String> existingColumns = new HashSet<>();
+
+        // Get existing column names from the table
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("PRAGMA table_info(" + tableName + ")")) {
             while (rs.next()) {
@@ -86,13 +88,20 @@ public class DatabaseManager implements Listener {
             }
         }
 
+        // Add only real columns (skip constraints like PRIMARY KEY)
         try (Statement stmt = connection.createStatement()) {
             for (Map.Entry<String, String> entry : desiredSchema.entrySet()) {
                 String columnName = entry.getKey();
-                String columnType = entry.getValue();
+                String columnDefinition = entry.getValue();
+
+                // Skip constraint entries
+                if (columnName.equalsIgnoreCase("PRIMARY KEY")
+                        || columnName.startsWith("__constraint_")) {
+                    continue;
+                }
 
                 if (!existingColumns.contains(columnName.toLowerCase())) {
-                    String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType;
+                    String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition;
                     stmt.execute(sql);
                     System.out.println("Added missing column '" + columnName + "' to table '" + tableName + "'");
                 }
@@ -355,10 +364,10 @@ public class DatabaseManager implements Listener {
         });
     }
 
-    public void addTrustedPlayer(UUID horseUuid, Player player) {
+    public void addTrustedPlayer(AbstractHorse horse, Player player) {
         String sql = "INSERT OR IGNORE INTO EQUINE_TRUSTED_PLAYERS (horse_uuid, player_uuid) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, horseUuid.toString());
+            ps.setString(1, horse.getUniqueId().toString());
             ps.setString(2, player.getUniqueId().toString());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -366,11 +375,11 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public List<UUID> getTrustedPlayers(UUID horseUuid) {
+    public List<UUID> getTrustedPlayers(AbstractHorse horse) {
         List<UUID> trusted = new ArrayList<>();
         String sql = "SELECT player_uuid FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, horseUuid.toString());
+            ps.setString(1, horse.getUniqueId().toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 trusted.add(UUID.fromString(rs.getString("player_uuid")));
@@ -395,4 +404,30 @@ public class DatabaseManager implements Listener {
         }
         return horses;
     }
+
+    public boolean isTrustedToHorse(AbstractHorse horse, Player player) {
+        String sql = "SELECT * FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ? AND player_uuid = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, horse.getUniqueId().toString());
+            ps.setString(2, player.getUniqueId().toString());
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to check trusted player: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void removeTrustedPlayer(AbstractHorse horse, Player player) {
+        String sql = "DELETE FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ? AND player_uuid = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, horse.getUniqueId().toString());
+            ps.setString(2, player.getUniqueId().toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to remove trusted player: " + e.getMessage());
+        }
+    }
+
+
 }
