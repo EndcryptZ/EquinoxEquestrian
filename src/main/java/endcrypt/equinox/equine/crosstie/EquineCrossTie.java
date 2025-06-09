@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.crosstie;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.api.events.EquineCrossTieLeashRemovedEvent;
+import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashRemovedEvent;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
@@ -39,7 +39,7 @@ public class EquineCrossTie {
 
                     if (!bat.isLeashed() || (!horse.isLeashed())) {
                         bat.remove();
-                        Bukkit.getPluginManager().callEvent(new EquineCrossTieLeashRemovedEvent(horse));
+                        Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
                         continue;
                     }
 

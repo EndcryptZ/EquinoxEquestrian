@@ -2,8 +2,8 @@ package endcrypt.equinox.equine.crosstie;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.api.events.EquineCrossTieLeashEvent;
-import endcrypt.equinox.api.events.EquineCrossTieLeashRemovedEvent;
+import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashEvent;
+import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashRemovedEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
@@ -38,7 +38,7 @@ public class EquineCrossTieListener implements Listener {
         // Bug Fixing Method
         if (!horse.isLeashed()) {
             if(EquineUtils.isCrossTied(horse)) {
-                Bukkit.getPluginManager().callEvent(new EquineCrossTieLeashRemovedEvent(horse));
+                Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
             }
             return;
         }
@@ -86,13 +86,13 @@ public class EquineCrossTieListener implements Listener {
         NBT.modifyPersistentData(bat, nbt -> {
             nbt.setString("LEASHED_HORSE", horse.getUniqueId().toString());
         });
-        Bukkit.getPluginManager().callEvent(new EquineCrossTieLeashEvent(horse));
+        Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashEvent(horse));
 
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onCrossTieRemoved(EquineCrossTieLeashRemovedEvent event) {
+    public void onCrossTieRemoved(EquinePlayerCrossTieLeashRemovedEvent event) {
         NBT.modifyPersistentData(event.getHorse(), nbt -> {
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), "false");
         });
@@ -102,7 +102,7 @@ public class EquineCrossTieListener implements Listener {
     }
 
     @EventHandler
-    public void onCrossTie(EquineCrossTieLeashEvent event) {
+    public void onCrossTie(EquinePlayerCrossTieLeashEvent event) {
         NBT.modifyPersistentData(event.getHorse(), nbt -> {
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), "true");
         });
