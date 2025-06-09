@@ -171,4 +171,9 @@ public class EquineUtils {
         return false;
     }
 
+    public static boolean isHorsePublic(AbstractHorse horse) {
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PUBLIC));
+    }
+
 }
