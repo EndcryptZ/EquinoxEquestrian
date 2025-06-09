@@ -69,8 +69,10 @@ public class    HorseListMenu {
         int slot = 0;
         for (EquineLiveHorse equineHorse : sortedHorses ) {
             if(tempoSlot == 0) {
-                if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
-                if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
+                if(gui.getMaxPage() > 1) {
+                    if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
+                    if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
+                }
                 gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType));
             }
             SGButton horseButton = horseButton(player, equineHorse);
