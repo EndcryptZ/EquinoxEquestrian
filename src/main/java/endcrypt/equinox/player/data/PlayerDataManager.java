@@ -33,21 +33,13 @@ public class PlayerDataManager {
 
     public void loadPlayer(Player player) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-            try {
 
-                plugin.getDatabaseManager().addPlayer(player);
-                playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getTokenAmount(player)));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            plugin.getDatabaseManager().addPlayer(player);
+            playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getTokenAmount(player)));
         });
     }
     public void saveTokens(Player player) {
         PlayerData playerData = playerDataMap.get(player);
-        try {
-            plugin.getDatabaseManager().setTokenAmount(player, playerData.getTokens());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        plugin.getDatabaseManager().setTokenAmount(player, playerData.getTokens());
     }
 }
