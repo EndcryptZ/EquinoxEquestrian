@@ -6,6 +6,7 @@ import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -213,7 +214,7 @@ public class DatabaseManager implements Listener {
     }
 
 
-    public List<EquineLiveHorse> getPlayerHorses(Player player) {
+    public List<EquineLiveHorse> getPlayerHorses(OfflinePlayer player) {
         List<EquineLiveHorse> horses = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?")) {
             preparedStatement.setString(1, player.getUniqueId().toString());
@@ -384,7 +385,7 @@ public class DatabaseManager implements Listener {
         return trusted;
     }
 
-    public boolean isTrustedToHorse(AbstractHorse horse, Player player) {
+    public boolean isTrustedToHorse(AbstractHorse horse, OfflinePlayer player) {
         String sql = "SELECT * FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ? AND player_uuid = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, horse.getUniqueId().toString());
@@ -397,7 +398,7 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public void removeTrustedPlayer(AbstractHorse horse, Player player) {
+    public void removeTrustedPlayer(AbstractHorse horse, OfflinePlayer player) {
         String sql = "DELETE FROM EQUINE_TRUSTED_PLAYERS WHERE horse_uuid = ? AND player_uuid = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, horse.getUniqueId().toString());
@@ -408,7 +409,7 @@ public class DatabaseManager implements Listener {
         }
     }
 
-    public List<EquineLiveHorse> getTrustedHorses(Player player) {
+    public List<EquineLiveHorse> getTrustedHorses(OfflinePlayer player) {
         List<EquineLiveHorse> horses = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(
                 "SELECT h.* FROM EQUINE_HORSES h " +

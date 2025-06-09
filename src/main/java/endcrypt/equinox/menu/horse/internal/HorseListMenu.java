@@ -9,6 +9,7 @@ import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.player.data.PlayerData;
 import endcrypt.equinox.utils.HeadUtils;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,20 +27,20 @@ public class    HorseListMenu {
 
 
     public void open(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        player.openInventory(createMenu(player, listOrganizeType, isTrustedHorses));
+        player.getPlayer().openInventory(createMenu(player, listOrganizeType, isTrustedHorses));
 
     }
 
-    public void openToOther(Player player, Player target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+    public void openToOther(Player player, OfflinePlayer target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
         player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses));
     }
 
-    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        String guiName = isTrustedHorses ? "Trusted Horses" : "Horse List";
+    private Inventory createMenu(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+        String guiName = isTrustedHorses ? "Trusted Horses of " + player.getName() : "Horse List of " + player.getName();
 
         SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
 
-        SGButton menu = isTrustedHorses ? horseListButton(listOrganizeType) : trustedHorsesButton(listOrganizeType);
+        SGButton menu = isTrustedHorses ? horseListButton(player, listOrganizeType) : trustedHorsesButton(player, listOrganizeType);
 
 
         List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getTrustedHorses(player) : plugin.getDatabaseManager().getPlayerHorses(player);
@@ -69,7 +70,7 @@ public class    HorseListMenu {
 
         int tempoSlot = 0;
         int slot = 0;
-        gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType, isTrustedHorses));
+        gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
         gui.setButton(slot + 35, menu);
         for (EquineLiveHorse equineHorse : sortedHorses ) {
             if(tempoSlot == 0) {
@@ -77,7 +78,7 @@ public class    HorseListMenu {
                     if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
                     if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
                 }
-                gui.setButton(slot + 31, menuOrganiserButton(listOrganizeType, isTrustedHorses));
+                gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
                 gui.setButton(slot + 35, menu);
             }
             SGButton horseButton = horseButton(player, equineHorse, isTrustedHorses);
@@ -100,7 +101,7 @@ public class    HorseListMenu {
     }
 
 
-    private SGButton menuOrganiserButton(ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+    private SGButton menuOrganiserButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
 
         return new SGButton(
                 new ItemBuilder(Material.PAPER)
@@ -109,14 +110,17 @@ public class    HorseListMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event ) -> {
-                    Player player = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player, listOrganizeType, isTrustedHorses);
+                    if(player != event.getWhoClicked()) {
+                        plugin.getHorseMenuManager().getListOrganizerMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorses);
+                        return;
+                    }
+                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player.getPlayer(), listOrganizeType, isTrustedHorses);
 
 
                 });
     }
 
-    private SGButton trustedHorsesButton(ListOrganizeType listOrganizeType) {
+    private SGButton trustedHorsesButton(OfflinePlayer player, ListOrganizeType listOrganizeType) {
 
         return new SGButton(
                 new ItemBuilder(Material.WRITABLE_BOOK)
@@ -128,14 +132,17 @@ public class    HorseListMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event ) -> {
-                    Player player = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, true);
+                    if(player != event.getWhoClicked()) {
+                        plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, true);
+                        return;
+                    }
+                    plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, true);
 
                 });
     }
 
 
-    private SGButton horseListButton(ListOrganizeType listOrganizeType) {
+    private SGButton horseListButton(OfflinePlayer player, ListOrganizeType listOrganizeType) {
 
         return new SGButton(
                 new ItemBuilder(Material.WRITABLE_BOOK)
@@ -146,17 +153,23 @@ public class    HorseListMenu {
                         .build()
         )
                 .withListener((InventoryClickEvent event ) -> {
-                    Player player = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, false);
+                    if(player != event.getWhoClicked()) {
+                        plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, false);
+                        return;
+                    }
+
+                    plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, false);
 
                 });
     }
 
-    private SGButton horseButton(Player player, EquineLiveHorse equineLiveHorse, boolean isTrustedHorses) {
-        boolean isSelected;
-        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
-        AbstractHorse selectedHorse = playerData.getSelectedHorse();
-        isSelected = selectedHorse != null && selectedHorse.getUniqueId().equals(equineLiveHorse.getUuid());
+    private SGButton horseButton(OfflinePlayer player, EquineLiveHorse equineLiveHorse, boolean isTrustedHorses) {
+        boolean isSelected = false;
+        if(player.isOnline()) {
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player.getPlayer());
+            AbstractHorse selectedHorse = playerData.getSelectedHorse();
+            isSelected = selectedHorse != null && selectedHorse.getUniqueId().equals(equineLiveHorse.getUuid());
+        }
         String displayName = "&f" + equineLiveHorse.getName() + (isSelected ? " &a(Selected)" : "");
         ItemStack head = HeadUtils.getItemHead(equineLiveHorse.getSkullId());
 

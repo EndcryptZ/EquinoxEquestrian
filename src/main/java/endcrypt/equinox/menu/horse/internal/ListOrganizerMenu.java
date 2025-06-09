@@ -5,6 +5,7 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -21,7 +22,12 @@ public class ListOrganizerMenu {
 
     }
 
-    private Inventory createMenu(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    public void openToOther(Player player, OfflinePlayer target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
+        player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses));
+    }
+
+
+    private Inventory createMenu(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         SGMenu gui = plugin.getSpiGUI().create("Horse List Organizer", 3, "Horse List Organizer");
 
         gui.setButton(11, disciplineButton(player, listOrganizeType, isTrustedHorse));
@@ -33,7 +39,7 @@ public class ListOrganizerMenu {
         return gui.getInventory();
     }
 
-    private SGButton disciplineButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    private SGButton disciplineButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         boolean isSelected = listOrganizeType == ListOrganizeType.DISCIPLINE;
         String loreIndicator = !isSelected ? "&c&l✘" : "&a&l✔";
 
@@ -50,7 +56,7 @@ public class ListOrganizerMenu {
         });
     }
 
-    private SGButton alphabeticalButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    private SGButton alphabeticalButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         boolean isSelected = listOrganizeType == ListOrganizeType.ALPHABETICAL;
         String loreIndicator = !isSelected ? "&c&l✘" : "&a&l✔";
 
@@ -63,11 +69,15 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.ALPHABETICAL, isTrustedHorse);
+            if(player != event.getWhoClicked()) {
+                plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.ALPHABETICAL, isTrustedHorse);
+                return;
+            }
+            plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.ALPHABETICAL, isTrustedHorse);
         });
     }
 
-    private SGButton ageButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    private SGButton ageButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         boolean isSelected = listOrganizeType == ListOrganizeType.AGE;
         String loreIndicator = !isSelected ? "&c&l✘" : "&a&l✔";
 
@@ -80,11 +90,15 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE, isTrustedHorse);
+            if(player != event.getWhoClicked()) {
+                plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.AGE, isTrustedHorse);
+                return;
+            }
+            plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.AGE, isTrustedHorse);
         });
     }
 
-    private SGButton levelButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    private SGButton levelButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         boolean isSelected = listOrganizeType == ListOrganizeType.LEVEL;
         String loreIndicator = !isSelected ? "&c&l✘" : "&a&l✔";
 
@@ -100,7 +114,7 @@ public class ListOrganizerMenu {
         });
     }
 
-    private SGButton genderButton(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
+    private SGButton genderButton(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorse) {
         boolean isSelected = listOrganizeType == ListOrganizeType.GENDER;
         String loreIndicator = !isSelected ? "&c&l✘" : "&a&l✔";
 
@@ -113,7 +127,11 @@ public class ListOrganizerMenu {
                         )
                         .build()
         ).withListener(event -> {
-            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.GENDER, isTrustedHorse);
+            if(player != event.getWhoClicked()) {
+                plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.GENDER, isTrustedHorse);
+                return;
+            }
+            plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.GENDER, isTrustedHorse);
         });
     }
 
