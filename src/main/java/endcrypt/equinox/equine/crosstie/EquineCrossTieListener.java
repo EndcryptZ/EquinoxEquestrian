@@ -97,6 +97,7 @@ public class EquineCrossTieListener implements Listener {
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), "false");
         });
 
+        plugin.getEquineManager().getEquineCrossTie().remove(event.getHorse());
         event.getHorse().setJumpStrength(EquineUtils.getBaseJumpPower(event.getHorse()));
         event.getHorse().setAI(true);
     }
@@ -107,6 +108,7 @@ public class EquineCrossTieListener implements Listener {
             nbt.setString(Keys.IS_CROSS_TIED.getKey(), "true");
         });
 
+        plugin.getEquineManager().getEquineCrossTie().add(event.getHorse());
         event.getHorse().setJumpStrength(0);
         event.getHorse().setAI(false);
     }
