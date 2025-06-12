@@ -99,7 +99,7 @@ public class DatabaseUtils {
                     if (!existingColumns.contains(columnName.toLowerCase())) {
                         String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition;
                         stmt.execute(sql);
-                        System.out.println("Added missing column '" + columnName + "' to table '" + tableName + "'");
+                        plugin.getLogger().info("Added new column '" + columnName + "' to table '" + tableName + "'");
                     }
                 }
             }

@@ -1,17 +1,11 @@
 package endcrypt.equinox.database;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.nbt.Keys;
 import lombok.Getter;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-import de.tr7zw.changeme.nbtapi.NBT;
 
 import java.sql.*;
-import java.util.*;
 
 @Getter
 public class DatabaseManager implements Listener {
@@ -25,15 +19,19 @@ public class DatabaseManager implements Listener {
         this.plugin = plugin;
         try {
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-            databasePlayer = new DatabasePlayer(plugin);
-            databaseTrustedPlayers = new DatabaseTrustedPlayers(plugin);
-            databaseHorses = new DatabaseHorses(plugin);
-
-            plugin.getLogger().info("Connected to database!");
 
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to connect to database: " + e.getMessage());
+            return;
         }
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+            databasePlayer = new DatabasePlayer(plugin);
+            databaseTrustedPlayers = new DatabaseTrustedPlayers(plugin);
+            databaseHorses = new DatabaseHorses(plugin);
+            plugin.getLogger().info("Connected to database!");
+        }, 1L);
+
     }
 
 
