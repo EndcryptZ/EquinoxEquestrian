@@ -180,4 +180,14 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PUBLIC));
     }
 
+    public static boolean isHorseInHeat(AbstractHorse horse) {
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
+    }
+
+    public static boolean isHorsePregnant(AbstractHorse horse) {
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
+    }
+
 }

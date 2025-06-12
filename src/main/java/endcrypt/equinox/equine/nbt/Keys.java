@@ -31,7 +31,9 @@ public enum Keys {
     LAST_LOCATION_X("EQUINE_LAST_LOCATION_X", ""),
     LAST_LOCATION_Y("EQUINE_LAST_LOCATION_Y", ""),
     LAST_LOCATION_Z("EQUINE_LAST_LOCATION_Z", ""),
-    IS_PUBLIC("EQUINE_IS_PUBLIC", "false");
+    IS_PUBLIC("EQUINE_IS_PUBLIC", "false"),
+    IS_IN_HEAT("EQUINE_IS_IN_HEAT", "false"),
+    IS_PREGNANT("EQUINE_IS_PREGNANT", "false");
 
     public final String key;
     public final Object defaultValue;

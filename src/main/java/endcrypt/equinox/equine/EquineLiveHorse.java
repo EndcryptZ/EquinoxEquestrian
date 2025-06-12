@@ -44,6 +44,8 @@ public class EquineLiveHorse {
     private String skullId;
     private Location lastLocation;
     private boolean isPublic;
+    private boolean isInHeat;
+    private boolean isPregnant;
 
     private final AbstractHorse horse;
     
@@ -69,6 +71,8 @@ public class EquineLiveHorse {
         this.skullId = null;
         this.lastLocation = null;
         this.isPublic = false;
+        this.isInHeat = false;
+        this.isPregnant = false;
     }
 
 
@@ -89,6 +93,8 @@ public class EquineLiveHorse {
         this.uuid = horse.getUniqueId();
         this.horse = horse;
         this.isPublic = EquineUtils.isHorsePublic(horse);
+        this.isInHeat = EquineUtils.isHorseInHeat(horse);
+        this.isPregnant = EquineUtils.isHorsePregnant(horse);
 
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
@@ -123,6 +129,8 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
             nbt.setString(Keys.IS_PUBLIC.getKey(), String.valueOf(isPublic));
+            nbt.setString(Keys.IS_IN_HEAT.getKey(), String.valueOf(isInHeat));
+            nbt.setString(Keys.IS_PREGNANT.getKey(), String.valueOf(isPregnant));
         });
     }
 
