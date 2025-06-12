@@ -32,8 +32,13 @@ public enum Keys {
     LAST_LOCATION_Y("EQUINE_LAST_LOCATION_Y", ""),
     LAST_LOCATION_Z("EQUINE_LAST_LOCATION_Z", ""),
     IS_PUBLIC("EQUINE_IS_PUBLIC", "false"),
+
+    // Breeding & Pregnancy
     IS_IN_HEAT("EQUINE_IS_IN_HEAT", "false"),
-    IS_PREGNANT("EQUINE_IS_PREGNANT", "false");
+    LAST_IN_HEAT("EQUINE_LAST_IN_HEAT", System.currentTimeMillis()),
+    IS_PREGNANT("EQUINE_IS_PREGNANT", "false"),
+    LAST_PREGNANCY("EQUINE_LAST_PREGNANCY", System.currentTimeMillis()),
+    PREGNANCY_START("EQUINE_PREGNANCY_START", System.currentTimeMillis());
 
     public final String key;
     public final Object defaultValue;
