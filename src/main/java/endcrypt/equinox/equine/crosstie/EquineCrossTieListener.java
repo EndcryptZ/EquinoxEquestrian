@@ -14,6 +14,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.world.EntitiesLoadEvent;
+import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -111,5 +113,54 @@ public class EquineCrossTieListener implements Listener {
         plugin.getEquineManager().getEquineCrossTie().add(event.getHorse());
         event.getHorse().setJumpStrength(0);
         event.getHorse().setAI(false);
+    }
+
+    @EventHandler
+    public void onEntityLoad(EntitiesLoadEvent event) {
+        for(Entity entity : event.getEntities()) {
+            if(!(entity instanceof AbstractHorse horse)) {
+                continue;
+            }
+
+            if(!EquineUtils.isLivingEquineHorse(horse)) {
+                continue;
+            }
+
+            if(!EquineUtils.isCrossTied(horse)) {
+                continue;
+            }
+
+            // Bug Fixing Method
+            if (!horse.isLeashed()) {
+                Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
+                continue;
+            }
+
+            plugin.getEquineManager().getEquineCrossTie().add(horse);
+        }
+    }
+
+    @EventHandler
+    public void onEntityUnload(EntitiesUnloadEvent event) {
+        for(Entity entity : event.getEntities()) {
+            if(!(entity instanceof AbstractHorse horse)) {
+                continue;
+            }
+
+            if(!EquineUtils.isLivingEquineHorse(horse)) {
+                continue;
+            }
+
+            if(!EquineUtils.isCrossTied(horse)) {
+                continue;
+            }
+
+            // Bug Fixing Method
+            if (!horse.isLeashed()) {
+                Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
+            }
+
+            plugin.getEquineManager().getEquineCrossTie().remove(horse);
+        }
     }
 }
