@@ -43,6 +43,7 @@ public class EquineLiveHorse {
     private double baseJumpPower;
     private String skullId;
     private Location lastLocation;
+    private boolean isCrossTied;
     private boolean isPublic;
     private boolean isInHeat;
     private boolean isPregnant;
@@ -70,6 +71,7 @@ public class EquineLiveHorse {
         this.baseJumpPower = 0.0;
         this.skullId = null;
         this.lastLocation = null;
+        this.isCrossTied = false;
         this.isPublic = false;
         this.isInHeat = false;
         this.isPregnant = false;
@@ -92,6 +94,7 @@ public class EquineLiveHorse {
 
         this.uuid = horse.getUniqueId();
         this.horse = horse;
+        this.isCrossTied = EquineUtils.isCrossTied(horse);
         this.isPublic = EquineUtils.isHorsePublic(horse);
         this.isInHeat = EquineUtils.isHorseInHeat(horse);
         this.isPregnant = EquineUtils.isHorsePregnant(horse);
