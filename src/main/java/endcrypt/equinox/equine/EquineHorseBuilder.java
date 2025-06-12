@@ -102,7 +102,7 @@ public class EquineHorseBuilder {
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
         });
 
-        plugin.getDatabaseManager().addHorse(horse);
+        plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
 
 
     }

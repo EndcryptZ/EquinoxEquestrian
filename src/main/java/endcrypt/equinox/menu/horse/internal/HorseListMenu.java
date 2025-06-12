@@ -43,7 +43,7 @@ public class    HorseListMenu {
         SGButton menu = isTrustedHorses ? horseListButton(player, listOrganizeType) : trustedHorsesButton(player, listOrganizeType);
 
 
-        List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getTrustedHorses(player) : plugin.getDatabaseManager().getPlayerHorses(player);
+        List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(player) : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
         List<EquineLiveHorse> sortedHorses;
 
         switch (listOrganizeType) {

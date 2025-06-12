@@ -167,7 +167,7 @@ public class EquineUtils {
 
     public static boolean hasPermissionToHorse(Player player, AbstractHorse horse) {
         if (player == null || horse == null) return false;
-        if (instance.getDatabaseManager().isTrustedToHorse(horse, player)) return true;
+        if (instance.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, player)) return true;
         if(isHorsePublic(horse)) return true;
         if(EquineBypass.hasBypass(player)) return true;
         if(horse.getOwner() == player) return true;

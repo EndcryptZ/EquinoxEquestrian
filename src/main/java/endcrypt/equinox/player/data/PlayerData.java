@@ -26,6 +26,6 @@ public class PlayerData {
 
     @SneakyThrows
     public List<EquineLiveHorse> getOwnedHorses(Player player) {
-        return instance.getDatabaseManager().getPlayerHorses(player);
+        return instance.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
     }
 }

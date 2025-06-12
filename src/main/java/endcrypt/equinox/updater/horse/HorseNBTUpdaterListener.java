@@ -46,14 +46,14 @@ public class HorseNBTUpdaterListener implements Listener {
             EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
             equineLiveHorse.setLastLocation(horse.getLocation());
 
-            if(plugin.getDatabaseManager().horseExists(horse)) {
+            if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
-                plugin.getDatabaseManager().updateHorse(horse);
+                plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
                 plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: " + horse.getName()));
                 continue;
             }
 
-            plugin.getDatabaseManager().addHorse(horse);
+            plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: " + horse.getName()));
 
             equineLiveHorse.update();
@@ -74,9 +74,9 @@ public class HorseNBTUpdaterListener implements Listener {
             EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
             equineLiveHorse.setLastLocation(horse.getLocation());
 
-            if(plugin.getDatabaseManager().horseExists(horse)) {
+            if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
-                plugin.getDatabaseManager().updateHorse(horse);
+                plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
                 plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: " + horse.getName()));
             }
         }

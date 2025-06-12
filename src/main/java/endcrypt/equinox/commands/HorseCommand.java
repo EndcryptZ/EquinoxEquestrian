@@ -258,13 +258,13 @@ public class HorseCommand {
         }
 
 
-        if (plugin.getDatabaseManager().isTrustedToHorse(horse, target)) {
+        if (plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, target)) {
             player.sendMessage(ColorUtils.color("<prefix><red><target> is already trusted!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
                     Placeholder.parsed("target", target.getName())));
             return;
         }
-        plugin.getDatabaseManager().addTrustedPlayer(horse, target);
+        plugin.getDatabaseManager().getDatabaseTrustedPlayers().addTrustedPlayer(horse, target);
         player.sendMessage(ColorUtils.color("<prefix><green><target> has been trusted!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("target", target.getName())));
@@ -301,7 +301,7 @@ public class HorseCommand {
             return;
         }
 
-        if (!plugin.getDatabaseManager().isTrustedToHorse(horse, offlineTarget)) {
+        if (!plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, offlineTarget)) {
             player.sendMessage(ColorUtils.color("<prefix><red><target> is not trusted!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
                     Placeholder.parsed("target", offlineTarget.getName())));
@@ -311,7 +311,7 @@ public class HorseCommand {
         // Call event and untrust
         EquinePlayerUntrustEvent event = new EquinePlayerUntrustEvent(horse, player, target);
         Bukkit.getPluginManager().callEvent(event);
-        plugin.getDatabaseManager().removeTrustedPlayer(horse, offlineTarget);
+        plugin.getDatabaseManager().getDatabaseTrustedPlayers().removeTrustedPlayer(horse, offlineTarget);
 
         player.sendMessage(ColorUtils.color("<prefix><green><target> has been untrusted!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),

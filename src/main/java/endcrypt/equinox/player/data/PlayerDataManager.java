@@ -3,9 +3,7 @@ package endcrypt.equinox.player.data;
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +32,12 @@ public class PlayerDataManager {
     public void loadPlayer(Player player) {
         Bukkit.getScheduler().runTask(plugin, () -> {
 
-            plugin.getDatabaseManager().addPlayer(player);
-            playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getTokenAmount(player)));
+            plugin.getDatabaseManager().getDatabasePlayer().addPlayer(player);
+            playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getDatabasePlayer().getTokenAmount(player)));
         });
     }
     public void saveTokens(Player player) {
         PlayerData playerData = playerDataMap.get(player);
-        plugin.getDatabaseManager().setTokenAmount(player, playerData.getTokens());
+        plugin.getDatabaseManager().getDatabasePlayer().setTokenAmount(player, playerData.getTokens());
     }
 }
