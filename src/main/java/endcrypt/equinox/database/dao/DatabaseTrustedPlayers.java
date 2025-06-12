@@ -1,6 +1,7 @@
-package endcrypt.equinox.database;
+package endcrypt.equinox.database.dao;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.database.DatabaseUtils;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;

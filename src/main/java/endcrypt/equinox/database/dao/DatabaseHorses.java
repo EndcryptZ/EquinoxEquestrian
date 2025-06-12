@@ -1,7 +1,8 @@
-package endcrypt.equinox.database;
+package endcrypt.equinox.database.dao;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.database.DatabaseUtils;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.OfflinePlayer;

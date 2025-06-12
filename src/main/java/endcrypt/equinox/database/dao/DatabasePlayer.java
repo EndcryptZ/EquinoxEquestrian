@@ -1,4 +1,4 @@
-package endcrypt.equinox.database;
+package endcrypt.equinox.database.dao;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.entity.Player;

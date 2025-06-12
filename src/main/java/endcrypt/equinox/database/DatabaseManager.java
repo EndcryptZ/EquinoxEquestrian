@@ -1,6 +1,9 @@
 package endcrypt.equinox.database;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.database.dao.DatabaseHorses;
+import endcrypt.equinox.database.dao.DatabasePlayer;
+import endcrypt.equinox.database.dao.DatabaseTrustedPlayers;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
