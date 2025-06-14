@@ -176,16 +176,7 @@ public class DatabaseHorses {
 
     public List<EquineLiveHorse> getPlayerHorses(OfflinePlayer player) {
         List<EquineLiveHorse> horses = new ArrayList<>();
-        String sql;
-        boolean isMySQL;
-        try {
-            isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to determine database type: " + e.getMessage());
-            return horses;
-        }
-
-        sql = "SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?";
+        String sql = "SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, player.getUniqueId().toString());
@@ -204,14 +195,6 @@ public class DatabaseHorses {
     }
 
     public boolean horseExists(AbstractHorse horse) {
-        boolean isMySQL;
-        try {
-            isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to determine database type: " + e.getMessage());
-            return false;
-        }
-
         String sql = "SELECT * FROM EQUINE_HORSES WHERE uuid = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
