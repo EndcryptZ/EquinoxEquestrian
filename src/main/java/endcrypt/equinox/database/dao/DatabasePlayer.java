@@ -1,6 +1,7 @@
 package endcrypt.equinox.database.dao;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.database.DatabaseUtils;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
@@ -12,10 +13,20 @@ public class DatabasePlayer {
     public DatabasePlayer(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         this.connection = plugin.getDatabaseManager().getConnection();
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS PLAYERS (" +
-                    "uuid TEXT PRIMARY KEY, " +
-                    "token int NOT NULL DEFAULT 0)");
+
+        try {
+            boolean isMySQL = connection.getMetaData()
+                    .getDatabaseProductName()
+                    .toLowerCase()
+                    .contains("mysql");
+
+            String uuidType = DatabaseUtils.getColumnType("UUID", isMySQL);
+
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("CREATE TABLE IF NOT EXISTS PLAYERS (" +
+                        "uuid " + uuidType + " PRIMARY KEY, " +
+                        "token INT NOT NULL DEFAULT 0)");
+            }
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to create player database tables: " + e.getMessage());
         }
@@ -24,7 +35,7 @@ public class DatabasePlayer {
     public void addPlayer(Player player) {
         try {
             if (!playerExists(player)) {
-                try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO players (uuid) VALUES (?)")) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PLAYERS (uuid) VALUES (?)")) {
                     preparedStatement.setString(1, player.getUniqueId().toString());
                     preparedStatement.executeUpdate();
                 }
@@ -36,7 +47,7 @@ public class DatabasePlayer {
 
     private boolean playerExists(Player player) {
         try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM players WHERE uuid = ?")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PLAYERS WHERE uuid = ?")) {
                 preparedStatement.setString(1, player.getUniqueId().toString());
                 return preparedStatement.executeQuery().next();
             }
@@ -48,7 +59,7 @@ public class DatabasePlayer {
 
     public void setTokenAmount(Player player, int tokenAmount) {
         try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE players SET token = ? WHERE uuid = ?")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("UPDATE PLAYERS SET token = ? WHERE uuid = ?")) {
                 preparedStatement.setInt(1, tokenAmount);
                 preparedStatement.setString(2, player.getUniqueId().toString());
                 preparedStatement.executeUpdate();
@@ -60,7 +71,7 @@ public class DatabasePlayer {
 
     public int getTokenAmount(Player player) {
         try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT token FROM players WHERE uuid = ?")) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT token FROM PLAYERS WHERE uuid = ?")) {
                 preparedStatement.setString(1, player.getUniqueId().toString());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {

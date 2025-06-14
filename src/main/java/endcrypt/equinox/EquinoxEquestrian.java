@@ -146,11 +146,14 @@ public final class EquinoxEquestrian extends JavaPlugin {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
-        // Initialize the DatabaseManager with the path to the database file
-        // we make it 'databaseManager =' because we will use it when registering events.
-        // The file name will be 'database.db' but you can change that here.
-        databaseManager = new DatabaseManager(this, getDataFolder().getAbsolutePath() + "/database.db");
+
+        // Save default config if it doesn't exist
+        saveDefaultConfig();
+
+        // Initialize the DatabaseManager
+        databaseManager = new DatabaseManager(this);
     }
+
 
     private void loadPlaceholderAPI() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //

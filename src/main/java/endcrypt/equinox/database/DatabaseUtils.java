@@ -75,12 +75,31 @@ public class DatabaseUtils {
     public static void updateTableSchema(String tableName, Map<String, String> desiredSchema) {
         Set<String> existingColumns = new HashSet<>();
 
-        // Get existing column names from the table
         try {
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery("PRAGMA table_info(" + tableName + ")")) {
-                while (rs.next()) {
-                    existingColumns.add(rs.getString("name").toLowerCase());
+            // Get database type
+            boolean isMySQL = connection.getMetaData()
+                    .getDatabaseProductName()
+                    .toLowerCase()
+                    .contains("mysql");
+
+            // Get existing column names from the table
+            try (Statement stmt = connection.createStatement()) {
+                String columnQuery;
+                if (isMySQL) {
+                    columnQuery = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS " +
+                            "WHERE TABLE_NAME = '" + tableName + "'";
+                } else {
+                    columnQuery = "PRAGMA table_info(" + tableName + ")";
+                }
+
+                try (ResultSet rs = stmt.executeQuery(columnQuery)) {
+                    while (rs.next()) {
+                        // MySQL uses COLUMN_NAME, SQLite uses 'name' from PRAGMA
+                        String columnName = isMySQL ?
+                                rs.getString("COLUMN_NAME") :
+                                rs.getString("name");
+                        existingColumns.add(columnName.toLowerCase());
+                    }
                 }
             }
 
@@ -98,6 +117,8 @@ public class DatabaseUtils {
 
                     if (!existingColumns.contains(columnName.toLowerCase())) {
                         String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition;
+
+                        // MySQL doesn't allow multiple ADD COLUMN in single ALTER TABLE
                         stmt.execute(sql);
                         plugin.getLogger().info("Added new column '" + columnName + "' to table '" + tableName + "'");
                     }
@@ -107,4 +128,34 @@ public class DatabaseUtils {
             plugin.getLogger().severe("Failed to update table schema for table '" + tableName + "': " + e.getMessage());
         }
     }
+
+
+    public static String getColumnType(String baseType, boolean isMySQL) {
+        switch (baseType.toUpperCase()) {
+            case "TEXT":
+                return isMySQL ? "VARCHAR(255)" : "TEXT";
+            case "UUID":
+                return isMySQL ? "VARCHAR(36)" : "TEXT";
+            case "LONG":
+                return isMySQL ? "BIGINT" : "LONG";
+            case "DOUBLE":
+                return isMySQL ? "DOUBLE PRECISION" : "DOUBLE";
+            default:
+                return baseType;
+        }
+    }
+
+    public static Map<String, String> getSchemaForDatabase(Map<String, String> baseSchema, boolean isMySQL) {
+        Map<String, String> result = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : baseSchema.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (!key.equals("PRIMARY KEY")) {
+                value = getColumnType(value, isMySQL);
+            }
+            result.put(key, value);
+        }
+        return result;
+    }
+
 }

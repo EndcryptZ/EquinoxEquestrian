@@ -15,38 +15,73 @@ public class DatabaseTrustedPlayers {
     private final Connection connection;
     private final EquinoxEquestrian plugin;
 
-    private final Map<String, String> EQUINE_TRUSTED_PLAYERS_SCHEMA = new LinkedHashMap<>() {{
-        put("horse_uuid", "TEXT NOT NULL");
-        put("player_uuid", "TEXT NOT NULL");
+    private final Map<String, String> BASE_SCHEMA = new LinkedHashMap<>() {{
+        put("horse_uuid", "UUID");
+        put("player_uuid", "UUID");
         put("PRIMARY KEY", "(horse_uuid, player_uuid)");
     }};
 
     public DatabaseTrustedPlayers(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         this.connection = plugin.getDatabaseManager().getConnection();
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_TRUSTED_PLAYERS (" +
-                    "horse_uuid TEXT NOT NULL, " +
-                    "player_uuid TEXT NOT NULL, " +
-                    "PRIMARY KEY (horse_uuid, player_uuid)" +
-                    ")");
 
-            DatabaseUtils.updateTableSchema("EQUINE_TRUSTED_PLAYERS", EQUINE_TRUSTED_PLAYERS_SCHEMA);
+        try {
+            boolean isMySQL = connection.getMetaData()
+                    .getDatabaseProductName()
+                    .toLowerCase()
+                    .contains("mysql");
+
+            Map<String, String> schema = DatabaseUtils.getSchemaForDatabase(BASE_SCHEMA, isMySQL);
+
+            // Create table with appropriate schema
+            StringBuilder createTable = new StringBuilder(
+                    "CREATE TABLE IF NOT EXISTS EQUINE_TRUSTED_PLAYERS (");
+
+            for (Map.Entry<String, String> entry : schema.entrySet()) {
+                if (entry.getKey().equals("PRIMARY KEY")) {
+                    createTable.append(entry.getKey()).append(" ").append(entry.getValue());
+                } else {
+                    createTable.append(entry.getKey()).append(" ").append(entry.getValue()).append(", ");
+                }
+            }
+            createTable.append(")");
+
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(createTable.toString());
+            }
+
+            DatabaseUtils.updateTableSchema("EQUINE_TRUSTED_PLAYERS", schema);
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to create player database tables: " + e.getMessage());
+            plugin.getLogger().severe("Failed to create trusted players database tables: " + e.getMessage());
         }
     }
 
+
+
     public void addTrustedPlayer(AbstractHorse horse, Player player) {
-        String sql = "INSERT OR IGNORE INTO EQUINE_TRUSTED_PLAYERS (horse_uuid, player_uuid) VALUES (?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, horse.getUniqueId().toString());
-            ps.setString(2, player.getUniqueId().toString());
-            ps.executeUpdate();
+        // Get database type from connection metadata
+        String sql;
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            String dbType = metaData.getDatabaseProductName().toLowerCase();
+
+            // Use appropriate syntax based on database type
+            if (dbType.contains("mysql")) {
+                sql = "INSERT IGNORE INTO EQUINE_TRUSTED_PLAYERS (horse_uuid, player_uuid) VALUES (?, ?)";
+            } else {
+                sql = "INSERT OR IGNORE INTO EQUINE_TRUSTED_PLAYERS (horse_uuid, player_uuid) VALUES (?, ?)";
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, horse.getUniqueId().toString());
+                ps.setString(2, player.getUniqueId().toString());
+                ps.executeUpdate();
+            }
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to add trusted player: " + e.getMessage());
         }
     }
+
 
     public List<UUID> getTrustedPlayers(AbstractHorse horse) {
         List<UUID> trusted = new ArrayList<>();

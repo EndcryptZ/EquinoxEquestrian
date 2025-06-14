@@ -20,9 +20,9 @@ public class DatabaseHorses {
     private final EquinoxEquestrian plugin;
 
 
-    private final Map<String, String> EQUINE_HORSES_SCHEMA = new LinkedHashMap<>() {{
-        put("uuid", "TEXT PRIMARY KEY");
-        put("owner_uuid", "VARCHAR(255) NOT NULL");
+    private final Map<String, String> BASE_SCHEMA = new LinkedHashMap<>() {{
+        put("uuid", "UUID");  // Will be converted based on database type
+        put("owner_uuid", "UUID");
         put("display_name", "TEXT");
         put("discipline", "TEXT");
         put("breed_1", "TEXT");
@@ -32,34 +32,47 @@ public class DatabaseHorses {
         put("coat_modifier", "TEXT");
         put("gender", "TEXT");
         put("age", "INTEGER");
-        put("height", "DOUBLE");
+        put("height", "REAL");  // Changed from DOUBLE to be compatible with both MySQL and SQLite
         put("trait_1", "TEXT");
         put("trait_2", "TEXT");
         put("trait_3", "TEXT");
-        put("claim_time", "LONG");
-        put("birth_time", "LONG");
+        put("claim_time", "BIGINT");  // Changed from LONG to be compatible with both MySQL and SQLite
+        put("birth_time", "BIGINT");  // Changed from LONG to be compatible with both MySQL and SQLite
         put("owner_name", "TEXT");
-        put("base_speed", "DOUBLE");
-        put("base_jump_power", "DOUBLE");
+        put("base_speed", "REAL");  // Changed from DOUBLE to be compatible with both MySQL and SQLite
+        put("base_jump_power", "REAL"); // Changed from DOUBLE to be compatible with both MySQL and SQLite
         put("skull_id", "TEXT");
         put("last_world", "TEXT");
-        put("last_location_x", "DOUBLE");
-        put("last_location_y", "DOUBLE");
-        put("last_location_z", "DOUBLE");
+        put("last_location_x", "REAL"); // Changed from DOUBLE to be compatible with both MySQL and SQLite
+        put("last_location_y", "REAL"); // Changed from DOUBLE to be compatible with both MySQL and SQLite
+        put("last_location_z", "REAL"); // Changed from DOUBLE to be compatible with both MySQL and SQLite
     }};
+
 
 
 
     public DatabaseHorses(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         this.connection = plugin.getDatabaseManager().getConnection();
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
-                    "uuid TEXT PRIMARY KEY, " +
-                    "owner_uuid VARCHAR(255) NOT NULL" +
-                    ")");
 
-            DatabaseUtils.updateTableSchema("EQUINE_HORSES", EQUINE_HORSES_SCHEMA);
+        try {
+            boolean isMySQL = connection.getMetaData()
+                    .getDatabaseProductName()
+                    .toLowerCase()
+                    .contains("mysql");
+
+            Map<String, String> schema = DatabaseUtils.getSchemaForDatabase(BASE_SCHEMA, isMySQL);
+
+            // Create initial table with minimal columns
+            try (Statement statement = connection.createStatement()) {
+                String uuidType = isMySQL ? "VARCHAR(36)" : "TEXT";
+                statement.execute("CREATE TABLE IF NOT EXISTS EQUINE_HORSES (" +
+                        "uuid " + uuidType + " PRIMARY KEY, " +
+                        "owner_uuid " + uuidType + " NOT NULL" +
+                        ")");
+            }
+
+            DatabaseUtils.updateTableSchema("EQUINE_HORSES", schema);
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to create horses database tables: " + e.getMessage());
         }
@@ -93,12 +106,27 @@ public class DatabaseHorses {
             double lastY = nbt.getDouble(Keys.LAST_LOCATION_Y.getKey());
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
 
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO EQUINE_HORSES (" +
-                            "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
-                            "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, skull_id, last_world, last_location_x, last_location_y, last_location_z ) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            String sql;
+            boolean isMySQL;
+            try {
+                isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
+            if (isMySQL) {
+                sql = "INSERT INTO EQUINE_HORSES (" +
+                        "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
+                        "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, skull_id, last_world, last_location_x, last_location_y, last_location_z ) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            } else {
+                sql = "INSERT OR REPLACE INTO EQUINE_HORSES (" +
+                        "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
+                        "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, skull_id, last_world, last_location_x, last_location_y, last_location_z ) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, uuid);
                 ps.setString(2, ownerUuid);
                 ps.setString(3, displayName);
@@ -106,8 +134,8 @@ public class DatabaseHorses {
                 ps.setString(5, breed1);
                 ps.setString(6, breed2);
                 ps.setString(7, prominentBreed);
-                ps.setString(8, coatColor);        // added
-                ps.setString(9, coatModifier);     // added
+                ps.setString(8, coatColor);
+                ps.setString(9, coatModifier);
                 ps.setString(10, gender);
                 ps.setInt(11, age);
                 ps.setDouble(12, height);
@@ -148,7 +176,18 @@ public class DatabaseHorses {
 
     public List<EquineLiveHorse> getPlayerHorses(OfflinePlayer player) {
         List<EquineLiveHorse> horses = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?")) {
+        String sql;
+        boolean isMySQL;
+        try {
+            isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to determine database type: " + e.getMessage());
+            return horses;
+        }
+
+        sql = "SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, player.getUniqueId().toString());
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -165,7 +204,17 @@ public class DatabaseHorses {
     }
 
     public boolean horseExists(AbstractHorse horse) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM EQUINE_HORSES WHERE uuid = ?")) {
+        boolean isMySQL;
+        try {
+            isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to determine database type: " + e.getMessage());
+            return false;
+        }
+
+        String sql = "SELECT * FROM EQUINE_HORSES WHERE uuid = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, horse.getUniqueId().toString());
             return preparedStatement.executeQuery().next();
         } catch (SQLException e) {
@@ -202,14 +251,31 @@ public class DatabaseHorses {
             double lastY = nbt.getDouble(Keys.LAST_LOCATION_Y.getKey());
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
 
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE EQUINE_HORSES SET " +
-                            "owner_uuid = ?, display_name = ?, discipline = ?, breed_1 = ?, breed_2 = ?, prominent_breed = ?, " +
-                            "coat_color = ?, coat_modifier = ?, gender = ?, age = ?, height = ?, trait_1 = ?, trait_2 = ?, " +
-                            "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
-                            "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ? " +
-                            "WHERE uuid = ?")) {
+            String sql;
+            boolean isMySQL;
+            try {
+                isMySQL = connection.getMetaData().getDatabaseProductName().toLowerCase().contains("mysql");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
+            if (isMySQL) {
+                sql = "UPDATE EQUINE_HORSES SET " +
+                        "owner_uuid = ?, display_name = ?, discipline = ?, breed_1 = ?, breed_2 = ?, prominent_breed = ?, " +
+                        "coat_color = ?, coat_modifier = ?, gender = ?, age = ?, height = ?, trait_1 = ?, trait_2 = ?, " +
+                        "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
+                        "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ? " +
+                        "WHERE uuid = ?";
+            } else {
+                sql = "UPDATE OR REPLACE EQUINE_HORSES SET " +
+                        "owner_uuid = ?, display_name = ?, discipline = ?, breed_1 = ?, breed_2 = ?, prominent_breed = ?, " +
+                        "coat_color = ?, coat_modifier = ?, gender = ?, age = ?, height = ?, trait_1 = ?, trait_2 = ?, " +
+                        "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
+                        "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ? " +
+                        "WHERE uuid = ?";
+            }
+
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, ownerUuid);
                 ps.setString(2, displayName);
                 ps.setString(3, discipline);
@@ -234,7 +300,7 @@ public class DatabaseHorses {
                 ps.setDouble(22, lastX);
                 ps.setDouble(23, lastY);
                 ps.setDouble(24, lastZ);
-                ps.setString(25, uuid); // WHERE uuid = ?
+                ps.setString(25, uuid);
 
                 ps.executeUpdate();
                 return true;
@@ -244,5 +310,22 @@ public class DatabaseHorses {
             }
         });
     }
+
+    private String getDatabaseType(String baseType) throws SQLException {
+        boolean isMySQL = connection.getMetaData()
+                .getDatabaseProductName()
+                .toLowerCase()
+                .contains("mysql");
+
+        return switch (baseType.toUpperCase()) {
+            case "UUID" -> isMySQL ? "VARCHAR(36)" : "TEXT";
+            case "TEXT" -> isMySQL ? "VARCHAR(255)" : "TEXT";
+            case "LONG" -> isMySQL ? "BIGINT" : "INTEGER";
+            case "DOUBLE" -> isMySQL ? "DOUBLE PRECISION" : "REAL";
+            case "INTEGER" -> isMySQL ? "INT" : "INTEGER";
+            default -> baseType;
+        };
+    }
+
 
 }
