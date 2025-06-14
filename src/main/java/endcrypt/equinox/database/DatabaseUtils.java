@@ -131,18 +131,14 @@ public class DatabaseUtils {
 
 
     public static String getColumnType(String baseType, boolean isMySQL) {
-        switch (baseType.toUpperCase()) {
-            case "TEXT":
-                return isMySQL ? "VARCHAR(255)" : "TEXT";
-            case "UUID":
-                return isMySQL ? "VARCHAR(36)" : "TEXT";
-            case "LONG":
-                return isMySQL ? "BIGINT" : "LONG";
-            case "DOUBLE":
-                return isMySQL ? "DOUBLE PRECISION" : "DOUBLE";
-            default:
-                return baseType;
-        }
+        return switch (baseType.toUpperCase()) {
+            case "TEXT" -> isMySQL ? "VARCHAR(255)" : "TEXT";
+            case "UUID" -> isMySQL ? "VARCHAR(36)" : "TEXT";
+            case "LONG", "BIGINT" -> "BIGINT"; // both MySQL and SQLite accept this
+            case "DOUBLE", "REAL" -> "DOUBLE PRECISION"; // MySQL accepts this, SQLite maps it to REAL internally
+            case "INTEGER" -> "INTEGER"; // both support this
+            default -> baseType; // fallback (e.g., REAL, BOOLEAN, etc.)
+        };
     }
 
     public static Map<String, String> getSchemaForDatabase(Map<String, String> baseSchema, boolean isMySQL) {
