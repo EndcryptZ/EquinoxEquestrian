@@ -148,7 +148,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
             getDataFolder().mkdirs();
         }
 
-        // Save default config if it doesn't exist
+        // Save the default config if it doesn't exist
         saveDefaultConfig();
 
         // Initialize the DatabaseManager
