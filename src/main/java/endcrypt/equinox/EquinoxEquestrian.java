@@ -118,9 +118,10 @@ public final class EquinoxEquestrian extends JavaPlugin {
         if (rsp == null) {
             return;
         }
+
         econ = rsp.getProvider();
 
-        if(econ == null) {
+        if(!econ.isEnabled() || econ == null) {
             getServer().getLogger().severe("&cCouldn't find any economy provider plugin. Disabling the Plugin...");
             getServer().getPluginManager().disablePlugin(this);
         }
