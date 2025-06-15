@@ -36,6 +36,12 @@ public class PlayerDataManager {
             playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getDatabasePlayer().getTokenAmount(player)));
         });
     }
+
+    public void loadAllOnlinePlayers() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            loadPlayer(player);
+        }
+    }
     public void saveTokens(Player player) {
         PlayerData playerData = playerDataMap.get(player);
         plugin.getDatabaseManager().getDatabasePlayer().setTokenAmount(player, playerData.getTokens());

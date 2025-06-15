@@ -1,8 +1,8 @@
 package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.attributes.Gender;
-import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
@@ -21,9 +21,9 @@ public class EquineBreedingTask {
 
     private void checkBreeding() {
         for (AbstractHorse horse : plugin.getEquineManager().getEquineCrossTie().getCrosstiedHorses()) {
-            if (Keys.readPersistentData(horse, Keys.GENDER) == Gender.MARE) {
-                plugin.getServer().broadcast(ColorUtils.color(horse.getName() + " is a mare"));
-            }
+            EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
+            if(liveHorse.getGender() != Gender.MARE) return;
+            Bukkit.getServer().broadcast(ColorUtils.color(liveHorse.getName() + "is indeed a mare."));
         }
     }
 }

@@ -24,6 +24,7 @@ import endcrypt.equinox.player.data.PlayerDataManager;
 import endcrypt.equinox.token.TokenManager;
 import endcrypt.equinox.updater.horse.HorseNBTUpdaterListener;
 import lombok.Getter;
+import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -51,6 +52,9 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private DatabaseManager databaseManager;
     private CommandManager commandManager;
     private TokenManager tokenManager;
+
+    @Setter
+    private boolean databaseLoaded = false;
 
     @Override
     public void onLoad() {
@@ -91,10 +95,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
         playerDataManager = new PlayerDataManager(this);
         commandManager = new CommandManager(this);
         tokenManager = new TokenManager(this);
-
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            playerDataManager.load(player);
-        }
     }
 
     private void initializeListeners() {
@@ -137,7 +137,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
                 databaseManager.closeConnection();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.getLogger().severe("Failed to close database connection: " + e.getMessage());
         }
     }
 

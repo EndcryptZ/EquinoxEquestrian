@@ -55,6 +55,8 @@ public class DatabaseManager implements Listener {
             databaseTrustedPlayers = new DatabaseTrustedPlayers(plugin);
             databaseHorses = new DatabaseHorses(plugin);
             plugin.getLogger().info("Connected to database!");
+            plugin.getPlayerDataManager().loadAllOnlinePlayers();
+            plugin.setDatabaseLoaded(true);
         }, 1L);
     }
 
