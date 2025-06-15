@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class EquineCrossTie {
 
     private final EquinoxEquestrian plugin;
-    private final ArrayList<AbstractHorse> leashedHorses = new ArrayList<>();
+    private final ArrayList<AbstractHorse> crosstiedHorses = new ArrayList<>();
 
     public EquineCrossTie(EquinoxEquestrian plugin){
         this.plugin = plugin;
@@ -18,19 +18,19 @@ public class EquineCrossTie {
     }
 
     public void add(AbstractHorse horse) {
-        leashedHorses.add(horse);
+        crosstiedHorses.add(horse);
     }
 
     public void remove(AbstractHorse horse) {
-        leashedHorses.remove(horse);
+        crosstiedHorses.remove(horse);
     }
 
     public boolean contains(AbstractHorse horse) {
-        return leashedHorses.contains(horse);
+        return crosstiedHorses.contains(horse);
     }
 
     public void removeAll() {
-        leashedHorses.clear();
+        crosstiedHorses.clear();
     }
 
 

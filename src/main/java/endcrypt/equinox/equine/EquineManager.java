@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.breeding.EquineBreeding;
 import endcrypt.equinox.equine.crosstie.EquineCrossTie;
 import endcrypt.equinox.equine.gaits.EquineGaits;
 import endcrypt.equinox.equine.groom.EquineGroomManager;
@@ -26,6 +27,7 @@ public class EquineManager {
     private final EquineSelector equineSelector;
     private final EquineTeleport equineTeleport;
     private final EquinePrivacy equinePrivacy;
+    private final EquineBreeding equineBreeding;
 
     private final EquinoxEquestrian plugin;
     public EquineManager(EquinoxEquestrian plugin) {
@@ -42,6 +44,7 @@ public class EquineManager {
         equineSelector = new EquineSelector(plugin);
         equineTeleport = new EquineTeleport(plugin);
         equinePrivacy = new EquinePrivacy();
+        equineBreeding = new EquineBreeding(plugin);
 
     }
 

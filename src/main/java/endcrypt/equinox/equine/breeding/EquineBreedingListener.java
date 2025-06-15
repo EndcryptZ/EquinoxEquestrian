@@ -1,4 +1,4 @@
 package endcrypt.equinox.equine.breeding;
 
-public class BreedingManager {
+public class EquineBreedingListener {
 }
