@@ -46,7 +46,9 @@ public class EquineLiveHorse {
     private boolean isCrossTied;
     private boolean isPublic;
     private boolean isInHeat;
+    private long lastInHeat;
     private boolean isPregnant;
+    private long lastPrengnancy;
 
     private final AbstractHorse horse;
     
@@ -74,7 +76,9 @@ public class EquineLiveHorse {
         this.isCrossTied = false;
         this.isPublic = false;
         this.isInHeat = false;
+        this.lastInHeat = 0L;
         this.isPregnant = false;
+        this.lastPrengnancy = 0L;
     }
 
 
@@ -107,6 +111,9 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble(Keys.BASE_JUMP.getKey()));
         NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
 
+        NBT.getPersistentData(horse, nbt -> this.lastInHeat = nbt.getLong(Keys.LAST_IN_HEAT.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.lastPrengnancy = nbt.getLong(Keys.LAST_PREGNANCY.getKey()));
+
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
         double lastY = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Y.getKey()));
@@ -133,7 +140,9 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
             nbt.setString(Keys.IS_PUBLIC.getKey(), String.valueOf(isPublic));
             nbt.setString(Keys.IS_IN_HEAT.getKey(), String.valueOf(isInHeat));
+            nbt.setString(Keys.LAST_IN_HEAT.getKey(), String.valueOf(lastInHeat));
             nbt.setString(Keys.IS_PREGNANT.getKey(), String.valueOf(isPregnant));
+            nbt.setString(Keys.LAST_PREGNANCY.getKey(), String.valueOf(lastPrengnancy));
         });
     }
 
