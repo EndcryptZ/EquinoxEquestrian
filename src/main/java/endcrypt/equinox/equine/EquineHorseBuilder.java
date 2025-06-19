@@ -6,11 +6,13 @@ import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -22,15 +24,51 @@ public class EquineHorseBuilder {
         this.plugin = plugin;
     }
 
+    public void spawnFoal(EquineLiveHorse mare, EquineLiveHorse stallion, Location location, OfflinePlayer owner) {
+        EquineHorse foal = combineGenetics(mare, stallion);
+        spawnHorse(owner, location, foal);
+    }
+
+    private EquineHorse combineGenetics(EquineLiveHorse mare, EquineLiveHorse stallion) {
+        Random random = new Random();
+
+        List<Breed> foalBreeds = new ArrayList<>();
+        foalBreeds.add(random.nextBoolean() ? mare.getBreeds().get(0) : stallion.getBreeds().get(0));
+
+        CoatColor foalColor = random.nextBoolean() ? mare.getCoatColor() : stallion.getCoatColor();
+        CoatModifier foalModifier = random.nextBoolean() ? mare.getCoatModifier() : stallion.getCoatModifier();
+        Gender foalGender = Gender.random();
+        Height foalHeight = Height.getRandomHeight(foalBreeds.get(0));
+
+        List<Trait> foalTraits = new ArrayList<>();
+        int traitCount = Math.min(3, Math.max(mare.getTraits().size(), stallion.getTraits().size()));
+        for (int i = 0; i < traitCount; i++) {
+            foalTraits.add(random.nextBoolean() && i < mare.getTraits().size()
+                    ? mare.getTraits().get(i)
+                    : stallion.getTraits().get(Math.min(i, stallion.getTraits().size() - 1)));
+        }
+
+        return new EquineHorse(
+                mare.getName() + "'s Foal",
+                random.nextBoolean() ? mare.getDiscipline() : stallion.getDiscipline(),
+                foalBreeds,
+                foalColor,
+                foalModifier,
+                foalGender,
+                0,
+                foalHeight,
+                foalTraits
+        );
+    }
+
     private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
 
     // Method to spawn the horse at a player's location
-    public void spawnHorse(Player player, EquineHorse equineHorse) {
-        World world = player.getWorld();
-        Location location = player.getLocation();
+    public void spawnHorse(OfflinePlayer player, Location loc, EquineHorse equineHorse) {
+        World world = loc.getWorld();
 
         // Spawn the horse
-        Horse horse = (Horse) world.spawnEntity(location, EntityType.HORSE);
+        Horse horse = (Horse) world.spawnEntity(loc, EntityType.HORSE);
         horse.setPersistent(true);
 
         // Set the horse's custom name
@@ -50,8 +88,6 @@ public class EquineHorseBuilder {
         }
 
         Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).    setBaseValue(equineHorse.getHeight().getSize());
-
-        // Add Horse to player data
 
         NBT.modifyPersistentData(horse, nbt -> {
             long currentTime = System.currentTimeMillis();
@@ -129,4 +165,6 @@ public class EquineHorseBuilder {
 
         return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
     }
+
+
 }
