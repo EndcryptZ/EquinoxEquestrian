@@ -49,6 +49,9 @@ public class EquineLiveHorse {
     private long lastInHeat;
     private boolean isPregnant;
     private long lastPrengnancy;
+    private boolean isBreeding;
+    private long breedingStartTime;
+    private String breedingPartnerUUID;
 
     private final AbstractHorse horse;
     
@@ -79,6 +82,9 @@ public class EquineLiveHorse {
         this.lastInHeat = 0L;
         this.isPregnant = false;
         this.lastPrengnancy = 0L;
+        this.isBreeding = false;
+        this.breedingStartTime = 0L;
+        this.breedingPartnerUUID = null;
     }
 
 
@@ -102,6 +108,7 @@ public class EquineLiveHorse {
         this.isPublic = EquineUtils.isHorsePublic(horse);
         this.isInHeat = EquineUtils.isHorseInHeat(horse);
         this.isPregnant = EquineUtils.isHorsePregnant(horse);
+        this.isBreeding = EquineUtils.isBreeding(horse);
 
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
@@ -114,12 +121,29 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.lastInHeat = nbt.getLong(Keys.LAST_IN_HEAT.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastPrengnancy = nbt.getLong(Keys.LAST_PREGNANCY.getKey()));
 
+        NBT.getPersistentData(horse, nbt -> this.breedingStartTime = nbt.getLong(Keys.BREEDING_START.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.breedingPartnerUUID = nbt.getString(Keys.BREEDING_PARTNER.getKey()));
+
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
         double lastY = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Y.getKey()));
         double lastZ = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Z.getKey()));
 
         this.lastLocation = new Location(lastWorld, lastX, lastY, lastZ);
+    }
+
+    public void breed(EquineLiveHorse horse) {
+        this.isBreeding = true;
+        this.breedingPartnerUUID = horse.getUuid().toString();
+        this.breedingStartTime = System.currentTimeMillis();
+        this.update();
+    }
+
+    public void unbreed() {
+        this.isBreeding = false;
+        this.breedingPartnerUUID = null;
+        this.breedingStartTime = 0L;
+        this.update();
     }
 
     public void update() {
@@ -130,19 +154,22 @@ public class EquineLiveHorse {
             nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
             nbt.setLong(Keys.BIRTH_TIME.getKey(), this.birthTime);
             nbt.setString(Keys.OWNER_NAME.getKey(), this.ownerName);
-            nbt.setString(Keys.OWNER_UUID.getKey(), horse.getOwnerUniqueId().toString());
+            nbt.setString(Keys.OWNER_UUID.getKey(), this.horse.getOwnerUniqueId().toString());
             nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
             nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);
             nbt.setString(Keys.SKULL_ID.getKey(), this.skullId);
-            nbt.setString(Keys.LAST_WORLD.getKey(), horse.getWorld().getName());
-            nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), horse.getLocation().getX());
-            nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
-            nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
-            nbt.setString(Keys.IS_PUBLIC.getKey(), String.valueOf(isPublic));
-            nbt.setString(Keys.IS_IN_HEAT.getKey(), String.valueOf(isInHeat));
-            nbt.setString(Keys.LAST_IN_HEAT.getKey(), String.valueOf(lastInHeat));
-            nbt.setString(Keys.IS_PREGNANT.getKey(), String.valueOf(isPregnant));
-            nbt.setString(Keys.LAST_PREGNANCY.getKey(), String.valueOf(lastPrengnancy));
+            nbt.setString(Keys.LAST_WORLD.getKey(), this.horse.getWorld().getName());
+            nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), this.horse.getLocation().getX());
+            nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), this.horse.getLocation().getY());
+            nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), this.horse.getLocation().getZ());
+            nbt.setString(Keys.IS_PUBLIC.getKey(), String.valueOf(this.isPublic));
+            nbt.setString(Keys.IS_IN_HEAT.getKey(), String.valueOf(this.isInHeat));
+            nbt.setLong(Keys.LAST_IN_HEAT.getKey(), this.lastInHeat);
+            nbt.setString(Keys.IS_PREGNANT.getKey(), String.valueOf(this.isPregnant));
+            nbt.setLong(Keys.LAST_PREGNANCY.getKey(), this.lastPrengnancy);
+            nbt.setString(Keys.IS_BREEDING.getKey(), String.valueOf(this.isBreeding));
+            nbt.setLong(Keys.BREEDING_START.getKey(), this.breedingStartTime);
+            nbt.setString(Keys.BREEDING_PARTNER.getKey(), this.breedingPartnerUUID);
         });
     }
 
