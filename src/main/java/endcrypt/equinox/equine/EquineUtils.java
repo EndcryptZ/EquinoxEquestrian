@@ -175,6 +175,11 @@ public class EquineUtils {
         return false;
     }
 
+    public static Gender getHorseGender(AbstractHorse horse) {
+        if (horse == null) return null;
+        return Gender.getGenderByName(Keys.readPersistentData(horse, Keys.GENDER));
+    }
+
     public static boolean isHorsePublic(AbstractHorse horse) {
         if (horse == null) return false;
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PUBLIC));
@@ -188,6 +193,35 @@ public class EquineUtils {
     public static boolean isHorsePregnant(AbstractHorse horse) {
         if (horse == null) return false;
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
+    }
+
+    public static boolean isBreeding(AbstractHorse horse) {
+        if (horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_BREEDING));
+    }
+
+
+    public static void printEquineNBTData(EquineLiveHorse horse) {
+        if (horse == null) return;
+        AbstractHorse abstractHorse = horse.getHorse();
+        if (abstractHorse == null) return;
+
+        NBT.getPersistentData(abstractHorse, nbt -> {
+            for (Keys key : Keys.values()) {
+                if (key.getDefaultValue() instanceof String) {
+                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getString(key.getKey()));
+                } else if (key.getDefaultValue() instanceof Integer) {
+                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getInteger(key.getKey()));
+                } else if (key.getDefaultValue() instanceof Double) {
+                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getDouble(key.getKey()));
+                } else if (key.getDefaultValue() instanceof Long) {
+                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getLong(key.getKey()));
+                } else if (key.getDefaultValue() instanceof Boolean) {
+                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getBoolean(key.getKey()));
+                }
+            }
+            return null;
+        });
     }
 
 }
