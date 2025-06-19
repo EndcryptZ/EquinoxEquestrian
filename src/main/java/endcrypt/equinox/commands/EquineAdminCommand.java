@@ -113,7 +113,7 @@ public class EquineAdminCommand {
         EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
         Player player = (Player) sender;
         String name = (String) args.get("name");
-        equineHorseBuilder.spawnHorse(player, equineHorseBuilder.randomHorse(name));
+        equineHorseBuilder.spawnHorse(player, player.getLocation(), equineHorseBuilder.randomHorse(name));
         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>You have spawned a randomized horse!"));
 
     }

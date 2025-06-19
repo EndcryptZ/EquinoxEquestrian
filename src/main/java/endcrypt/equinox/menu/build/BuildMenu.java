@@ -445,7 +445,7 @@ public class BuildMenu implements Listener {
                     player.closeInventory();
                     plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(player);
                     plugin.getBuildMenuManager().getPlayerCost().remove(player);
-                    horseBuilder.spawnHorse(player, equineHorse);
+                    horseBuilder.spawnHorse(player, player.getLocation(), equineHorse);
                 });
     }
 
