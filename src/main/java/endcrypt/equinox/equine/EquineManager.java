@@ -9,6 +9,7 @@ import endcrypt.equinox.equine.home.EquineHome;
 import endcrypt.equinox.equine.invulnerable.EquineInvulnerable;
 import endcrypt.equinox.equine.items.EquineItems;
 import endcrypt.equinox.equine.lunge.EquineLunge;
+import endcrypt.equinox.equine.pregnancy.EquinePregnancy;
 import endcrypt.equinox.equine.privacy.EquinePrivacy;
 import endcrypt.equinox.equine.selector.EquineSelector;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class EquineManager {
     private final EquineTeleport equineTeleport;
     private final EquinePrivacy equinePrivacy;
     private final EquineBreeding equineBreeding;
+    private final EquinePregnancy equinePregnancy;
 
     private final EquinoxEquestrian plugin;
     public EquineManager(EquinoxEquestrian plugin) {
@@ -45,6 +47,7 @@ public class EquineManager {
         equineTeleport = new EquineTeleport(plugin);
         equinePrivacy = new EquinePrivacy();
         equineBreeding = new EquineBreeding(plugin);
+        equinePregnancy = new EquinePregnancy(plugin);
 
     }
 
