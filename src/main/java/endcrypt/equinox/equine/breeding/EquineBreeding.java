@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeat;
 import lombok.Getter;
 import org.bukkit.entity.AbstractHorse;
 
@@ -13,10 +14,13 @@ public class EquineBreeding {
     private final EquinoxEquestrian plugin;
     @Getter
     private final ArrayList<AbstractHorse> breedingHorses = new ArrayList<>();
+    @Getter
+    private EquineBreedingInHeat breedingInHeat;
 
     public EquineBreeding(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         new EquineBreedingTask(plugin);
+        breedingInHeat = new EquineBreedingInHeat(plugin);
     }
 
     public void add(AbstractHorse horse) {

@@ -9,6 +9,7 @@ import endcrypt.equinox.bedrock.menu.BedrockBuildForm;
 import endcrypt.equinox.commands.CommandManager;
 import endcrypt.equinox.database.DatabaseManager;
 import endcrypt.equinox.equine.breeding.EquineBreedingListener;
+import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeatListener;
 import endcrypt.equinox.equine.bypass.EquineBypassListener;
 import endcrypt.equinox.equine.crosstie.EquineCrossTieListener;
 import endcrypt.equinox.equine.groom.EquineGroomListener;
@@ -111,6 +112,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineBypassListener(this);
         new EquineBreedingListener(this);
         new EquinePregnancyListener(this);
+        new EquineBreedingInHeatListener(this);
 
     }
 
