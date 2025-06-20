@@ -9,10 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DatabaseHorses {
 
@@ -162,10 +159,10 @@ public class DatabaseHorses {
         });
     }
 
-    public void removeHorse(AbstractHorse horse) {
+    public void removeHorse(UUID uuid) {
         try {
             try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM EQUINE_HORSES WHERE uuid = ?")) {
-                preparedStatement.setString(1, horse.getUniqueId().toString());
+                preparedStatement.setString(1, uuid.toString());
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -204,6 +201,23 @@ public class DatabaseHorses {
             plugin.getLogger().severe("Failed to check horse existence: " + e.getMessage());
         }
         return false;
+    }
+
+    public EquineLiveHorse getHorse(UUID uuid) {
+        EquineLiveHorse equineLiveHorse = null;
+        String sql = "SELECT * FROM EQUINE_HORSES WHERE uuid = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, uuid.toString());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    equineLiveHorse = DatabaseUtils.mapResultSetToHorse(resultSet);
+                    return equineLiveHorse;
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to get horse: " + e.getMessage());
+        }
+        return equineLiveHorse;
     }
 
     public void updateHorse(AbstractHorse horse) {
@@ -293,22 +307,5 @@ public class DatabaseHorses {
             }
         });
     }
-
-    private String getDatabaseType(String baseType) throws SQLException {
-        boolean isMySQL = connection.getMetaData()
-                .getDatabaseProductName()
-                .toLowerCase()
-                .contains("mysql");
-
-        return switch (baseType.toUpperCase()) {
-            case "UUID" -> isMySQL ? "VARCHAR(36)" : "TEXT";
-            case "TEXT" -> isMySQL ? "VARCHAR(255)" : "TEXT";
-            case "LONG" -> isMySQL ? "BIGINT" : "INTEGER";
-            case "DOUBLE" -> isMySQL ? "DOUBLE PRECISION" : "REAL";
-            case "INTEGER" -> isMySQL ? "INT" : "INTEGER";
-            default -> baseType;
-        };
-    }
-
 
 }
