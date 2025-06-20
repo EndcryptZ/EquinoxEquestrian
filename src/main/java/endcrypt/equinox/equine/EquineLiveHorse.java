@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import endcrypt.equinox.equine.nbt.Keys;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,6 +17,7 @@ import org.bukkit.entity.AbstractHorse;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Setter
 @Getter
 public class EquineLiveHorse {
@@ -45,13 +47,17 @@ public class EquineLiveHorse {
     private Location lastLocation;
     private boolean isCrossTied;
     private boolean isPublic;
+
     private boolean isInHeat;
     private long lastInHeat;
-    private boolean isPregnant;
-    private long lastPrengnancy;
+
     private boolean isBreeding;
     private long breedingStartTime;
     private String breedingPartnerUUID;
+
+    private boolean isPregnant;
+    private long pregnancyStartTime;
+    private String pregnancyPartnerUUID;
 
     private final AbstractHorse horse;
     
@@ -81,7 +87,7 @@ public class EquineLiveHorse {
         this.isInHeat = false;
         this.lastInHeat = 0L;
         this.isPregnant = false;
-        this.lastPrengnancy = 0L;
+        this.pregnancyStartTime = 0L;
         this.isBreeding = false;
         this.breedingStartTime = 0L;
         this.breedingPartnerUUID = null;
@@ -119,9 +125,11 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
 
         NBT.getPersistentData(horse, nbt -> this.lastInHeat = nbt.getLong(Keys.LAST_IN_HEAT.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastPrengnancy = nbt.getLong(Keys.LAST_PREGNANCY.getKey()));
 
-        NBT.getPersistentData(horse, nbt -> this.breedingStartTime = nbt.getLong(Keys.BREEDING_START.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.pregnancyStartTime = nbt.getLong(Keys.PREGNANCY_START_TIME.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.pregnancyPartnerUUID = nbt.getString(Keys.PREGNANCY_PARTNER.getKey()));
+
+        NBT.getPersistentData(horse, nbt -> this.breedingStartTime = nbt.getLong(Keys.BREEDING_START_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.breedingPartnerUUID = nbt.getString(Keys.BREEDING_PARTNER.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
@@ -146,6 +154,14 @@ public class EquineLiveHorse {
         this.update();
     }
 
+    public void pregnant(EquineLiveHorse horse) {
+        this.isPregnant = true;
+        this.pregnancyPartnerUUID = horse.getUuid().toString();
+        this.pregnancyStartTime = System.currentTimeMillis();
+        this.isInHeat = false;
+        this.update();
+    }
+
     public void update() {
 
         updateDefault();
@@ -166,9 +182,10 @@ public class EquineLiveHorse {
             nbt.setString(Keys.IS_IN_HEAT.getKey(), String.valueOf(this.isInHeat));
             nbt.setLong(Keys.LAST_IN_HEAT.getKey(), this.lastInHeat);
             nbt.setString(Keys.IS_PREGNANT.getKey(), String.valueOf(this.isPregnant));
-            nbt.setLong(Keys.LAST_PREGNANCY.getKey(), this.lastPrengnancy);
+            nbt.setLong(Keys.PREGNANCY_START_TIME.getKey(), this.pregnancyStartTime);
+            nbt.setString(Keys.PREGNANCY_PARTNER.getKey(), this.pregnancyPartnerUUID);
             nbt.setString(Keys.IS_BREEDING.getKey(), String.valueOf(this.isBreeding));
-            nbt.setLong(Keys.BREEDING_START.getKey(), this.breedingStartTime);
+            nbt.setLong(Keys.BREEDING_START_TIME.getKey(), this.breedingStartTime);
             nbt.setString(Keys.BREEDING_PARTNER.getKey(), this.breedingPartnerUUID);
         });
     }
