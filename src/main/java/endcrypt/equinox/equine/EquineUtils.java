@@ -208,7 +208,12 @@ public class EquineUtils {
 
         NBT.getPersistentData(abstractHorse, nbt -> {
             for (Keys key : Keys.values()) {
-                if (key.getDefaultValue() instanceof String) {
+                if (key.equals(Keys.TRAIT_PREFIX) || key.equals(Keys.BREED_PREFIX)) {
+                    for (int i = 0; i < 3; i++) {
+                        String fullKey = key.getKey() + i;
+                        Bukkit.broadcastMessage(fullKey + ": " + nbt.getString(fullKey));
+                    }
+                } else if (key.getDefaultValue() instanceof String) {
                     Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getString(key.getKey()));
                 } else if (key.getDefaultValue() instanceof Integer) {
                     Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getInteger(key.getKey()));
