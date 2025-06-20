@@ -36,11 +36,13 @@ public enum Keys {
     // Breeding & Pregnancy
     IS_IN_HEAT("EQUINE_IS_IN_HEAT", "false"),
     LAST_IN_HEAT("EQUINE_LAST_IN_HEAT", System.currentTimeMillis()),
+
     IS_PREGNANT("EQUINE_IS_PREGNANT", "false"),
-    LAST_PREGNANCY("EQUINE_LAST_PREGNANCY", System.currentTimeMillis()),
-    PREGNANCY_START("EQUINE_PREGNANCY_START", System.currentTimeMillis()),
+    PREGNANCY_START_TIME("EQUINE_PREGNANCY_START", System.currentTimeMillis()),
+    PREGNANCY_PARTNER("EQUINE_PREGNANCY_PARTNER", ""),
+
     IS_BREEDING("EQUINE_IS_BREEDING", "false"),
-    BREEDING_START("EQUINE_BREEDING_START", System.currentTimeMillis()),
+    BREEDING_START_TIME("EQUINE_BREEDING_START", System.currentTimeMillis()),
     BREEDING_PARTNER("EQUINE_BREEDING_PARTNER", "");
 
     public final String key;
