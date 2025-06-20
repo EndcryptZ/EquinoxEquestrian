@@ -3,10 +3,12 @@ package endcrypt.equinox.equine.breeding.inheat;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
+import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 
 public class EquineBreedingInHeatListener implements Listener {
@@ -54,5 +56,23 @@ public class EquineBreedingInHeatListener implements Listener {
 
             plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses().remove(horse);
         }
+    }
+
+    @EventHandler
+    public void OnSpawn(EntitySpawnEvent event) {
+        if (!(event.getEntity() instanceof AbstractHorse horse)) {
+            return;
+        }
+
+        if(!EquineUtils.isLivingEquineHorse(horse)) {
+            return;
+        }
+
+        if(EquineUtils.getHorseGender(horse) != Gender.MARE) {
+            return;
+        }
+
+        plugin.getServer().broadcast(ColorUtils.color("A mare has spawned!"));
+        plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses().remove(horse);
     }
 }
