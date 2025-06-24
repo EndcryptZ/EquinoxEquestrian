@@ -200,6 +200,16 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_BREEDING));
     }
 
+    public static boolean isInstantFoal(AbstractHorse horse) {
+        if(horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_FOAL));
+    }
+
+    public static boolean isInstantBreed(AbstractHorse horse) {
+        if(horse == null) return false;
+        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_BREED));
+    }
+
 
     public static void printEquineNBTData(EquineLiveHorse horse) {
         if (horse == null) return;
