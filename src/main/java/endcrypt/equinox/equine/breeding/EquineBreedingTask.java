@@ -30,27 +30,54 @@ public class EquineBreedingTask {
 
     private void checkBreeding() {
         for (AbstractHorse horse : plugin.getEquineManager().getEquineBreeding().getBreedingHorses()) {
-            horse.getWorld().spawnParticle(Particle.HEART, horse.getLocation().add(0, 1, 0), 10, 0.5, 0.5, 0.5, 0.05);
-
-            EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
-
-            // Fail breeding if the partner is dead or too far away
-            if(!isPartnerValid(liveHorse)) {
-                liveHorse.unbreed();
-                plugin.getEquineManager().getEquineBreeding().remove(horse);
-                continue;
-            }
-
-            // Successful breeding
-            if(liveHorse.getBreedingStartTime() + TimeUtils.minutesToMillis(10) < System.currentTimeMillis()) {
-                if (liveHorse.getGender() == Gender.MARE) {
-                    liveHorse.pregnant(getBreedingPartner(liveHorse));
-                }
-                liveHorse.unbreed();
-                plugin.getEquineManager().getEquineBreeding().remove(horse);
-            }
-
+            if(horse == null) continue;
+            processBreedingHorse(horse);
         }
+    }
+
+    private void processBreedingHorse(AbstractHorse horse) {
+        horse.getWorld().spawnParticle(Particle.HEART, horse.getLocation().add(0, 1, 0), 10, 0.5, 0.5, 0.5, 0.05);
+
+        EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
+
+        // Fail breeding if the partner is dead or too far away
+        if (!isPartnerValid(liveHorse)) {
+            stopBreeding(liveHorse, horse);
+            return;
+        }
+
+        if (liveHorse.getGender() == Gender.MARE && liveHorse.isInstantBreed()) {
+            handleInstantBreeding(liveHorse, horse);
+            return;
+        }
+
+        // Successful breeding
+        if (liveHorse.getBreedingStartTime() + TimeUtils.minutesToMillis(10) < System.currentTimeMillis()) {
+            handleSuccessfulBreeding(liveHorse, horse);
+        }
+    }
+
+    private void stopBreeding(EquineLiveHorse liveHorse, AbstractHorse horse) {
+        liveHorse.unbreed();
+        plugin.getEquineManager().getEquineBreeding().remove(horse);
+    }
+
+    private void handleInstantBreeding(EquineLiveHorse liveHorse, AbstractHorse horse) {
+        liveHorse.pregnant(getBreedingPartner(liveHorse));
+        liveHorse.unbreed();
+        liveHorse.setInstantBreed(false);
+        liveHorse.update();
+        plugin.getEquineManager().getEquineBreeding().remove(horse);
+        plugin.getEquineManager().getEquinePregnancy().add(horse);
+    }
+
+    private void handleSuccessfulBreeding(EquineLiveHorse liveHorse, AbstractHorse horse) {
+        if (liveHorse.getGender() == Gender.MARE) {
+            liveHorse.pregnant(getBreedingPartner(liveHorse));
+            plugin.getEquineManager().getEquinePregnancy().add(horse);
+        }
+        liveHorse.unbreed();
+        plugin.getEquineManager().getEquineBreeding().remove(horse);
     }
 
     private void checkBreed() {
