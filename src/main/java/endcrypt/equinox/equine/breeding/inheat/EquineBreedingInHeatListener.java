@@ -3,7 +3,6 @@ package endcrypt.equinox.equine.breeding.inheat;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
-import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -20,7 +19,7 @@ public class EquineBreedingInHeatListener implements Listener {
     }
 
     @EventHandler
-    public void OnEntityLoad(EntitiesLoadEvent event) {
+    public void OnInHeatHorsesLoad(EntitiesLoadEvent event) {
         for(Entity entity : event.getEntities()) {
             if (!(entity instanceof AbstractHorse horse)) {
                 continue;
@@ -40,7 +39,7 @@ public class EquineBreedingInHeatListener implements Listener {
     }
 
     @EventHandler
-    public void OnEntityUnload(EntitiesLoadEvent event) {
+    public void OnInHeatHorsesUnload(EntitiesLoadEvent event) {
         for(Entity entity : event.getEntities()) {
             if (!(entity instanceof AbstractHorse horse)) {
                 continue;
@@ -72,7 +71,6 @@ public class EquineBreedingInHeatListener implements Listener {
             return;
         }
 
-        plugin.getServer().broadcast(ColorUtils.color("A mare has spawned!"));
-        plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses().remove(horse);
+        plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses().add(horse);
     }
 }
