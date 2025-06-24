@@ -17,7 +17,7 @@ public class EquineBreedingListener implements Listener {
     }
 
     @EventHandler
-    public void OnEntityLoad(EntitiesLoadEvent event) {
+    public void onBreedingHorsesLoad(EntitiesLoadEvent event) {
         for(Entity entity : event.getEntities()) {
             if (!(entity instanceof AbstractHorse horse)) {
                 continue;
@@ -37,7 +37,7 @@ public class EquineBreedingListener implements Listener {
     }
 
     @EventHandler
-    public void OnEntityUnload(EntitiesLoadEvent event) {
+    public void onBreedingHorsesUnload(EntitiesLoadEvent event) {
         for(Entity entity : event.getEntities()) {
             if (!(entity instanceof AbstractHorse horse)) {
                 continue;
