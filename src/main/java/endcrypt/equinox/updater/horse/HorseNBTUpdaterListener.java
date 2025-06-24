@@ -37,12 +37,6 @@ public class HorseNBTUpdaterListener implements Listener {
                 continue;
             }
 
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(horse.getOwner().getUniqueId());
-
-            if(!offlinePlayer.isOnline()) {
-                continue;
-            }
-
             EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
             equineLiveHorse.setLastLocation(horse.getLocation());
 

@@ -167,7 +167,7 @@ public class BedrockBuildForm {
                 player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>You have used a token to create this horse."));
             }
 
-            new EquineHorseBuilder(plugin).spawnHorse(player, player.getLocation(), equineHorse);
+            new EquineHorseBuilder(plugin).spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorse);
             return;
         }
 
