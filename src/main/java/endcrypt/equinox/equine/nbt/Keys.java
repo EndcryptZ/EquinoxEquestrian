@@ -40,10 +40,14 @@ public enum Keys {
     IS_PREGNANT("EQUINE_IS_PREGNANT", "false"),
     PREGNANCY_START_TIME("EQUINE_PREGNANCY_START", System.currentTimeMillis()),
     PREGNANCY_PARTNER("EQUINE_PREGNANCY_PARTNER", ""),
+    INSTANT_FOAL("EQUINE_INSTANT_FOAL", "false"),
 
     IS_BREEDING("EQUINE_IS_BREEDING", "false"),
     BREEDING_START_TIME("EQUINE_BREEDING_START", System.currentTimeMillis()),
-    BREEDING_PARTNER("EQUINE_BREEDING_PARTNER", "");
+    BREEDING_PARTNER("EQUINE_BREEDING_PARTNER", ""),
+    INSTANT_BREED("EQUINE_INSTANT_BREED", "false");
+
+
 
     public final String key;
     public final Object defaultValue;
