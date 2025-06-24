@@ -5,7 +5,6 @@ import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.UUID;
@@ -26,27 +25,37 @@ public class EquinePregnancyTask {
 
     private void checkPregnancy() {
         for (AbstractHorse horse : plugin.getEquineManager().getEquinePregnancy().getPregnantHorses()) {
+            if(horse == null) continue;
             checkHorsePregnancy(new EquineLiveHorse(horse));
         }
     }
 
     private void checkHorsePregnancy(EquineLiveHorse mare) {
         long calculatedEndPregnancy = mare.getPregnancyStartTime() + TimeUtils.daysToMillis(3);
-        if(calculatedEndPregnancy < System.currentTimeMillis()) {
-            EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
-            OfflinePlayer owner = Bukkit.getOfflinePlayer(mare.getHorse().getUniqueId());
-
-            equineHorseBuilder.spawnFoal(mare, getPregnancyPartner(mare), mare.getHorse().getLocation(), owner);
-            mare.setPregnant(false);
-            mare.setPregnancyStartTime(0L);
-            mare.update();
-            plugin.getEquineManager().getEquinePregnancy().remove(mare.getHorse());
+        if(mare.isInstantFoal()) {
+            giveBirth(mare);
+            return;
         }
+        if(calculatedEndPregnancy < System.currentTimeMillis()) {
+            giveBirth(mare);
+        }
+
+    }
+
+    private void giveBirth(EquineLiveHorse mare) {
+        EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
+
+        equineHorseBuilder.spawnFoal(mare, getPregnancyPartner(mare), mare.getHorse().getLocation(), mare.getOwnerUUID());
+        mare.setPregnant(false);
+        mare.setPregnancyStartTime(0L);
+        mare.setInstantFoal(false);
+        mare.update();
+        plugin.getEquineManager().getEquinePregnancy().remove(mare.getHorse());
     }
 
 
     private EquineLiveHorse getPregnancyPartner(EquineLiveHorse mare) {
-        return plugin.getDatabaseManager().getDatabaseHorses().getHorse(UUID.fromString(mare.getBreedingPartnerUUID()));
+        return plugin.getDatabaseManager().getDatabaseHorses().getHorse(UUID.fromString(mare.getPregnancyPartnerUUID()));
     }
 
 }
