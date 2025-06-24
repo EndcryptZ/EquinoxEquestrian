@@ -6,7 +6,9 @@ import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.equine.nbt.Keys;
@@ -19,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,6 +34,10 @@ public class EquineAdminCommand {
     }
 
     String[] equineItems = Arrays.stream(Item.values()).map(Enum::name).toArray(String[]::new);
+    String[] equineCoatColors = Arrays.stream(CoatColor.values()).map(coatColor -> coatColor.getCoatColorName().toLowerCase()).toArray(String[]::new);
+    String[] equineCoatModifier = Arrays.stream(CoatModifier.values()).map(coatModifier -> coatModifier.getCoatModifierName().toLowerCase()).toArray(String[]::new);
+    String[] equineHeight = Arrays.stream(Height.values()).map(height -> String.valueOf(height.getHands())).toArray(String[]::new);
+
 
     private void registerCommands() {
         new CommandAPICommand("equineadmin")
@@ -54,19 +61,51 @@ public class EquineAdminCommand {
                         .withArguments(new IntegerArgument("amount", 1).setOptional(true))
                         .executes(this::giveEquineItem))
 
-                .withSubcommand(new CommandAPICommand("speed")
-                        .withPermission("equinox.cmd.equineadmin.speed")
-                        .withArguments(new DoubleArgument("speed"))
-                        .executes(this::speed))
-
-                .withSubcommand(new CommandAPICommand("jumpstrength")
-                        .withPermission("equinox.cmd.equineadmin.jumpstrength")
-                        .withArguments(new DoubleArgument("jumpstrength"))
-                        .executes(this::jumpStrength))
-
                 .withSubcommand(new CommandAPICommand("bypass")
                         .withPermission("equinox.cmd.equineadmin.bypass")
                         .executesPlayer(this::bypass))
+
+                .withSubcommand(new CommandAPICommand("modify")
+                        .withPermission("equinox.cmd.equineadmin.edit")
+                        .withSubcommand(new CommandAPICommand("colour")
+                                .withArguments(new MultiLiteralArgument("colour", equineCoatColors))
+                                .executesPlayer(this::modifyColour))
+                        .withSubcommand(new CommandAPICommand("modifier")
+                                .withArguments(new MultiLiteralArgument("modifier", equineCoatModifier))
+                                .executesPlayer(this::modifyModifier))
+                        .withSubcommand(new CommandAPICommand("height")
+                                .withArguments(new DoubleArgument("height").replaceSuggestions(ArgumentSuggestions.strings(equineHeight)))
+                                .executesPlayer(this::modifyHeight)))
+
+                .withSubcommand(new CommandAPICommand("set")
+                        .withPermission("equinox.cmd.equineadmin.edit")
+                        .withSubcommand(new CommandAPICommand("jump")
+                                .withArguments(new DoubleArgument("jump"))
+                                .executesPlayer(this::setJump))
+                        .withSubcommand(new CommandAPICommand("speed")
+                                .withArguments(new DoubleArgument("speed"))
+                                .executesPlayer(this::setSpeed))
+                        .withSubcommand(new CommandAPICommand("traits")
+                                .withArguments(new ListArgumentBuilder<Trait>("traits")
+                                        .allowDuplicates(false)
+                                        .withList(List.of(Trait.values()))
+                                        .withMapper(Trait::getTraitName)
+                                        .buildGreedy())
+                                .executesPlayer(this::setTraits))
+
+                        .withSubcommand(new CommandAPICommand("age")
+                                .withArguments(new IntegerArgument("age"))
+                                .executesPlayer(this::setAge))
+
+                        .withSubcommand(new CommandAPICommand("inheat")
+                            .withArguments(new BooleanArgument("inheat"))
+                            .executesPlayer(this::setInHeat))
+
+                        .withSubcommand(new CommandAPICommand("instafoal")
+                                .executesPlayer(this::setInstaFoal))
+
+                        .withSubcommand(new CommandAPICommand("instabreed")
+                                .executesPlayer(this::setInstaBreed)))
 
                 .register();
     }
@@ -113,7 +152,7 @@ public class EquineAdminCommand {
         EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
         Player player = (Player) sender;
         String name = (String) args.get("name");
-        equineHorseBuilder.spawnHorse(player, player.getLocation(), equineHorseBuilder.randomHorse(name));
+        equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse(name));
         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>You have spawned a randomized horse!"));
 
     }
@@ -151,7 +190,111 @@ public class EquineAdminCommand {
                 Placeholder.parsed("player", target.getName())));
     }
 
-    private void speed(CommandSender commandSender, CommandArguments args) {
+
+
+
+
+    private void bypass(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        if(!EquineBypass.hasBypass(player)) {
+            EquineBypass.add(player);
+            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass enabled. You can now interact with any horses!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+        } else {
+            EquineBypass.remove(player);
+            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass disabled. You can no longer interact with any horses!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+        }
+    }
+
+    private void modifyColour(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse abstractHorse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (abstractHorse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the colour!"));
+            return;
+        }
+
+        CoatColor coatColor = CoatColor.getByName(args.getUnchecked("colour"));
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
+        equineLiveHorse.setCoatColor(coatColor);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("color", coatColor.getCoatColorName())));
+
+    }
+
+    private void modifyModifier(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse abstractHorse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (abstractHorse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the modifier!"));
+            return;
+        }
+
+        CoatModifier coatModifier = CoatModifier.getByName(args.getUnchecked("modifier"));
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
+        equineLiveHorse.setCoatModifier(coatModifier);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("color", coatModifier.getCoatModifierName())));
+    }
+
+    private void modifyHeight(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse abstractHorse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (abstractHorse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the height!"));
+            return;
+        }
+
+        Height height = Height.getByHands(args.getUnchecked("height"));
+        if(height == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>Invalid height!"));
+            return;
+        }
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
+        equineLiveHorse.setHeight(height);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the height of <horse> to <height> hands",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("height", String.valueOf(height.getHands()))));
+    }
+
+    private void setJump(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the jump strength!"));
+            return;
+        }
+
+        double jumpStrength = (double) args.get("jump");
+        if(jumpStrength < 0.1) {
+            commandSender.sendMessage(ColorUtils.color("<red>Jump Power must be greater than 0.1!"));
+            return;
+        }
+
+        NBT.modifyPersistentData(horse, nbt -> {
+            horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
+        });
+
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength> blocks!",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
+        ));
+    }
+
+    private void setSpeed(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
         if(horse == null) {
@@ -176,43 +319,139 @@ public class EquineAdminCommand {
         ));
     }
 
-    private void jumpStrength(CommandSender commandSender, CommandArguments args) {
+    private void setTraits(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
         if(horse == null) {
-            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the jump strength!"));
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the traits!"));
             return;
         }
 
-        double jumpStrength = (double) args.get("jumpstrength");
-        if(jumpStrength < 0.1) {
-            commandSender.sendMessage(ColorUtils.color("<red>Jump Power must be greater than 0.1!"));
+        List<Trait> traitList = (List<Trait>) args.get("traits");
+        if(traitList.size() > 3) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can only select 3 traits!"));
             return;
         }
-
-        NBT.modifyPersistentData(horse, nbt -> {
-            horse.getAttribute(Attribute.JUMP_STRENGTH).setBaseValue(EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
-            nbt.setDouble(Keys.BASE_JUMP.getKey(), EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
-        });
-
-        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength> blocks!",
+        
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        equineLiveHorse.setTraits(traitList);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You set the traits of <horse> to <traits>",
                 Placeholder.parsed("horse", horse.getName()),
-                Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
-        ));
+                Placeholder.parsed("traits", String.join(", ", traitList.stream().map(Trait::getTraitName).toList()))));
+
     }
 
-    private void bypass(CommandSender commandSender, CommandArguments args) {
+    private void setAge(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
-        if(!EquineBypass.hasBypass(player)) {
-            EquineBypass.add(player);
-            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass enabled. You can now interact with any horses!",
-                    Placeholder.parsed("prefix", plugin.getPrefix())));
-        } else {
-            EquineBypass.remove(player);
-            player.sendMessage(ColorUtils.color("<prefix><green>You have bypass disabled. You can no longer interact with any horses!",
-                    Placeholder.parsed("prefix", plugin.getPrefix())));
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the age!"));
+            return;
         }
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        equineLiveHorse.setAge((int) args.get("age"));
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You set the age of <horse> to <age>",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("age", String.valueOf(equineLiveHorse.getAge()))));
     }
 
+    private void setInHeat(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        boolean inHeat = (boolean) args.get("inheat");
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the in heat state!"));
+            return;
+        }
 
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+
+        if(equineLiveHorse.getGender() != Gender.MARE) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can only change the in heat state of mares!"));
+            return;
+        }
+
+        if(inHeat && equineLiveHorse.isInHeat()) {
+            commandSender.sendMessage(ColorUtils.color("<red>This horse is already in heat!"));
+            return;
+        }
+
+        if(!inHeat && !equineLiveHorse.isInHeat()) {
+            commandSender.sendMessage(ColorUtils.color("<red>This horse is already not in heat!"));
+            return;
+        }
+
+        if(equineLiveHorse.isPregnant()) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can't change the in heat state of pregnant horses!"));
+            return;
+        }
+
+        equineLiveHorse.setInHeat(inHeat);
+        if(inHeat) {
+            equineLiveHorse.setLastInHeat(System.currentTimeMillis());
+        }
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You set the in heat state of <horse> to <inheat>",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("inheat", String.valueOf(equineLiveHorse.isInHeat()))));
+    }
+
+    private void setInstaFoal(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the instant foal state!"));
+            return;
+        }
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        if(equineLiveHorse.getGender() != Gender.MARE) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can only change the instant foal state of mares!"));
+            return;
+        }
+
+        if(!equineLiveHorse.isPregnant()) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can't change the instant foal state of non-pregnant horses!"));
+            return;
+        }
+
+        equineLiveHorse.setInstantFoal(true);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You set the instant foal state of <horse> to <instafoal>",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("instafoal", String.valueOf(equineLiveHorse.isInstantFoal()))));
+
+
+    }
+
+    private void setInstaBreed(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(horse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the instant breed state!"));
+            return;
+        }
+
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        if(equineLiveHorse.getGender() != Gender.MARE) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can only change the instant breed state of mares!"));
+            return;
+        }
+
+        if(!equineLiveHorse.isBreeding()) {
+            commandSender.sendMessage(ColorUtils.color("<red>You can't change the instant breed state of non-breeding horses!"));
+            return;
+        }
+
+        equineLiveHorse.setInstantBreed(true);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You set the instant breed state of <horse> to <instabreed>",
+                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("instabreed", String.valueOf(equineLiveHorse.isInstantBreed()))));
+
+    }
 }
