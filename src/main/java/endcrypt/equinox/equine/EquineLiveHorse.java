@@ -12,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Horse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -54,10 +57,12 @@ public class EquineLiveHorse {
     private boolean isBreeding;
     private long breedingStartTime;
     private String breedingPartnerUUID;
+    private boolean isInstantBreed;
 
     private boolean isPregnant;
     private long pregnancyStartTime;
     private String pregnancyPartnerUUID;
+    private boolean isInstantFoal;
 
     private final AbstractHorse horse;
     
@@ -115,6 +120,8 @@ public class EquineLiveHorse {
         this.isInHeat = EquineUtils.isHorseInHeat(horse);
         this.isPregnant = EquineUtils.isHorsePregnant(horse);
         this.isBreeding = EquineUtils.isBreeding(horse);
+        this.isInstantFoal = EquineUtils.isInstantFoal(horse);
+        this.isInstantBreed = EquineUtils.isInstantBreed(horse);
 
         NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
@@ -169,8 +176,8 @@ public class EquineLiveHorse {
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
             nbt.setLong(Keys.BIRTH_TIME.getKey(), this.birthTime);
-            nbt.setString(Keys.OWNER_NAME.getKey(), this.ownerName);
-            nbt.setString(Keys.OWNER_UUID.getKey(), this.horse.getOwnerUniqueId().toString());
+            nbt.setString(Keys.OWNER_NAME.getKey(), Bukkit.getOfflinePlayer(UUID.fromString(this.ownerUUID)).getName());
+            nbt.setString(Keys.OWNER_UUID.getKey(), this.ownerUUID);
             nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
             nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);
             nbt.setString(Keys.SKULL_ID.getKey(), this.skullId);
@@ -187,7 +194,25 @@ public class EquineLiveHorse {
             nbt.setString(Keys.IS_BREEDING.getKey(), String.valueOf(this.isBreeding));
             nbt.setLong(Keys.BREEDING_START_TIME.getKey(), this.breedingStartTime);
             nbt.setString(Keys.BREEDING_PARTNER.getKey(), this.breedingPartnerUUID);
+            nbt.setString(Keys.INSTANT_FOAL.getKey(), String.valueOf(this.isInstantFoal));
+            nbt.setString(Keys.INSTANT_BREED.getKey(), String.valueOf(this.isInstantBreed));
+            nbt.setInteger(Keys.AGE.getKey(), this.age);
+
+            // Traits Updater
+            for (int i = 0; i <= 3; i++) {
+                if (i < this.traits.size()) {
+                    nbt.setString(Keys.TRAIT_PREFIX.getKey() + i, this.traits.get(i).name());
+                } else {
+                    nbt.setString(Keys.TRAIT_PREFIX.getKey() + i, "");
+                }
+            }
         });
+
+        Horse horse1 = (Horse) horse;
+        horse1.setColor(coatColor.getHorseColor());
+        horse1.setStyle(coatModifier.getHorseCoatModifier());
+        Objects.requireNonNull(horse1.getAttribute(Attribute.SCALE)).setBaseValue(height.getSize());
+        horse.setAge(this.age);
     }
 
     public void updateDefault() {
