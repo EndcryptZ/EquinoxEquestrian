@@ -124,7 +124,7 @@ public class EquineCrossTieListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityLoad(EntitiesLoadEvent event) {
+    public void onCrosstieHorsesLoad(EntitiesLoadEvent event) {
         for(Entity entity : event.getEntities()) {
             if(!(entity instanceof AbstractHorse horse)) {
                 continue;
@@ -149,7 +149,7 @@ public class EquineCrossTieListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityUnload(EntitiesUnloadEvent event) {
+    public void onCrosstieHorsesUnload(EntitiesUnloadEvent event) {
         for(Entity entity : event.getEntities()) {
             if(!(entity instanceof AbstractHorse horse)) {
                 continue;
