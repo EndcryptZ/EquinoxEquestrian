@@ -22,6 +22,7 @@ public class EquineBreedingInHeatTask {
 
     private void checkInHeat() {
         for (AbstractHorse horse : plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses()) {
+            if(horse == null) continue;
             if(EquineUtils.getHorseGender(horse) != Gender.MARE) continue;
             EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
             checkHorseInHeat(liveHorse);
