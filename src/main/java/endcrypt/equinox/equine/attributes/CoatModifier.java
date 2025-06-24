@@ -9,7 +9,7 @@ import java.util.Random;
 
 @Getter
 public enum CoatModifier {
-    NONE("None", null),
+    NONE("None", Horse.Style.NONE),
     SNIP("Snip", Horse.Style.WHITE),
     PAINT("Paint", Horse.Style.WHITEFIELD),
     HEART("Heart", Horse.Style.WHITE_DOTS),

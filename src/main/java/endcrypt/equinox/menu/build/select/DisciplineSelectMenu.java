@@ -22,7 +22,6 @@ public class DisciplineSelectMenu implements Listener {
     private final Map<Player, EquineHorse> playerMap = new HashMap<>();
     public DisciplineSelectMenu(EquinoxEquestrian plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     // Select Discipline Menu
