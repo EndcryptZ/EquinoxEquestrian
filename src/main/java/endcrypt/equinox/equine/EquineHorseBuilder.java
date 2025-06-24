@@ -5,8 +5,8 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
@@ -24,7 +24,7 @@ public class EquineHorseBuilder {
         this.plugin = plugin;
     }
 
-    public void spawnFoal(EquineLiveHorse mare, EquineLiveHorse stallion, Location location, OfflinePlayer owner) {
+    public void spawnFoal(EquineLiveHorse mare, EquineLiveHorse stallion, Location location, String owner) {
         EquineHorse foal = combineGenetics(mare, stallion);
         spawnHorse(owner, location, foal);
     }
@@ -64,7 +64,7 @@ public class EquineHorseBuilder {
     private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
 
     // Method to spawn the horse at a player's location
-    public void spawnHorse(OfflinePlayer player, Location loc, EquineHorse equineHorse) {
+    public void spawnHorse(String ownerUUID, Location loc, EquineHorse equineHorse) {
         World world = loc.getWorld();
 
         // Spawn the horse
@@ -77,7 +77,7 @@ public class EquineHorseBuilder {
 
         // Optional: Set horse as tamed
         horse.setTamed(true);
-        horse.setOwner(player);
+        horse.setOwner(Bukkit.getOfflinePlayer(UUID.fromString(ownerUUID)));
         horse.setAge(equineHorse.getAge());
         horse.setAgeLock(true);
 
@@ -87,7 +87,7 @@ public class EquineHorseBuilder {
             horse.setStyle(equineHorse.getCoatModifier().getHorseCoatModifier());
         }
 
-        Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).    setBaseValue(equineHorse.getHeight().getSize());
+        Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).setBaseValue(equineHorse.getHeight().getSize());
 
         NBT.modifyPersistentData(horse, nbt -> {
             long currentTime = System.currentTimeMillis();
@@ -120,8 +120,8 @@ public class EquineHorseBuilder {
             // Set metadata
             nbt.setLong(Keys.CLAIM_TIME.getKey(), currentTime);
             nbt.setLong(Keys.BIRTH_TIME.getKey(), currentTime - (MILLIS_PER_YEAR * equineHorse.getAge()));
-            nbt.setString(Keys.OWNER_UUID.getKey(), player.getUniqueId().toString());
-            nbt.setString(Keys.OWNER_NAME.getKey(), player.getName());
+            nbt.setString(Keys.OWNER_UUID.getKey(), ownerUUID);
+            nbt.setString(Keys.OWNER_NAME.getKey(), Bukkit.getOfflinePlayer(UUID.fromString(ownerUUID)).getName());
 
             // Set base stats
             nbt.setDouble(Keys.BASE_SPEED.getKey(), Objects.requireNonNull(horse.getAttribute(Attribute.MOVEMENT_SPEED)).getBaseValue());
