@@ -148,7 +148,7 @@ public class HorseInfoMenu {
         if (traits.isEmpty()) {
             loreList.add("    &7▸ &bNone");
         } else {
-            for (int i = 0; i < traits.size() - 1; i++) {
+            for (int i = 0; i < traits.size(); i++) {
                 if( traits.get(i) == null ) continue;
                 loreList.add("    &7▸ &bTrait " + (i + 1) + ": &7" + traits.get(i).getTraitName());
             }
