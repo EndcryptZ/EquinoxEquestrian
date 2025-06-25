@@ -37,7 +37,7 @@ public class EquineHorseBuilder {
 
         CoatColor foalColor = random.nextBoolean() ? mare.getCoatColor() : stallion.getCoatColor();
         CoatModifier foalModifier = random.nextBoolean() ? mare.getCoatModifier() : stallion.getCoatModifier();
-        Gender foalGender = Gender.random();
+        Gender foalGender = random.nextBoolean() ? Gender.MARE : Gender.STALLION;
         Height foalHeight = Height.getRandomHeight(foalBreeds.get(0));
 
         List<Trait> foalTraits = new ArrayList<>();
