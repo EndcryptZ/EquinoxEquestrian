@@ -4,10 +4,10 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashEvent;
 import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashRemovedEvent;
-import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
+import endcrypt.equinox.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -57,7 +57,7 @@ public class EquineCrossTieListener implements Listener {
         }
 
         if (!EquineUtils.hasPermissionToHorse(player, horse)) {
-            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You can't interact with this horse!"));
+            player.sendMessage(MessageUtils.cantInteractWithHorse(horse));
             event.setCancelled(true);
             return;
         }

@@ -40,6 +40,7 @@ public class EquineCrossTieTask {
                     }
 
                     if (!bat.isLeashed() || (!horse.isLeashed())) {
+                        bat.setLeashHolder(null);
                         bat.remove();
                         Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
                         continue;
