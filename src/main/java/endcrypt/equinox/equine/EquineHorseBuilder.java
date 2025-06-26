@@ -4,7 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
-import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -72,7 +72,7 @@ public class EquineHorseBuilder {
         horse.setPersistent(true);
 
         // Set the horse's custom name
-        horse.customName(ColorUtils.color(equineHorse.getName()));
+        horse.customName(LegacyComponentSerializer.legacyAmpersand().deserialize(equineHorse.getName()));
         horse.setCustomNameVisible(true);
 
         // Optional: Set horse as tamed

@@ -4,6 +4,7 @@ import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.utils.ColorUtils;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -51,7 +52,7 @@ public class BuildMenuListener implements Listener {
             return;
         }
 
-        plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(originalMessage);
+        plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(LegacyComponentSerializer.legacyAmpersand().serialize(event.message()));
         plugin.getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
                 plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
         );

@@ -53,7 +53,7 @@ public class EquineAdminCommand {
 
                 .withSubcommand(new CommandAPICommand("autospawn")
                         .withPermission("equinox.cmd.equineadmin.autospawn")
-                        .withArguments(new StringArgument("name"))
+                        .withArguments(new GreedyStringArgument("name"))
                         .executes(this::autoSpawn))
 
                 .withSubcommand(new CommandAPICommand("give")
