@@ -73,7 +73,7 @@ public class EquineLunge {
             return;
         }
 
-        if (!(horse.getOwner() == player)) {
+        if (!EquineUtils.hasPermissionToHorse(player, horse)) {
             player.sendMessage("§cYou can only lunge your own tamed horse!");
             return;
         }

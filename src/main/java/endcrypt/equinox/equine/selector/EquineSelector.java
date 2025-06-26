@@ -4,6 +4,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerSelectHorseEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
+import endcrypt.equinox.utils.MessageUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -26,8 +27,7 @@ public class EquineSelector {
         }
 
         if(!EquineUtils.hasPermissionToHorse(player, horse)) {
-            player.sendMessage(ColorUtils.color("<prefix><red>You can't interact with this horse!",
-                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            player.sendMessage(MessageUtils.cantInteractWithHorse(horse));
             return;
         }
 

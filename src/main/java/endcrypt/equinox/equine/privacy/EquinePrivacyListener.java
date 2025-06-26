@@ -3,7 +3,7 @@ package endcrypt.equinox.equine.privacy;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
 import endcrypt.equinox.equine.EquineUtils;
-import endcrypt.equinox.utils.ColorUtils;
+import endcrypt.equinox.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,7 +44,7 @@ public class EquinePrivacyListener implements Listener {
             return;
         }
 
-        player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You can't interact with this horse!"));
+        player.sendMessage(MessageUtils.cantInteractWithHorse(horse));
         event.setCancelled(true);
 
         
