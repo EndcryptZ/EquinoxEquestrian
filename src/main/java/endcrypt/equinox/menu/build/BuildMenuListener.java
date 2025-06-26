@@ -45,7 +45,7 @@ public class BuildMenuListener implements Listener {
             return;
         }
 
-        if(originalMessage.length() > 16) {
+        if(originalMessage.length() > 30) {
             event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cName too long! Please keep it under 16 characters."));
             event.setCancelled(true);
             return;
