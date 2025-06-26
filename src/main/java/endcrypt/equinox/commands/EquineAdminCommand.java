@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class EquineAdminCommand {
 
@@ -33,15 +34,16 @@ public class EquineAdminCommand {
         this.registerCommands();
     }
 
-    String[] equineItems = Arrays.stream(Item.values()).map(Enum::name).toArray(String[]::new);
-    String[] equineCoatColors = Arrays.stream(CoatColor.values()).map(coatColor -> coatColor.getCoatColorName().toLowerCase()).toArray(String[]::new);
-    String[] equineCoatModifier = Arrays.stream(CoatModifier.values()).map(coatModifier -> coatModifier.getCoatModifierName().toLowerCase()).toArray(String[]::new);
+    String[] equineItems = Arrays.stream(Item.values()).map(Enum::name).filter(name -> !name.equals("NONE")).toArray(String[]::new);
+    String[] equineCoatColors = Arrays.stream(CoatColor.values()).map(Enum::name).filter(name -> !name.equals("NONE")).toArray(String[]::new);
+    String[] equineCoatModifier = Arrays.stream(CoatModifier.values()).map(Enum::name).toArray(String[]::new);
     String[] equineHeight = Arrays.stream(Height.values()).map(height -> String.valueOf(height.getHands())).toArray(String[]::new);
 
 
     private void registerCommands() {
         new CommandAPICommand("equineadmin")
                 .withAliases("eqadmin")
+                .withPermission("equinox.cmd.equineadmin")
                 .withSubcommand(new CommandAPICommand("token")
                         .withPermission("equinox.cmd.equineadmin.token")
                         .withArguments(new MultiLiteralArgument("action", "set", "give", "take"))
@@ -88,7 +90,7 @@ public class EquineAdminCommand {
                         .withSubcommand(new CommandAPICommand("traits")
                                 .withArguments(new ListArgumentBuilder<Trait>("traits")
                                         .allowDuplicates(false)
-                                        .withList(List.of(Trait.values()))
+                                        .withList(Stream.of(Trait.values()).filter(trait -> trait != Trait.NONE).toList())
                                         .withMapper(Trait::getTraitName)
                                         .buildGreedy())
                                 .executesPlayer(this::setTraits))
@@ -152,7 +154,7 @@ public class EquineAdminCommand {
         EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
         Player player = (Player) sender;
         String name = (String) args.get("name");
-        equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse(name));
+        equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse(name), false);
         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>You have spawned a randomized horse!"));
 
     }
@@ -350,8 +352,13 @@ public class EquineAdminCommand {
             return;
         }
 
+        int ageInput = (int) args.get("age");
+        if(ageInput < 0 || ageInput > 45) {
+            commandSender.sendMessage(ColorUtils.color("<red>Age must be between 0 and 45!"));
+            return;
+        }
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
-        equineLiveHorse.setAge((int) args.get("age"));
+        equineLiveHorse.setAge(ageInput);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the age of <horse> to <age>",
                 Placeholder.parsed("horse", horse.getName()),
