@@ -26,7 +26,7 @@ public class EquineHorseBuilder {
 
     public void spawnFoal(EquineLiveHorse mare, EquineLiveHorse stallion, Location location, String owner) {
         EquineHorse foal = combineGenetics(mare, stallion);
-        spawnHorse(owner, location, foal);
+        spawnHorse(owner, location, foal, true);
     }
 
     private EquineHorse combineGenetics(EquineLiveHorse mare, EquineLiveHorse stallion) {
@@ -64,7 +64,7 @@ public class EquineHorseBuilder {
     private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
 
     // Method to spawn the horse at a player's location
-    public void spawnHorse(String ownerUUID, Location loc, EquineHorse equineHorse) {
+    public void spawnHorse(String ownerUUID, Location loc, EquineHorse equineHorse, boolean isBaby) {
         World world = loc.getWorld();
 
         // Spawn the horse
@@ -79,7 +79,9 @@ public class EquineHorseBuilder {
         horse.setTamed(true);
         horse.setOwner(Bukkit.getOfflinePlayer(UUID.fromString(ownerUUID)));
         horse.setAge(equineHorse.getAge());
-        horse.setAgeLock(true);
+        if(isBaby) {
+            horse.setBaby();
+        }
 
         horse.setColor(equineHorse.getCoatColor().getHorseColor());
 
