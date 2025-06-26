@@ -45,7 +45,7 @@ public class NameForm {
             return;
         }
 
-        if (name.length() > 16) {
+        if (name.length() > 30) {
             plugin.getFloodgateApi().sendForm(player.getUniqueId(), nameForm(player, "Maximum Error", equineHorse));
             return;
         }
