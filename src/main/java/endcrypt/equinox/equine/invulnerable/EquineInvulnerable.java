@@ -1,10 +1,12 @@
 package endcrypt.equinox.equine.invulnerable;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRemoveEvent;
 
 public class EquineInvulnerable implements Listener {
 
@@ -19,5 +21,13 @@ public class EquineInvulnerable implements Listener {
         if(event.getEntity() instanceof AbstractHorse) {
             event.setCancelled(true);
         }
+    }
+
+    // Horse Removal Respawner (?)
+    @EventHandler
+    public void onHorseRemove(EntityRemoveEvent event) {
+        if(!(event.getEntity() instanceof AbstractHorse horse)) return;
+        if(!EquineUtils.isLivingEquineHorse(horse)) return;
+        event.getEntity().copy(event.getEntity().getLocation());
     }
 }
