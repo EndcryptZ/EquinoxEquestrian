@@ -23,9 +23,10 @@ public class EquineInvulnerable implements Listener {
         }
     }
 
-    // Horse Removal Respawner (?)
+    // Respawns Horses Removed by an External Plugin
     @EventHandler
     public void onHorseRemove(EntityRemoveEvent event) {
+        if(event.getCause() != EntityRemoveEvent.Cause.PLUGIN) return;
         if(!(event.getEntity() instanceof AbstractHorse horse)) return;
         if(!EquineUtils.isLivingEquineHorse(horse)) return;
         event.getEntity().copy(event.getEntity().getLocation());
