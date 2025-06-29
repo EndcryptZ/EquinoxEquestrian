@@ -51,8 +51,8 @@ public class HorseNBTUpdaterListener implements Listener {
             plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: " + horse.getName()));
 
             equineLiveHorse.update();
-            }
         }
+    }
 
     @EventHandler
     public void onEntitiesUnload(EntitiesUnloadEvent event) {
