@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.home;
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
@@ -32,7 +33,8 @@ public class EquineHome {
                 nbt.setString("PASTURE_WORLD", player.getWorld().getName());
             });
 
-            player.sendMessage("Sucessfully set selected horse's pasture to your current location!");
+            player.sendMessage(ColorUtils.color("<prefix><green>Sucessfully set selected horse's pasture to your current location!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
         }
 
         if(type.equalsIgnoreCase("stall")) {
@@ -44,7 +46,8 @@ public class EquineHome {
                 nbt.setString("STALL_WORLD", player.getWorld().getName());
             });
 
-            player.sendMessage("Sucessfully set selected horse's pasture to your current location!");
+            player.sendMessage(ColorUtils.color("<prefix><green>Sucessfully set selected horse's stall to your current location!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
         }
 
 
@@ -67,7 +70,8 @@ public class EquineHome {
             String world = NBT.getPersistentData(horse, nbt -> nbt.getString("PASTURE_WORLD"));
 
             loc = new Location(plugin.getServer().getWorld(world), x, y, z);
-            player.sendMessage("Your horse have been teleported to its pasture!");
+            player.sendMessage(ColorUtils.color("<prefix><green>Your horse have been teleported to its pasture!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
         } else if (type.equalsIgnoreCase("stall") && NBT.getPersistentData(horse, nbt -> nbt.getString("HAS_STALL")).equals("true")) {
             double x = NBT.getPersistentData(horse, nbt -> nbt.getDouble("STALL_X"));
             double y = NBT.getPersistentData(horse, nbt -> nbt.getDouble("STALL_Y"));
@@ -75,7 +79,8 @@ public class EquineHome {
             String world = NBT.getPersistentData(horse, nbt -> nbt.getString("STALL_WORLD"));
 
             loc = new Location(plugin.getServer().getWorld(world), x, y, z);
-            player.sendMessage("Your horse have been teleported to its stall!");
+            player.sendMessage(ColorUtils.color("<prefix><green>Your horse have been teleported to its stall!",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
         } else {
             player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
             return;

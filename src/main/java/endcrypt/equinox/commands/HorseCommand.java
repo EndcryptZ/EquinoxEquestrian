@@ -19,6 +19,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class HorseCommand {
 
 
@@ -37,9 +40,9 @@ public class HorseCommand {
                 .withSubcommand(new CommandAPICommand("list")
                         .withArguments(new StringArgument("target")
                                 .setOptional(true)
-                                .replaceSuggestions(ArgumentSuggestions.strings(Bukkit.getOnlinePlayers().stream()
-                                .map(Player::getName)
-                                .toArray(String[]::new)))
+                                .replaceSuggestions(ArgumentSuggestions.strings(Arrays.stream(Bukkit.getOfflinePlayers())
+                                        .map(OfflinePlayer::getName)
+                                        .toArray(String[]::new)))
                                 .withPermission("equinox.cmd.horse.list.others"))
                         .executesPlayer(this::list))
 
@@ -198,7 +201,7 @@ public class HorseCommand {
         }
 
         horse.teleport(player.getLocation());
-        player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
+        player.sendMessage(ColorUtils.color("<prefix><green>Your selected horse has been teleported to you!",
                 Placeholder.parsed("prefix", plugin.getPrefix())));
     }
 
@@ -217,6 +220,7 @@ public class HorseCommand {
 
         boolean isPublic = EquineUtils.isHorsePublic(horse);
 
+        assert privacy != null;
         if (privacy.equalsIgnoreCase("public")) {
             if (isPublic) {
                 player.sendMessage(ColorUtils.color("<prefix><red>Your horse is already public!",
@@ -249,7 +253,7 @@ public class HorseCommand {
             return;
         }
 
-        if (horse.getOwner().equals(target)) {
+        if (Objects.equals(horse.getOwner(), target)) {
             player.sendMessage(ColorUtils.color(
                     "<prefix><red>You cannot trust the owner of the horse!",
                     Placeholder.parsed("prefix", plugin.getPrefix())
@@ -258,6 +262,7 @@ public class HorseCommand {
         }
 
 
+        assert target != null;
         if (plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, target)) {
             player.sendMessage(ColorUtils.color("<prefix><red><target> is already trusted!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
@@ -285,6 +290,7 @@ public class HorseCommand {
             return;
         }
 
+        assert iniTarget != null;
         Player target = Bukkit.getPlayer(iniTarget);
         OfflinePlayer offlineTarget = (target != null) ? target : Bukkit.getOfflinePlayer(iniTarget);
 
@@ -295,7 +301,7 @@ public class HorseCommand {
             return;
         }
 
-        if (horse.getOwner().equals(offlineTarget)) {
+        if (Objects.equals(horse.getOwner(), offlineTarget)) {
             player.sendMessage(ColorUtils.color("<prefix><red>You can't untrust the owner of the horse!",
                     Placeholder.parsed("prefix", plugin.getPrefix())));
             return;
@@ -304,7 +310,7 @@ public class HorseCommand {
         if (!plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, offlineTarget)) {
             player.sendMessage(ColorUtils.color("<prefix><red><target> is not trusted!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
-                    Placeholder.parsed("target", offlineTarget.getName())));
+                    Placeholder.parsed("target", Objects.requireNonNull(offlineTarget.getName()))));
             return;
         }
 
@@ -315,7 +321,7 @@ public class HorseCommand {
 
         player.sendMessage(ColorUtils.color("<prefix><green><target> has been untrusted!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("target", offlineTarget.getName())));
+                Placeholder.parsed("target", Objects.requireNonNull(offlineTarget.getName()))));
 
         if (offlineTarget.isOnline()) {
             Player onlineTarget = Bukkit.getPlayer(offlineTarget.getUniqueId());

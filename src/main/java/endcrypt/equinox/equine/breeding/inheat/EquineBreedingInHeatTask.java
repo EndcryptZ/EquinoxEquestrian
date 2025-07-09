@@ -8,6 +8,8 @@ import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
 
+import java.util.ArrayList;
+
 public class EquineBreedingInHeatTask {
 
     private final EquinoxEquestrian plugin;
@@ -21,7 +23,7 @@ public class EquineBreedingInHeatTask {
     }
 
     private void checkInHeat() {
-        for (AbstractHorse horse : plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses()) {
+        for (AbstractHorse horse : new ArrayList<>(plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses())) {
             if(horse == null) continue;
             if(EquineUtils.getHorseGender(horse) != Gender.MARE) continue;
             EquineLiveHorse liveHorse = new EquineLiveHorse(horse);

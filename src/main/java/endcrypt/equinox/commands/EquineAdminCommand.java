@@ -13,7 +13,10 @@ import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
@@ -62,6 +65,10 @@ public class EquineAdminCommand {
                         .withArguments(new MultiLiteralArgument("item", equineItems))
                         .withArguments(new IntegerArgument("amount", 1).setOptional(true))
                         .executes(this::giveEquineItem))
+
+                .withSubcommand(new CommandAPICommand("remove")
+                        .withPermission("equinox.cmd.equineadmin.remove")
+                        .executes(this::remove))
 
                 .withSubcommand(new CommandAPICommand("bypass")
                         .withPermission("equinox.cmd.equineadmin.bypass")
@@ -154,6 +161,12 @@ public class EquineAdminCommand {
         EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
         Player player = (Player) sender;
         String name = (String) args.get("name");
+
+        if(name.length() > 16 || name.length() < 3) {
+            sender.sendMessage(ColorUtils.color("<red>Name must be between 3 and 16 characters!"));
+            return;
+        }
+
         equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse(name), false);
         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>You have spawned a randomized horse!"));
 
@@ -190,6 +203,28 @@ public class EquineAdminCommand {
                 Placeholder.parsed("amount", String.valueOf(amount)),
                 Placeholder.parsed("item", item.name()),
                 Placeholder.parsed("player", target.getName())));
+    }
+
+
+    private void remove(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse abstractHorse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if(abstractHorse == null) {
+            commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to remove!"));
+            return;
+        }
+
+        plugin.getDatabaseManager().getDatabaseHorses().removeHorse(abstractHorse.getUniqueId());
+        abstractHorse.remove();
+        player.sendMessage(ColorUtils.color("<prefix><green>You have permanently removed <horse>",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(abstractHorse.getName())))));
+
+        Bukkit.getOnlinePlayers().forEach(eachPlayer -> {
+            if(plugin.getPlayerDataManager().getPlayerData(eachPlayer).getSelectedHorse() == abstractHorse) {
+                plugin.getPlayerDataManager().getPlayerData(eachPlayer).setSelectedHorse(null);
+            }
+        });
     }
 
 

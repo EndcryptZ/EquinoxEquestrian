@@ -7,6 +7,7 @@ import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class EquinePregnancyTask {
@@ -24,7 +25,7 @@ public class EquinePregnancyTask {
 
 
     private void checkPregnancy() {
-        for (AbstractHorse horse : plugin.getEquineManager().getEquinePregnancy().getPregnantHorses()) {
+        for (AbstractHorse horse : new ArrayList<>(plugin.getEquineManager().getEquinePregnancy().getPregnantHorses())) {
             if(horse == null) continue;
             checkHorsePregnancy(new EquineLiveHorse(horse));
         }

@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.invulnerable;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -29,6 +30,11 @@ public class EquineInvulnerable implements Listener {
         if(event.getCause() != EntityRemoveEvent.Cause.PLUGIN) return;
         if(!(event.getEntity() instanceof AbstractHorse horse)) return;
         if(!EquineUtils.isLivingEquineHorse(horse)) return;
-        event.getEntity().copy(event.getEntity().getLocation());
+        if(!plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) return;
+        Entity entity = event.getEntity();
+        Entity copyEntity = event.getEntity().copy(event.getEntity().getLocation());
+        plugin.getDatabaseManager().getDatabaseHorses().removeHorse(entity.getUniqueId());
+        plugin.getDatabaseManager().getDatabaseHorses().addHorse((AbstractHorse) copyEntity);
+        plugin.getLogger().warning("Equine Restore: Horse " + entity.getUniqueId() + " removed by an external plugin. Replaced with " + copyEntity.getUniqueId() + " in database.");
     }
 }

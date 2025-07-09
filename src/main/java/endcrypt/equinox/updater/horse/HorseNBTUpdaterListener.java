@@ -4,8 +4,6 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
@@ -43,12 +41,12 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: " + horse.getName()));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: ").append(horse.name()));
                 continue;
             }
 
             plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
-            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: " + horse.getName()));
+            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: ").append(horse.name()));
 
             equineLiveHorse.update();
         }
@@ -71,7 +69,7 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: " + horse.getName()));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: ").append(horse.name()));
             }
         }
     }

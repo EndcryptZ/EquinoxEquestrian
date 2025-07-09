@@ -5,7 +5,9 @@ import endcrypt.equinox.api.events.EquinePlayerSelectHorseEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.MessageUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
@@ -37,7 +39,7 @@ public class EquineSelector {
 
         player.sendMessage(ColorUtils.color("<prefix><green>You have selected <horse>!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", horse.getName())));
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(horse.getName())))));
         plugin.getPlayerDataManager().getPlayerData(player).setSelectedHorse(horse);
     }
 

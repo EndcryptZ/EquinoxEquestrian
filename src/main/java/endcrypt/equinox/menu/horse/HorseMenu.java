@@ -11,6 +11,7 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
 public class HorseMenu {
 
@@ -119,6 +120,7 @@ public class HorseMenu {
 
         return new SGButton(
                 new ItemBuilder(Material.FIREWORK_ROCKET)
+                        .flag(ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
                         .name("&fHealth")
                         .build()
         )
