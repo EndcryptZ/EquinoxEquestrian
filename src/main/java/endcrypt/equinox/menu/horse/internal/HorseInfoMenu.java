@@ -19,7 +19,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HorseInfoMenu {
+public class    HorseInfoMenu {
 
     private final EquinoxEquestrian plugin;
     public HorseInfoMenu(EquinoxEquestrian plugin) {
@@ -200,10 +200,15 @@ public class HorseInfoMenu {
     }
 
     private SGButton healthInformation(EquineLiveHorse horse) {
+        String isInHeat = horse.isInHeat() ? "&aYes" : "&cNo";
+        String isPregnant = horse.isPregnant() ? "&aYes" : "&cNo";
+
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHealth")
                         .lore(
+                                "&bIn-Heat: " + isInHeat,
+                                "&bPregnant: " + isPregnant,
                                 "&bVaccines:",
                                 "&7+ WIP",
                                 "&7+ WIP + WIP + WIP",

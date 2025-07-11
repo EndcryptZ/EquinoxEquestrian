@@ -65,6 +65,9 @@ public class DatabaseUtils {
                 horse.setLastLocation(new Location(world, x, y, z));
             }
 
+            horse.setPregnant(resultSet.getBoolean("is_pregnant"));
+            horse.setInHeat(resultSet.getBoolean("is_in_heat"));
+
             return horse;
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to map result set to horse: " + e.getMessage());
