@@ -91,6 +91,7 @@ public class EquineCrossTieListener implements Listener {
         bat.setInvulnerable(true); // Make the bat invulnerable (god mode)
         bat.setCollidable(false); // Make the bat non-collidable
         bat.setInvisible(true);
+        bat.setPersistent(true); // Make the bat persistent so it doesn't get deleted when the player leaves the world
         bat.setAwake(true);
 
         NBT.modifyPersistentData(bat, nbt -> {
