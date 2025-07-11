@@ -1,8 +1,12 @@
 package endcrypt.equinox.equine.groom;
 
 import endcrypt.equinox.equine.items.Item;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.AbstractHorse;
 
+@Getter
+@Setter
 public class EquineGroomData {
 
     private final Item item;
@@ -15,19 +19,4 @@ public class EquineGroomData {
         this.groomTimes = groomTimes;
     }
 
-    public Item getItem() {
-        return item;
-    }
-
-    public AbstractHorse getHorse() {
-        return horse;
-    }
-
-    public int getGroomTimes() {
-        return groomTimes;
-    }
-
-    public void setGroomTimes(int groomTimes) {
-        this.groomTimes = groomTimes;
-    }
 }
