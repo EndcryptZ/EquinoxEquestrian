@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class EquineItems {
 
-    private EquinoxEquestrian plugin;
+    private final EquinoxEquestrian plugin;
     public EquineItems(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }

@@ -1,7 +1,9 @@
 package endcrypt.equinox.equine.items;
 
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
+@Getter
 public enum Item {
 
 
@@ -27,15 +29,4 @@ public enum Item {
         this.nbt = nbt;
     }
 
-    public ItemStack getItem() {
-        return item;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getNbt() {
-        return nbt;
-    }
 }
