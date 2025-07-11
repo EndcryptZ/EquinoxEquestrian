@@ -11,6 +11,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class EquineBreedingTask {
@@ -29,7 +30,7 @@ public class EquineBreedingTask {
     }
 
     private void checkBreeding() {
-        for (AbstractHorse horse : plugin.getEquineManager().getEquineBreeding().getBreedingHorses()) {
+        for (AbstractHorse horse : new ArrayList<>(plugin.getEquineManager().getEquineBreeding().getBreedingHorses())) {
             if(horse == null) continue;
             processBreedingHorse(horse);
         }
@@ -81,7 +82,7 @@ public class EquineBreedingTask {
     }
 
     private void checkBreed() {
-        for (AbstractHorse abstractMare : plugin.getEquineManager().getEquineCrossTie().getCrosstiedHorses()) {
+        for (AbstractHorse abstractMare : new ArrayList<>(plugin.getEquineManager().getEquineCrossTie().getCrosstiedHorses())) {
             if(EquineUtils.getHorseGender(abstractMare) != Gender.MARE) continue;
             EquineLiveHorse mare = new EquineLiveHorse(abstractMare);
             if(!canMareBreed(mare)) continue;
