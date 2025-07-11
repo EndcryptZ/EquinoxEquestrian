@@ -82,7 +82,8 @@ public class EquineHome {
             player.sendMessage(ColorUtils.color("<prefix><green>Your horse have been teleported to its stall!",
                     Placeholder.parsed("prefix", plugin.getPrefix())));
         } else {
-            player.sendMessage(ColorUtils.color("<red>You have not selected a horse!"));
+            player.sendMessage(ColorUtils.color("<red>Your horse doesn't have a <type> set!",
+                    Placeholder.parsed("type", type)));
             return;
         }
 
