@@ -13,4 +13,8 @@ public class TimeUtils {
     public static long minutesToMillis(int minutes) {
         return (long) minutes * 60 * 1000;
     }
+
+    public static long hoursToMillis(int hours) {
+        return (long) hours * 60 * 60 * 1000;
+    }
 }
