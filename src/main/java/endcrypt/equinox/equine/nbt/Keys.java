@@ -45,7 +45,12 @@ public enum Keys {
     IS_BREEDING("EQUINE_IS_BREEDING", "false"),
     BREEDING_START_TIME("EQUINE_BREEDING_START", System.currentTimeMillis()),
     BREEDING_PARTNER("EQUINE_BREEDING_PARTNER", ""),
-    INSTANT_BREED("EQUINE_INSTANT_BREED", "false");
+    INSTANT_BREED("EQUINE_INSTANT_BREED", "false"),
+
+    // Wasting
+    LAST_PEE("EQUINE_LAST_PEE", System.currentTimeMillis()),
+    LAST_POOP("EQUINE_LAST_POOP", System.currentTimeMillis())
+    ;
 
 
 
