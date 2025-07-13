@@ -64,6 +64,9 @@ public class EquineLiveHorse {
     private String pregnancyPartnerUUID;
     private boolean isInstantFoal;
 
+    private long lastPoop;
+    private long lastPee;
+
     private final AbstractHorse horse;
     
     public EquineLiveHorse() {
@@ -96,6 +99,8 @@ public class EquineLiveHorse {
         this.isBreeding = false;
         this.breedingStartTime = 0L;
         this.breedingPartnerUUID = null;
+        this.lastPoop = 0L;
+        this.lastPee = 0L;
     }
 
 
@@ -138,6 +143,9 @@ public class EquineLiveHorse {
 
         NBT.getPersistentData(horse, nbt -> this.breedingStartTime = nbt.getLong(Keys.BREEDING_START_TIME.getKey()));
         NBT.getPersistentData(horse, nbt -> this.breedingPartnerUUID = nbt.getString(Keys.BREEDING_PARTNER.getKey()));
+
+        NBT.getPersistentData(horse, nbt -> this.lastPoop = nbt.getLong(Keys.LAST_POOP.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.lastPee = nbt.getLong(Keys.LAST_PEE.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
@@ -197,6 +205,8 @@ public class EquineLiveHorse {
             nbt.setString(Keys.INSTANT_FOAL.getKey(), String.valueOf(this.isInstantFoal));
             nbt.setString(Keys.INSTANT_BREED.getKey(), String.valueOf(this.isInstantBreed));
             nbt.setInteger(Keys.AGE.getKey(), this.age);
+            nbt.setLong(Keys.LAST_POOP.getKey(), this.lastPoop);
+            nbt.setLong(Keys.LAST_PEE.getKey(), this.lastPee);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {
