@@ -25,7 +25,7 @@ public class PlayerDataManager {
     }
 
     public void save(Player player) {
-        this.saveTokens(player);
+        this.saveData(player);
         this.playerDataMap.remove(player);
     }
 
@@ -33,7 +33,11 @@ public class PlayerDataManager {
         Bukkit.getScheduler().runTask(plugin, () -> {
 
             plugin.getDatabaseManager().getDatabasePlayer().addPlayer(player);
-            playerDataMap.put(player, new PlayerData(null, plugin.getDatabaseManager().getDatabasePlayer().getTokenAmount(player)));
+            PlayerData playerData = new PlayerData(null, plugin.getDatabaseManager().getDatabasePlayer().getTokenAmount(player));
+            playerData.setLevel(plugin.getDatabaseManager().getDatabasePlayer().getLevel(player));
+            playerData.setExp(plugin.getDatabaseManager().getDatabasePlayer().getExp(player));
+
+            playerDataMap.put(player, playerData);
         });
     }
 
@@ -42,8 +46,10 @@ public class PlayerDataManager {
             loadPlayer(player);
         }
     }
-    public void saveTokens(Player player) {
+    public void saveData(Player player) {
         PlayerData playerData = playerDataMap.get(player);
         plugin.getDatabaseManager().getDatabasePlayer().setTokenAmount(player, playerData.getTokens());
+        plugin.getDatabaseManager().getDatabasePlayer().setLevel(player, playerData.getLevel());
+        plugin.getDatabaseManager().getDatabasePlayer().setExp(player, playerData.getExp());
     }
 }
