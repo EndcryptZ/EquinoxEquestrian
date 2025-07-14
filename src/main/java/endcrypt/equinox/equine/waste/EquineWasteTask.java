@@ -1,9 +1,11 @@
 package endcrypt.equinox.equine.waste;
 
 import com.samjakob.spigui.item.ItemBuilder;
+import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.HeadUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Material;
@@ -65,14 +67,28 @@ public class EquineWasteTask {
     }
 
     private ItemStack poopItem() {
-        return new ItemBuilder(HeadUtils.getItemHead("1682"))
+        ItemStack itemStack = new ItemBuilder(HeadUtils.getItemHead("1682"))
                 .name("&6Poop")
                 .build();
+
+        NBT.modify(itemStack, NBT -> {
+            NBT.setBoolean(Keys.IS_EXPERIENCE_ITEM.getKey(), true);
+            NBT.setBoolean(Keys.IS_EXPERIENCE_PROCESSED.getKey(), false);
+        });
+
+        return itemStack;
     }
 
     private ItemStack peeItem() {
-        return new ItemBuilder(Material.YELLOW_CARPET)
+        ItemStack itemStack = new ItemBuilder(Material.YELLOW_CARPET)
                 .name("&6Pee")
                 .build();
+
+        NBT.modify(itemStack, NBT -> {
+            NBT.setBoolean(Keys.IS_EXPERIENCE_ITEM.getKey(), true);
+            NBT.setBoolean(Keys.IS_EXPERIENCE_PROCESSED.getKey(), false);
+    });
+
+        return itemStack;
     }
 }
