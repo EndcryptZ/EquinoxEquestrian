@@ -1,12 +1,14 @@
 package endcrypt.equinox.player.data;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public class PlayerDataManager {
 
     private final EquinoxEquestrian plugin;
