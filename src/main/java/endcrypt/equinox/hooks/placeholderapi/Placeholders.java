@@ -1,6 +1,7 @@
 package endcrypt.equinox.hooks.placeholderapi;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.player.data.PlayerData;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
@@ -47,7 +48,22 @@ public class Placeholders extends PlaceholderExpansion {
             return plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse().getName(); //
         }
 
-        return null; //
+        if (params.equalsIgnoreCase("tokens")) {
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData((Player) player);
+            return String.valueOf(playerData.getTokens());
+        }
+
+        if (params.equalsIgnoreCase("level")) {
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData((Player) player);
+            return String.valueOf(playerData.getLevel());
+        }
+
+        if (params.equalsIgnoreCase("exp")) {
+            PlayerData playerData = plugin.getPlayerDataManager().getPlayerData((Player) player);
+            return String.valueOf(playerData.getExp());
+        }
+
+        return null;
     }
 
 
