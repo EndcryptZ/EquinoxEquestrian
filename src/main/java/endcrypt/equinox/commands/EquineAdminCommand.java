@@ -116,6 +116,13 @@ public class EquineAdminCommand {
                         .withSubcommand(new CommandAPICommand("instabreed")
                                 .executesPlayer(this::setInstaBreed)))
 
+                .withSubcommand(new CommandAPICommand("exp")
+                        .withPermission("equinox.cmd.equineadmin.exp")
+                        .withArguments(new PlayerArgument("player"))
+                        .withArguments(new MultiLiteralArgument("action", "give", "set"))
+                        .withArguments(new DoubleArgument("amount"))
+                        .executes(this::exp))
+
                 .register();
     }
 
@@ -495,5 +502,32 @@ public class EquineAdminCommand {
                 Placeholder.parsed("horse", horse.getName()),
                 Placeholder.parsed("instabreed", String.valueOf(equineLiveHorse.isInstantBreed()))));
 
+    }
+
+    private void exp(CommandSender commandSender, CommandArguments args) {
+        Player target = (Player) args.get("player");
+        String action = (String) args.get("action");
+        double amount = args.getUnchecked("amount");
+        if(amount < 1) {
+            commandSender.sendMessage(ColorUtils.color("<red>Amount must be greater than 0!"));
+            return;
+        }
+
+        if(action.equalsIgnoreCase("give")) {
+            plugin.getEquineManager().getEquineLeveling().addExp(target, amount, false);
+            target.sendMessage(ColorUtils.color("<prefix><green>You received <exp> EXP from <sender>",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("exp", String.valueOf(amount)),
+                    Placeholder.parsed("sender", commandSender.getName())));
+            return;
+        }
+
+        if(action.equalsIgnoreCase("set")) {
+            plugin.getEquineManager().getEquineLeveling().setExp(target, amount);
+            target.sendMessage(ColorUtils.color("<prefix><green>Your EXP has been set to <exp> by <sender>",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("exp", String.valueOf(amount)),
+                    Placeholder.parsed("sender", commandSender.getName())));
+        }
     }
 }
