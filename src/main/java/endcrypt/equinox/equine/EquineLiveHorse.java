@@ -184,7 +184,7 @@ public class EquineLiveHorse {
         NBT.modifyPersistentData(horse, nbt -> {
             nbt.setLong(Keys.CLAIM_TIME.getKey(), this.claimTime);
             nbt.setLong(Keys.BIRTH_TIME.getKey(), this.birthTime);
-            nbt.setString(Keys.OWNER_NAME.getKey(), Bukkit.getOfflinePlayer(UUID.fromString(this.ownerUUID)).getName());
+            nbt.setString(Keys.OWNER_NAME.getKey(), this.ownerName);
             nbt.setString(Keys.OWNER_UUID.getKey(), this.ownerUUID);
             nbt.setDouble(Keys.BASE_SPEED.getKey(), this.baseSpeed);
             nbt.setDouble(Keys.BASE_JUMP.getKey(), this.baseJumpPower);

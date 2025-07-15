@@ -51,10 +51,7 @@ public class EquineLevelingListener implements Listener {
             exp = new Random().nextInt(3) + 3; // 3-5
         }
 
-        plugin.getEquineManager().getEquineLeveling().addExp(player, exp);
-        player.sendMessage(ColorUtils.color("<prefix><green> You gained <exp> experience!",
-                Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("exp", String.valueOf(exp))));
+        plugin.getEquineManager().getEquineLeveling().addExp(player, exp, true);
     }
 
 }
