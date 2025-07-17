@@ -7,6 +7,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.attributes.Breed;
+import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.equine.attributes.Trait;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
@@ -200,25 +201,29 @@ public class    HorseInfoMenu {
     }
 
     private SGButton healthInformation(EquineLiveHorse horse) {
-        String isInHeat = horse.isInHeat() ? "&aYes" : "&cNo";
-        String isPregnant = horse.isPregnant() ? "&aYes" : "&cNo";
+        List<String> lore = new ArrayList<>();
+
+        if (horse.getGender() == Gender.MARE) {
+            String isInHeat = horse.isInHeat() ? "&aYes" : "&cNo";
+            String isPregnant = horse.isPregnant() ? "&aYes" : "&cNo";
+            lore.add("&bIn-Heat: " + isInHeat);
+            lore.add("&bPregnant: " + isPregnant);
+        }
+
+        lore.add("&bVaccines:");
+        lore.add("&7+ WIP");
+        lore.add("&7+ WIP + WIP + WIP");
+        lore.add("&bIllnesses:");
+        lore.add("&7+ WIP");
+        lore.add("&7+ WIP + WIP + WIP");
+        lore.add("&bInjury:");
+        lore.add("&7+ WIP");
+        lore.add("&7+ WIP + WIP + WIP");
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
                         .name("&fHealth")
-                        .lore(
-                                "&bIn-Heat: " + isInHeat,
-                                "&bPregnant: " + isPregnant,
-                                "&bVaccines:",
-                                "&7+ WIP",
-                                "&7+ WIP + WIP + WIP",
-                                "&bIllnesses:",
-                                "&7+ WIP",
-                                "&7+ WIP + WIP + WIP",
-                                "&bInjury:",
-                                "&7+ WIP",
-                                "&7+ WIP + WIP + WIP"
-                        )
+                        .lore(lore)
                         .build()
         );
     }

@@ -17,7 +17,6 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Horse;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -207,6 +206,7 @@ public class EquineLiveHorse {
             nbt.setInteger(Keys.AGE.getKey(), this.age);
             nbt.setLong(Keys.LAST_POOP.getKey(), this.lastPoop);
             nbt.setLong(Keys.LAST_PEE.getKey(), this.lastPee);
+            nbt.setDouble(Keys.HEIGHT.getKey(), this.height.getHands());
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {
@@ -219,9 +219,9 @@ public class EquineLiveHorse {
         });
 
         Horse horse1 = (Horse) horse;
-        horse1.setColor(coatColor.getHorseColor());
+        horse1.setColor(coatColor.getHorseColor());     
         horse1.setStyle(coatModifier.getHorseCoatModifier());
-        Objects.requireNonNull(horse1.getAttribute(Attribute.SCALE)).setBaseValue(height.getSize());
+        horse.getAttribute(Attribute.SCALE).setBaseValue(height.getSize());
         horse.setAge(this.age);
     }
 
