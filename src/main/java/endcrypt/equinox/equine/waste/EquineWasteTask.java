@@ -18,6 +18,8 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Random;
+
 public class EquineWasteTask {
 
     private final EquinoxEquestrian plugin;
@@ -58,22 +60,25 @@ public class EquineWasteTask {
     }
 
     private void handlePoop(EquineLiveHorse liveHorse) {
-        AbstractHorse horse = liveHorse.getHorse();
-        liveHorse.setLastPoop(System.currentTimeMillis());
-        liveHorse.update();
-
+        if (new Random().nextBoolean()) {
+            AbstractHorse horse = liveHorse.getHorse();
+            liveHorse.setLastPoop(System.currentTimeMillis());
+            liveHorse.update();
+            horsePoop(horse);
+        }
     }
 
     private void handlePee(EquineLiveHorse liveHorse) {
-        AbstractHorse horse = liveHorse.getHorse();
-        liveHorse.setLastPee(System.currentTimeMillis());
-        liveHorse.update();
-
+        if (new Random().nextBoolean()) {
+            AbstractHorse horse = liveHorse.getHorse();
+            liveHorse.setLastPee(System.currentTimeMillis());
+            liveHorse.update();
+            horsePee(horse);
+        }
     }
 
     private void horsePoop(AbstractHorse horse) {
         Location horseLoc = horse.getLocation();
-        World world = horseLoc.getWorld();
         int radius = 2;
 
         // Search for nearest air block on top of solid ground
@@ -87,9 +92,29 @@ public class EquineWasteTask {
                     if (!ground.getType().isSolid()) continue;
                     if (!above.getType().isAir()) continue;
 
-                    // Place poop block here - Option 1: Yellow Carpet
-                    above.setType(Material.YELLOW_CARPET);
+                    HeadUtils.placeHeadFromHDB(above.getLocation(), "1682");
+                    return;
+                }
+            }
+        }
+    }
 
+    private void horsePee(AbstractHorse horse) {
+        Location horseLoc = horse.getLocation();
+        int radius = 2;
+
+        // Search for nearest air block on top of solid ground
+        for (int y = -1; y <= 1; y++) {
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    Location check = horseLoc.clone().add(dx, y, dz);
+                    Block ground = check.getBlock();
+                    Block above = check.clone().add(0, 1, 0).getBlock();
+
+                    if (!ground.getType().isSolid()) continue;
+                    if (!above.getType().isAir()) continue;
+
+                    above.setType(Material.YELLOW_CARPET);
                     return;
                 }
             }
