@@ -4,6 +4,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseHorses;
 import endcrypt.equinox.database.dao.DatabasePlayer;
 import endcrypt.equinox.database.dao.DatabaseTrustedPlayers;
+import endcrypt.equinox.database.dao.DatabaseWaste;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,6 +19,7 @@ public class DatabaseManager implements Listener {
     private DatabasePlayer databasePlayer;
     private DatabaseTrustedPlayers databaseTrustedPlayers;
     private DatabaseHorses databaseHorses;
+    private DatabaseWaste databaseWaste;
 
     public DatabaseManager(EquinoxEquestrian plugin) {
         this.plugin = plugin;
@@ -54,6 +56,7 @@ public class DatabaseManager implements Listener {
             databasePlayer = new DatabasePlayer(plugin);
             databaseTrustedPlayers = new DatabaseTrustedPlayers(plugin);
             databaseHorses = new DatabaseHorses(plugin);
+            databaseWaste = new DatabaseWaste(plugin);
             plugin.getLogger().info("Connected to database!");
             plugin.getPlayerDataManager().loadAllOnlinePlayers();
             plugin.setDatabaseLoaded(true);

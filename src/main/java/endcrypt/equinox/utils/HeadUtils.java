@@ -12,4 +12,9 @@ public class HeadUtils {
         }
         return headDatabaseAPI.getItemHead(id);
     }
+
+    public static ItemStack getBlockHead(int id) {
+        HeadDatabaseAPI headDatabaseAPI = new HeadDatabaseAPI();
+        headDatabaseAPI.
+    }
 }

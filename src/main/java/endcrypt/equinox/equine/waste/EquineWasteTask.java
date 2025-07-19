@@ -8,8 +8,13 @@ import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.HeadUtils;
 import endcrypt.equinox.utils.TimeUtils;
+import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,39 +61,38 @@ public class EquineWasteTask {
         AbstractHorse horse = liveHorse.getHorse();
         liveHorse.setLastPoop(System.currentTimeMillis());
         liveHorse.update();
-        horse.getWorld().dropItem(horse.getLocation(), poopItem());
+
     }
 
     private void handlePee(EquineLiveHorse liveHorse) {
         AbstractHorse horse = liveHorse.getHorse();
         liveHorse.setLastPee(System.currentTimeMillis());
         liveHorse.update();
-        horse.getWorld().dropItem(horse.getLocation(), peeItem());
+
     }
 
-    private ItemStack poopItem() {
-        ItemStack itemStack = new ItemBuilder(HeadUtils.getItemHead("1682"))
-                .name("&6Poop")
-                .build();
+    private void horsePoop(AbstractHorse horse) {
+        Location horseLoc = horse.getLocation();
+        World world = horseLoc.getWorld();
+        int radius = 2;
 
-        NBT.modify(itemStack, NBT -> {
-            NBT.setBoolean(Keys.IS_EXPERIENCE_ITEM.getKey(), true);
-            NBT.setBoolean(Keys.IS_EXPERIENCE_PROCESSED.getKey(), false);
-        });
+        // Search for nearest air block on top of solid ground
+        for (int y = -1; y <= 1; y++) {
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    Location check = horseLoc.clone().add(dx, y, dz);
+                    Block ground = check.getBlock();
+                    Block above = check.clone().add(0, 1, 0).getBlock();
 
-        return itemStack;
-    }
+                    if (!ground.getType().isSolid()) continue;
+                    if (!above.getType().isAir()) continue;
 
-    private ItemStack peeItem() {
-        ItemStack itemStack = new ItemBuilder(Material.YELLOW_CARPET)
-                .name("&6Pee")
-                .build();
+                    // Place poop block here - Option 1: Yellow Carpet
+                    above.setType(Material.YELLOW_CARPET);
 
-        NBT.modify(itemStack, NBT -> {
-            NBT.setBoolean(Keys.IS_EXPERIENCE_ITEM.getKey(), true);
-            NBT.setBoolean(Keys.IS_EXPERIENCE_PROCESSED.getKey(), false);
-    });
-
-        return itemStack;
+                    return;
+                }
+            }
+        }
     }
 }
