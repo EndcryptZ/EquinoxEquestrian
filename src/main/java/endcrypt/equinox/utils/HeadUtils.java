@@ -1,14 +1,15 @@
 package endcrypt.equinox.utils;
 
-import com.mojang.authlib.GameProfile;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import java.lang.reflect.Field;
 
 public class HeadUtils {
 
@@ -21,29 +22,26 @@ public class HeadUtils {
     }
 
 
-    public static void copyHeadTextureToBlock(Block block, ItemStack headItem) {
-        // Ensure block is correct type
+    public static void placeHeadFromHDB(Location location, String id) {
+        HeadDatabaseAPI api = new HeadDatabaseAPI();
+        if (id == null || id.isEmpty()) id = "7280";
+
+        ItemStack head = api.getItemHead(id);
+        if (head == null || head.getType() != Material.PLAYER_HEAD) return;
+
+        Block block = location.getBlock();
         block.setType(Material.PLAYER_HEAD);
-        if (!(block.getState() instanceof Skull)) return;
-        if (!(headItem.getItemMeta() instanceof SkullMeta)) return;
 
-        SkullMeta skullMeta = (SkullMeta) headItem.getItemMeta();
-        Skull skull = (Skull) block.getState();
+        BlockState state = block.getState();
+        if (!(state instanceof Skull skull)) return;
 
-        try {
-            // Get GameProfile from SkullMeta
-            Field metaProfileField = skullMeta.getClass().getDeclaredField("profile");
-            metaProfileField.setAccessible(true);
-            GameProfile profile = (GameProfile) metaProfileField.get(skullMeta);
-
-            // Set it into the Skull block
-            Field blockProfileField = skull.getClass().getDeclaredField("profile");
-            blockProfileField.setAccessible(true);
-            blockProfileField.set(skull, profile);
-
-            skull.update();
-        } catch (Exception e) {
-            e.printStackTrace();
+        ItemMeta meta = head.getItemMeta();
+        if (meta instanceof SkullMeta skullMeta) {
+            PlayerProfile profile = skullMeta.getPlayerProfile();
+            if (profile != null) {
+                skull.setPlayerProfile(profile);
+                skull.update(true, false);
+            }
         }
     }
 }

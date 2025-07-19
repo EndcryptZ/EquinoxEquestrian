@@ -19,8 +19,8 @@ public class EquineDebugCommand {
 
     private void registerCommands() {
         new CommandAPICommand("equinedebug")
-                .withSubcommand(new CommandAPICommand("debugplayerhead"))
-                .executesPlayer(this::debugPlayerHead)
+                .withSubcommand(new CommandAPICommand("debugplayerhead")
+                        .executesPlayer(this::debugPlayerHead))
 
                 .register();
     }
@@ -28,9 +28,6 @@ public class EquineDebugCommand {
     private void debugPlayerHead(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
 
-        Block playerBlock = player.getTargetBlock(null, 50);
-        ItemStack pooHead = HeadUtils.getItemHead("1682");
-
-        HeadUtils.copyHeadTextureToBlock(playerBlock, pooHead);
+        HeadUtils.placeHeadFromHDB(player.getLocation(), "1682");
     }
 }
