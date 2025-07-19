@@ -17,6 +17,11 @@
       <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="codemc" />
+      <option name="name" value="codemc" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="codemc-repo" />
       <option name="name" value="codemc-repo" />
       <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
@@ -70,6 +75,11 @@
       <option name="id" value="enginehub" />
       <option name="name" value="enginehub" />
       <option name="url" value="https://maven.enginehub.org/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="minecraft-libraries" />
+      <option name="name" value="Minecraft Libraries" />
+      <option name="url" value="https://libraries.minecraft.net/" />
     </remote-repository>
   </component>
 </project>
