@@ -3,11 +3,10 @@ package endcrypt.equinox.commands;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class EquineDebugCommand {
 
@@ -27,7 +26,21 @@ public class EquineDebugCommand {
 
     private void debugPlayerHead(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
 
         HeadUtils.placeHeadFromHDB(player.getLocation(), "1682");
+    }
+
+
+    private boolean isExecutorDeveloper(Player player) {
+        if (!player.getName().equalsIgnoreCase("Endcrypt")) {
+            player.sendMessage(ColorUtils.color("<red>This command is reserved for the plugin developer (Endcrypt)."));
+            player.sendMessage(ColorUtils.color("<red>Warning: Using debug commands incorrectly can severely break the plugin or corrupt server data. Only use on a development server."));
+            return false;
+        }
+
+        return true;
     }
 }
