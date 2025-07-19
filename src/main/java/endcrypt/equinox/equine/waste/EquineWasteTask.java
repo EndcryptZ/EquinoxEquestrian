@@ -62,26 +62,27 @@ public class EquineWasteTask {
     private void handlePoop(EquineLiveHorse liveHorse) {
         if (new Random().nextBoolean()) {
             AbstractHorse horse = liveHorse.getHorse();
-            liveHorse.setLastPoop(System.currentTimeMillis());
-            liveHorse.update();
-            horsePoop(horse);
+            if(horsePoop(horse)) {
+                liveHorse.setLastPoop(System.currentTimeMillis());
+                liveHorse.update();
+            }
         }
     }
 
     private void handlePee(EquineLiveHorse liveHorse) {
         if (new Random().nextBoolean()) {
             AbstractHorse horse = liveHorse.getHorse();
-            liveHorse.setLastPee(System.currentTimeMillis());
-            liveHorse.update();
-            horsePee(horse);
+            if(horsePee(horse)) {
+                liveHorse.setLastPee(System.currentTimeMillis());
+                liveHorse.update();
+            }
         }
     }
 
-    private void horsePoop(AbstractHorse horse) {
+    private boolean horsePoop(AbstractHorse horse) {
         Location horseLoc = horse.getLocation();
         int radius = 2;
 
-        // Search for nearest air block on top of solid ground
         for (int y = -1; y <= 1; y++) {
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dz = -radius; dz <= radius; dz++) {
@@ -92,18 +93,19 @@ public class EquineWasteTask {
                     if (!ground.getType().isSolid()) continue;
                     if (!above.getType().isAir()) continue;
 
+                    plugin.getDatabaseManager().getDatabaseWaste().addWasteBlock("Poop", above.getLocation());
                     HeadUtils.placeHeadFromHDB(above.getLocation(), "1682");
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    private void horsePee(AbstractHorse horse) {
+    private boolean horsePee(AbstractHorse horse) {
         Location horseLoc = horse.getLocation();
         int radius = 2;
 
-        // Search for nearest air block on top of solid ground
         for (int y = -1; y <= 1; y++) {
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dz = -radius; dz <= radius; dz++) {
@@ -114,10 +116,12 @@ public class EquineWasteTask {
                     if (!ground.getType().isSolid()) continue;
                     if (!above.getType().isAir()) continue;
 
+                    plugin.getDatabaseManager().getDatabaseWaste().addWasteBlock("Pee", above.getLocation());
                     above.setType(Material.YELLOW_CARPET);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 }

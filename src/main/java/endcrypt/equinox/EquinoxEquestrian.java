@@ -17,6 +17,7 @@ import endcrypt.equinox.equine.leveling.EquineLevelingListener;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancyListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
+import endcrypt.equinox.equine.waste.EquineWasteListener;
 import endcrypt.equinox.hooks.placeholderapi.Placeholders;
 import endcrypt.equinox.equine.EquineManager;
 import endcrypt.equinox.menu.build.BuildMenuListener;
@@ -115,6 +116,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquinePregnancyListener(this);
         new EquineBreedingInHeatListener(this);
         new EquineLevelingListener(this);
+        new EquineWasteListener(this);
 
     }
 
