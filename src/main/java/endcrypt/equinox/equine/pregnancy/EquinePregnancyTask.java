@@ -45,12 +45,17 @@ public class EquinePregnancyTask {
 
     private void giveBirth(EquineLiveHorse mare) {
         EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
+        EquineLiveHorse partner = getPregnancyPartner(mare);
 
-        equineHorseBuilder.spawnFoal(mare, getPregnancyPartner(mare), mare.getHorse().getLocation(), mare.getOwnerUUID());
+        if (partner != null) {
+            equineHorseBuilder.spawnFoal(mare, partner, mare.getHorse().getLocation(), mare.getOwnerUUID());
+        }
+
         mare.setPregnant(false);
         mare.setPregnancyStartTime(0L);
         mare.setInstantFoal(false);
         mare.update();
+
         plugin.getEquineManager().getEquinePregnancy().remove(mare.getHorse());
     }
 

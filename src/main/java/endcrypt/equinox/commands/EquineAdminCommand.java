@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -68,7 +69,8 @@ public class EquineAdminCommand {
 
                 .withSubcommand(new CommandAPICommand("remove")
                         .withPermission("equinox.cmd.equineadmin.remove")
-                        .executes(this::remove))
+                        .withArguments(new IntegerArgument("range", 1, 10).setOptional(true))
+                        .executesPlayer(this::remove))
 
                 .withSubcommand(new CommandAPICommand("bypass")
                         .withPermission("equinox.cmd.equineadmin.bypass")
@@ -215,8 +217,29 @@ public class EquineAdminCommand {
 
     private void remove(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
+
+        int range = args.get("range") != null ? (int) args.get("range") : 0;
+
+        if (range != 0) {
+            int removed = 0;
+            for (Entity entity : player.getNearbyEntities(range, range, range)) {
+                if (!(entity instanceof AbstractHorse horse)) continue;
+                    if (!EquineUtils.isLivingEquineHorse(horse)) continue;
+
+                plugin.getDatabaseManager().getDatabaseHorses().removeHorse(horse.getUniqueId());
+                horse.remove();
+                removed++;
+            }
+
+            player.sendMessage(ColorUtils.color("<prefix><green>You removed <count> horse(s) within <range> blocks.",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("count", String.valueOf(removed)),
+                    Placeholder.parsed("range", String.valueOf(range))));
+            return;
+        }
+
         AbstractHorse abstractHorse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if(abstractHorse == null) {
+        if (abstractHorse == null) {
             commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to remove!"));
             return;
         }
@@ -228,7 +251,7 @@ public class EquineAdminCommand {
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(abstractHorse.getName())))));
 
         Bukkit.getOnlinePlayers().forEach(eachPlayer -> {
-            if(plugin.getPlayerDataManager().getPlayerData(eachPlayer).getSelectedHorse() == abstractHorse) {
+            if (plugin.getPlayerDataManager().getPlayerData(eachPlayer).getSelectedHorse() == abstractHorse) {
                 plugin.getPlayerDataManager().getPlayerData(eachPlayer).setSelectedHorse(null);
             }
         });
