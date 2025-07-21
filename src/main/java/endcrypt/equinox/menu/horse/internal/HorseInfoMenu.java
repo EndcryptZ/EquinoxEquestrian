@@ -234,6 +234,12 @@ public class    HorseInfoMenu {
                         .name("&c&l&oBack")
                         .lore("&7Click to open your horse list menu")
                         .build()
-        ).withListener(event -> plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, isTrustedHorse));
+        ).withListener((InventoryClickEvent event) -> {
+            if(player != event.getWhoClicked()) {
+                plugin.getHorseMenuManager().getListOrganizerMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorse);
+                return;
+            }
+            plugin.getHorseMenuManager().getHorseListMenu().open(player, listOrganizeType, isTrustedHorse);
+        });
     }
 }
