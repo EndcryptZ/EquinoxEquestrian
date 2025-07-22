@@ -181,8 +181,12 @@ public class    HorseListMenu {
 
 
                 .withListener((InventoryClickEvent event) -> {
-                    Player playerClick = (Player) event.getWhoClicked();
-                    plugin.getHorseMenuManager().getHorseInfoMenu().open(playerClick, equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
+                    if(player != event.getWhoClicked()) {
+                        plugin.getHorseMenuManager().getHorseInfoMenu().openToOther((Player) event.getWhoClicked(), player, equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
+                        return;
+                    }
+
+                    plugin.getHorseMenuManager().getHorseInfoMenu().open(player.getPlayer(), equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
                 });
     }
 

@@ -1,5 +1,7 @@
 package endcrypt.equinox.commands;
 
+import com.maximde.hologramlib.hologram.RenderMode;
+import com.maximde.hologramlib.hologram.TextHologram;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
@@ -7,6 +9,8 @@ import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class EquineDebugCommand {
 
@@ -21,6 +25,9 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("debugplayerhead")
                         .executesPlayer(this::debugPlayerHead))
 
+                .withSubcommand(new CommandAPICommand("debugholo")
+                        .executesPlayer(this::debugHolo))
+
                 .register();
     }
 
@@ -31,6 +38,25 @@ public class EquineDebugCommand {
         }
 
         HeadUtils.placeHeadFromHDB(player.getLocation(), "1682");
+    }
+
+    private void debugHolo(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        String holoId = UUID.randomUUID().toString();
+        TextHologram hologram = new TextHologram(holoId, RenderMode.NEARBY);
+        hologram
+                .setText("This is a test hologram!")
+                .update();
+
+        plugin.getHologramManager().spawn(hologram, player.getLocation().add(0, 1, 0));
+
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            plugin.getHologramManager().remove(hologram);
+        }, 60L);
     }
 
 

@@ -7,6 +7,7 @@ import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.HeadUtils;
+import endcrypt.equinox.utils.HoloUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import org.bukkit.Bukkit;
@@ -93,7 +94,10 @@ public class EquineWasteTask {
                     if (!ground.getType().isSolid()) continue;
                     if (!above.getType().isAir()) continue;
 
+                    String holoId = "Waste" + above.getWorld().getName() + above.getX() + above.getY() + above.getZ();
                     plugin.getDatabaseManager().getDatabaseWaste().addWasteBlock("Poop", above.getLocation());
+                    Location holoLoc = above.getLocation().add(0.5, 1, 0.5);
+                    HoloUtils.createPersistentHolo(holoId, "<gold>Poop", holoLoc);
                     HeadUtils.placeHeadFromHDB(above.getLocation(), "1682");
                     return true;
                 }
@@ -116,7 +120,13 @@ public class EquineWasteTask {
                     if (!ground.getType().isSolid()) continue;
                     if (!above.getType().isAir()) continue;
 
+                    String holoId = "Waste" + above.getWorld().getName() + above.getX() + above.getY() + above.getZ();
                     plugin.getDatabaseManager().getDatabaseWaste().addWasteBlock("Pee", above.getLocation());
+
+                    // Center the hologram by adding (0.5, 1, 0.5)
+                    Location holoLoc = above.getLocation().add(0.5, 1, 0.5);
+                    HoloUtils.createPersistentHolo(holoId, "<yellow>Pee", holoLoc);
+
                     above.setType(Material.YELLOW_CARPET);
                     return true;
                 }

@@ -3,17 +3,23 @@ package endcrypt.equinox.equine.waste;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseWaste;
 import endcrypt.equinox.utils.ColorUtils;
-import org.bukkit.Bukkit;
+import endcrypt.equinox.utils.HoloUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class EquineWasteListener implements Listener {
@@ -34,8 +40,11 @@ public class EquineWasteListener implements Listener {
             return;
         }
 
+
+        Block block = event.getClickedBlock();
+        Location blockLocation = event.getClickedBlock().getLocation();
         DatabaseWaste wasteDatabase = plugin.getDatabaseManager().getDatabaseWaste();
-        if (!wasteDatabase.hasWasteBlock(event.getClickedBlock().getLocation())) return;
+        if (!wasteDatabase.hasWasteBlock(blockLocation)) return;
 
         Player player = event.getPlayer();
         if (!isUsingShovel(event)) {
@@ -43,7 +52,10 @@ public class EquineWasteListener implements Listener {
             return;
         }
 
-        wasteDatabase.removeWasteBlock(event.getClickedBlock().getLocation());
+        String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
+        wasteDatabase.removeWasteBlock(blockLocation);
+        plugin.getHologramManager().remove(holoId);
+        HoloUtils.removePersistentHolo(holoId);
         event.getClickedBlock().setType(Material.AIR);
 
         int exp;
@@ -58,12 +70,37 @@ public class EquineWasteListener implements Listener {
 
     @EventHandler
     public void onWasteBlockBreak(BlockBreakEvent event) {
+        Block above = event.getBlock().getRelative(BlockFace.UP);
+        if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(above.getLocation())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ColorUtils.color("<red>Please clean the horse waste above before breaking this block."));
+            return;
+        }
+
+
         if (!plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(event.getBlock().getLocation())) return;
+
 
         event.setCancelled(true);
         event.getPlayer().sendMessage(ColorUtils.color("<red>Use a shovel and right-click to clean up horse waste."));
     }
 
+    @EventHandler
+    public void onExplosion(EntityExplodeEvent event) {
+        List<Block> toRemove = new ArrayList<>();
+
+        for (Block block : event.blockList()) {
+            Block above = block.getRelative(BlockFace.UP);
+
+            if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(above.getLocation())) {
+                toRemove.add(block);
+                toRemove.add(above);
+            }
+        }
+
+        // prevent the blocks from being affected
+        event.blockList().removeAll(toRemove);
+    }
 
     private boolean isUsingShovel(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return false;

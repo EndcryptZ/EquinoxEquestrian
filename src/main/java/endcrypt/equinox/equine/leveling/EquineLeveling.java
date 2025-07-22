@@ -26,7 +26,6 @@ public class EquineLeveling {
             player.sendMessage(ColorUtils.color("<prefix><green>You gained <exp> exp!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
                     Placeholder.parsed("exp", String.valueOf(amount))));
-            // DHAPI.createHologram("Test", location);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         }
 
