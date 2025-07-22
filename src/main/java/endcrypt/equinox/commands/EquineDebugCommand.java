@@ -1,12 +1,15 @@
 package endcrypt.equinox.commands;
 
-import com.maximde.hologramlib.hologram.RenderMode;
-import com.maximde.hologramlib.hologram.TextHologram;
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -41,21 +44,28 @@ public class EquineDebugCommand {
     }
 
     private void debugHolo(CommandSender commandSender, CommandArguments args) {
+        HologramManager hologramManager = FancyHologramsPlugin.get().getHologramManager();
         Player player = (Player) commandSender;
         if(!isExecutorDeveloper(player)) {
             return;
         }
 
         String holoId = UUID.randomUUID().toString();
-        TextHologram hologram = new TextHologram(holoId, RenderMode.NEARBY);
-        hologram
-                .setText("This is a test hologram!")
-                .update();
+        TextHologramData textHologramData = new TextHologramData(holoId, player.getLocation().add(0, 1, 0));
+        textHologramData.removeLine(0);
+        textHologramData.addLine("This is a test hologram.");
+        textHologramData.setPersistent(false);
+        textHologramData.setTextUpdateInterval(10);
 
-        plugin.getHologramManager().spawn(hologram, player.getLocation().add(0, 1, 0));
+        Hologram hologram = hologramManager.create(textHologramData);
+        hologramManager.addHologram(hologram);
+
+        hologram.queueUpdate();
+        hologram.forceUpdate();
+
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            plugin.getHologramManager().remove(hologram);
+            hologramManager.removeHologram(hologram);
         }, 60L);
     }
 

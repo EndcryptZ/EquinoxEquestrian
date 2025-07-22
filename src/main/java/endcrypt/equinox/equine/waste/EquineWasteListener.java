@@ -54,7 +54,6 @@ public class EquineWasteListener implements Listener {
 
         String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
         wasteDatabase.removeWasteBlock(blockLocation);
-        plugin.getHologramManager().remove(holoId);
         HoloUtils.removePersistentHolo(holoId);
         event.getClickedBlock().setType(Material.AIR);
 

@@ -2,8 +2,6 @@ package endcrypt.equinox;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.maximde.hologramlib.HologramLib;
-import com.maximde.hologramlib.hologram.HologramManager;
 import com.samjakob.spigui.SpiGUI;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
@@ -50,7 +48,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private Economy econ;
     private BedrockBuildForm bedrockBuildForm;
     private FloodgateApi floodgateApi;
-    private HologramManager hologramManager;
 
     private BuildMenuManager buildMenuManager;
     private HorseMenuManager horseMenuManager;
@@ -70,13 +67,11 @@ public final class EquinoxEquestrian extends JavaPlugin {
         CommandAPI.onLoad(new CommandAPIBukkitConfig(this)
                 .shouldHookPaperReload(true)
         );
-        HologramLib.onLoad(this);
     }
 
     @Override
     public void onEnable() {
         CommandAPI.onEnable();
-        this.initializeHologramLib();
         this.initializeInstances();
         this.initializeListeners();
         this.setupEconomy();
@@ -169,14 +164,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
         // Initialize the DatabaseManager
         databaseManager = new DatabaseManager(this);
     }
-
-    private void initializeHologramLib() {
-        HologramLib.getManager().ifPresentOrElse(
-                manager -> hologramManager = manager,
-                () -> getLogger().severe("Failed to initialize HologramLib manager.")
-        );
-    }
-
 
     private void loadPlaceholderAPI() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
