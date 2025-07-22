@@ -14,12 +14,12 @@ public class DatabaseWaste {
     private final EquinoxEquestrian plugin;
 
     private final Map<String, String> BASE_SCHEMA = new LinkedHashMap<>() {{
-        put("type", "VARCHAR(10)");           // Stores either 'Poo' or 'Pee'
-        put("x", "INT");                      // X coordinate
-        put("y", "INT");                      // Y coordinate
-        put("z", "INT");                      // Z coordinate
-        put("world", "VARCHAR(50)");          // World name (e.g., "world", "world_nether")
-        put("PRIMARY KEY", "(x, y, z, world)"); // Unique block location per world
+        put("type", "TEXT");                    // 'Poo' or 'Pee'
+        put("x", "INTEGER");                    // X coordinate
+        put("y", "INTEGER");                    // Y coordinate
+        put("z", "INTEGER");                    // Z coordinate
+        put("world", "TEXT");                  // World name
+        put("PRIMARY KEY", "(x, y, z, world)"); // Composite key
     }};
 
     public DatabaseWaste(EquinoxEquestrian plugin) {
