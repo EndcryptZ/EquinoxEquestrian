@@ -7,6 +7,7 @@ import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import endcrypt.equinox.bedrock.menu.BedrockBuildForm;
 import endcrypt.equinox.commands.CommandManager;
+import endcrypt.equinox.config.ConfigManager;
 import endcrypt.equinox.database.DatabaseManager;
 import endcrypt.equinox.equine.breeding.EquineBreedingListener;
 import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeatListener;
@@ -57,6 +58,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private DatabaseManager databaseManager;
     private CommandManager commandManager;
     private TokenManager tokenManager;
+    private ConfigManager configManager;
 
     @Setter
     private boolean databaseLoaded = false;
@@ -88,7 +90,9 @@ public final class EquinoxEquestrian extends JavaPlugin {
     }
 
     private void initializeInstances() {
-        this.initializeDatabase();
+        configManager = new ConfigManager(this);
+        databaseManager = new DatabaseManager(this);
+
         floodgateApi = FloodgateApi.getInstance();
         spiGUI = new SpiGUI(this);
         bedrockBuildForm = new BedrockBuildForm(this);
@@ -150,19 +154,6 @@ public final class EquinoxEquestrian extends JavaPlugin {
         } catch (SQLException e) {
             this.getLogger().severe("Failed to close database connection: " + e.getMessage());
         }
-    }
-
-    private void initializeDatabase() {
-        // Ensure the plugin's data folder exists
-        if (!getDataFolder().exists()) {
-            getDataFolder().mkdirs();
-        }
-
-        // Save the default config if it doesn't exist
-        saveDefaultConfig();
-
-        // Initialize the DatabaseManager
-        databaseManager = new DatabaseManager(this);
     }
 
     private void loadPlaceholderAPI() {
