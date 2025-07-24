@@ -25,7 +25,7 @@ public class DatabaseManager implements Listener {
         this.plugin = plugin;
 
         try {
-            ConfigurationSection dbConfig = plugin.getConfig().getConfigurationSection("database");
+            ConfigurationSection dbConfig = plugin.getConfigManager().getConfigMain().getDatabaseSection();
             if (dbConfig == null) {
                 throw new SQLException("Database configuration section not found in config.yml");
             }
