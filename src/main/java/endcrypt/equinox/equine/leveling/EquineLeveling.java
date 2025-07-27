@@ -15,6 +15,7 @@ public class EquineLeveling {
     private final EquinoxEquestrian plugin;
     public EquineLeveling(EquinoxEquestrian plugin) {
         this.plugin = plugin;
+        new EquineLevelingTask(plugin);
     }
 
     public void addExp(Player player, double amount, boolean notify) {
@@ -33,6 +34,7 @@ public class EquineLeveling {
         }
 
         processLevelUp(player);
+        syncExpBar(player);
     }
 
     public void setExp(Player player, double amount) {
@@ -41,6 +43,7 @@ public class EquineLeveling {
         plugin.getPlayerDataManager().getPlayerDataMap().put(player, playerData);
 
         processLevelUp(player);
+        syncExpBar(player);
     }
 
     public void setLevel(Player player, int level) {
@@ -48,6 +51,7 @@ public class EquineLeveling {
         playerData.setLevel(level);
         playerData.setExp(getTotalExpToReachLevel(level));
         plugin.getPlayerDataManager().getPlayerDataMap().put(player, playerData);
+        syncExpBar(player);
     }
 
     public void processLevelUp(Player player) {
@@ -98,5 +102,38 @@ public class EquineLeveling {
         return totalExp;
     }
 
+    public   void syncExpBar(Player player) {
+        PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        double totalExp = playerData.getExp();
 
+        // recalculate level based on total exp
+        int calculatedLevel = 1;
+        for (int i = 2; i <= 150; i++) {
+            double requiredExp = getTotalExpToReachLevel(i);
+            if (totalExp < requiredExp) {
+                break;
+            }
+            calculatedLevel = i;
+        }
+
+        // update player data level if changed
+        if (playerData.getLevel() != calculatedLevel) {
+            playerData.setLevel(calculatedLevel);
+            plugin.getPlayerDataManager().getPlayerDataMap().put(player, playerData);
+        }
+
+        double currentLevelExp = getTotalExpToReachLevel(calculatedLevel);
+        double nextLevelExp = getTotalExpToReachLevel(calculatedLevel + 1);
+
+        double progress = 0.0;
+        if (nextLevelExp > currentLevelExp) {
+            progress = (totalExp - currentLevelExp) / (nextLevelExp - currentLevelExp);
+        }
+
+        if (progress < 0.0) progress = 0.0;
+        if (progress > 1.0) progress = 1.0;
+
+        player.setLevel(calculatedLevel);
+        player.setExp((float) progress);
+    }
 }
