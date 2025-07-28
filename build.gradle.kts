@@ -19,6 +19,7 @@ repositories {
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://repo.opencollab.dev/main/")
     maven("https://maven.enginehub.org/repo/")
+    maven("https://repo.fancyinnovations.com/releases")
 }
 
 dependencies {
@@ -35,6 +36,7 @@ dependencies {
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("de.oliver:FancyHolograms:2.7.0")
 
     implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
 
