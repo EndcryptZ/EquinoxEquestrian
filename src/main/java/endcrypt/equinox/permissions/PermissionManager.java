@@ -15,9 +15,8 @@ public class PermissionManager {
         for (PermissionsEnum permissionEnum : PermissionsEnum.values()) {
             String basePermission = permissionEnum.getPermission();
 
-            // If it's the PLACE_LIMIT permission, register numbered permission nodes (bounty.place.1 to bounty.place.100)
             if (permissionEnum == PermissionsEnum.PERMISSION_HORSE_LIMIT) {
-                for (int i = 1; i <= 100; i++) {
+                for (int i = 1; i <= 200; i++) {
                     String numberedPermission = basePermission + "." + i;
                     if (pm.getPermission(numberedPermission) == null) {
                         pm.addPermission(new Permission(numberedPermission));
