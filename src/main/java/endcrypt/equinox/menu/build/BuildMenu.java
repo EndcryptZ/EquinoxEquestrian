@@ -406,6 +406,19 @@ public class BuildMenu implements Listener {
         )
                 .withListener((InventoryClickEvent event) -> {
 
+                    int playerHorseAmount = plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size();
+                    int horsesAllowed = plugin.getPermissionManager().getMaxHorsesAllowed(player);
+                    if(playerHorseAmount >= horsesAllowed) {
+                        player.closeInventory();
+                        player.sendMessage(ColorUtils.color(
+                                "<prefix><red>You’ve reached the maximum number of horse slots! (<amount>/<max_amount>)",
+                                Placeholder.parsed("prefix", plugin.getPrefix()),
+                                Placeholder.parsed("amount", String.valueOf(playerHorseAmount)),
+                                Placeholder.parsed("max_amount", String.valueOf(horsesAllowed))
+                        ));
+                        return;
+                    }
+
                     List<String> missingAttributes = new ArrayList<>();
 
                     if (equineHorse.getName().equalsIgnoreCase("")) missingAttributes.add("Name");
