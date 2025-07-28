@@ -25,6 +25,7 @@ import endcrypt.equinox.menu.build.BuildMenuListener;
 import endcrypt.equinox.menu.build.BuildMenuManager;
 import endcrypt.equinox.menu.horse.HorseMenuListener;
 import endcrypt.equinox.menu.horse.HorseMenuManager;
+import endcrypt.equinox.permissions.PermissionManager;
 import endcrypt.equinox.player.data.PlayerDataListener;
 import endcrypt.equinox.player.data.PlayerDataManager;
 import endcrypt.equinox.token.TokenManager;
@@ -59,6 +60,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private CommandManager commandManager;
     private TokenManager tokenManager;
     private ConfigManager configManager;
+    private PermissionManager permissionManager;
 
     @Setter
     private boolean databaseLoaded = false;
@@ -104,6 +106,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         playerDataManager = new PlayerDataManager(this);
         commandManager = new CommandManager(this);
         tokenManager = new TokenManager(this);
+        permissionManager = new PermissionManager(this);
     }
 
     private void initializeListeners() {
