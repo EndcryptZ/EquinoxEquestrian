@@ -1,7 +1,6 @@
-package endcrypt.equinox.utils;
+package endcrypt.equinox.hologram;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import endcrypt.equinox.EquinoxEquestrian;
@@ -9,12 +8,13 @@ import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Optional;
 import java.util.UUID;
 
-public class HoloUtils {
+public class HologramManager {
 
-    public static void createPersistentHolo(String id, String text, Location location) {
-        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+    public Hologram createPersistentHolo(String id, String text, Location location) {
+        de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
 
         TextHologramData textHologram = new TextHologramData(id, location);
 
@@ -28,21 +28,39 @@ public class HoloUtils {
 
         hologram.forceUpdate();
         hologram.queueUpdate();
+        return hologram;
     }
 
-    public static void removePersistentHolo(String id) {
-        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
-        for (Hologram hologram : manager.getHolograms()) {
-            if(hologram.getName().equals(id)) {
-                manager.removeHologram(hologram);
-                break;
-            }
-        }
+    public Hologram createTemporaryHolo(String id, String text, Location location) {
+        de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+
+        TextHologramData textHologram = new TextHologramData(id, location);
+
+        textHologram.removeLine(0);
+        textHologram.addLine(text);
+        textHologram.setPersistent(false);
+        textHologram.setTextUpdateInterval(10);
+
+        Hologram hologram = manager.create(textHologram);
+        manager.addHologram(hologram);
+
+        hologram.forceUpdate();
+        hologram.queueUpdate();
+
+        return hologram;
+    }
+
+    public boolean removeHolo(String id) {
+        de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+        Optional<Hologram> hologram = manager.getHologram(id);
+        if (hologram.isEmpty()) return false;
+        manager.removeHologram(hologram.get());
+        return true;
 
     }
 
-    public static void createFlyoutHolo(String text, Location location) {
-        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+    public void createFlyoutHolo(String text, Location location) {
+        de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
 
         TextHologramData textHologram = new TextHologramData(UUID.randomUUID().toString(), location);
 
@@ -85,4 +103,6 @@ public class HoloUtils {
             }
         }.runTaskTimer(EquinoxEquestrian.instance, 0L, 1L); // this runs the task
     }
+
+
 }

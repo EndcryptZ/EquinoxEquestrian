@@ -3,7 +3,6 @@ package endcrypt.equinox.equine.waste;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseWaste;
 import endcrypt.equinox.utils.ColorUtils;
-import endcrypt.equinox.utils.HoloUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -54,7 +53,7 @@ public class EquineWasteListener implements Listener {
 
         String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
         wasteDatabase.removeWasteBlock(blockLocation);
-        HoloUtils.removePersistentHolo(holoId);
+        plugin.getHologramManager().removeHolo(holoId);
         event.getClickedBlock().setType(Material.AIR);
 
         int exp;

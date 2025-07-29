@@ -20,6 +20,7 @@ import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
 import endcrypt.equinox.equine.tokens.EquineTokensListener;
 import endcrypt.equinox.equine.waste.EquineWasteListener;
+import endcrypt.equinox.hologram.HologramManager;
 import endcrypt.equinox.hooks.placeholderapi.Placeholders;
 import endcrypt.equinox.equine.EquineManager;
 import endcrypt.equinox.menu.build.BuildMenuListener;
@@ -62,6 +63,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private TokenManager tokenManager;
     private ConfigManager configManager;
     private PermissionManager permissionManager;
+    private HologramManager hologramManager;
 
     @Setter
     private boolean databaseLoaded = false;
@@ -108,6 +110,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         commandManager = new CommandManager(this);
         tokenManager = new TokenManager(this);
         permissionManager = new PermissionManager(this);
+        hologramManager = new HologramManager();
     }
 
     private void initializeListeners() {

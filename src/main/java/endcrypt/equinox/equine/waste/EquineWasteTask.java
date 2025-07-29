@@ -1,23 +1,15 @@
 package endcrypt.equinox.equine.waste;
 
-import com.samjakob.spigui.item.ItemBuilder;
-import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
-import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.HeadUtils;
-import endcrypt.equinox.utils.HoloUtils;
 import endcrypt.equinox.utils.TimeUtils;
-import me.arcaniax.hdb.api.HeadDatabaseAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
 import org.bukkit.entity.AbstractHorse;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -97,7 +89,7 @@ public class EquineWasteTask {
                     String holoId = "Waste" + above.getWorld().getName() + above.getX() + above.getY() + above.getZ();
                     plugin.getDatabaseManager().getDatabaseWaste().addWasteBlock("Poop", above.getLocation());
                     Location holoLoc = above.getLocation().add(0.5, 1, 0.5);
-                    HoloUtils.createPersistentHolo(holoId, "<gold>Poop", holoLoc);
+                    plugin.getHologramManager().createTemporaryHolo(holoId, "<gold>Poop", holoLoc);
                     HeadUtils.placeHeadFromHDB(above.getLocation(), "1682");
                     return true;
                 }
@@ -125,7 +117,7 @@ public class EquineWasteTask {
 
                     // Center the hologram by adding (0.5, 1, 0.5)
                     Location holoLoc = above.getLocation().add(0.5, 1, 0.5);
-                    HoloUtils.createPersistentHolo(holoId, "<yellow>Pee", holoLoc);
+                    plugin.getHologramManager().createTemporaryHolo(holoId, "<yellow>Pee", holoLoc);
 
                     above.setType(Material.YELLOW_CARPET);
                     return true;

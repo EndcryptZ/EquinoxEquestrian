@@ -3,7 +3,6 @@ package endcrypt.equinox.equine.leveling;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.player.data.PlayerData;
 import endcrypt.equinox.utils.ColorUtils;
-import endcrypt.equinox.utils.HoloUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -29,7 +28,7 @@ public class EquineLeveling {
             Vector direction = eyeLocation.getDirection().normalize();
             Location holoLocation = eyeLocation.add(direction.multiply(1)); // 1 block in front
 
-            HoloUtils.createFlyoutHolo("<green>+" + amount + " EXP!", holoLocation);
+            plugin.getHologramManager().createFlyoutHolo("<green>+" + amount + " EXP!", holoLocation);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         }
 
