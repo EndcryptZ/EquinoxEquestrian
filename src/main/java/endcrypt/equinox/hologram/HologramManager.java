@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import endcrypt.equinox.EquinoxEquestrian;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,6 +23,8 @@ public class HologramManager {
         textHologram.addLine(text);
         textHologram.setPersistent(true);
         textHologram.setTextUpdateInterval(10);
+        textHologram.setSeeThrough(true);
+
 
         Hologram hologram = manager.create(textHologram);
         manager.addHologram(hologram);
@@ -42,6 +45,7 @@ public class HologramManager {
         textHologram.addLine(text);
         textHologram.setPersistent(false);
         textHologram.setTextUpdateInterval(10);
+        textHologram.setSeeThrough(true);
 
         Hologram hologram = manager.create(textHologram);
         manager.addHologram(hologram);
@@ -70,6 +74,7 @@ public class HologramManager {
         textHologram.removeLine(0);
         textHologram.addLine(text);
         textHologram.setTextUpdateInterval(10);
+        textHologram.setSeeThrough(true);
 
         Hologram hologram = manager.create(textHologram);
         manager.addHologram(hologram);
