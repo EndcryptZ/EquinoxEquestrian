@@ -11,6 +11,9 @@ import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.equine.attributes.Trait;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
@@ -67,7 +70,8 @@ public class    HorseInfoMenu {
                     AbstractHorse abstractHorse = EquineUtils.findHorseByUuidAndLocation(horse.getUuid(), horse.getLastLocation());
 
                     if(abstractHorse == null) {
-                        player.sendMessage(ColorUtils.color("<red>Horse '" + horse.getName() + "' not found. The horse has been permanently removed from the database."));
+                        player.sendMessage(ColorUtils.color("<red>Horse '<horse>' not found. The horse has been permanently removed from the database.",
+                                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(horse.getName())))));
                         plugin.getDatabaseManager().getDatabaseHorses().removeHorse(horse.getUuid());
                         player.closeInventory();
                         return;
