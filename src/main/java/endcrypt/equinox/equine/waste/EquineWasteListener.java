@@ -14,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
@@ -98,6 +99,20 @@ public class EquineWasteListener implements Listener {
 
         // prevent the blocks from being affected
         event.blockList().removeAll(toRemove);
+    }
+
+    // Hologram Loader
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        plugin.getDatabaseManager().getDatabaseWaste().getPeeAndPooLocationsInChunk(event.getChunk()).forEach(location -> {
+            plugin.getLogger().info("Trying to load waste holo at " + location);
+            Block block = location.getBlock();
+            Location blockLocation = block.getLocation();
+            String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
+            String holoText = block.getType().equals(Material.YELLOW_CARPET) ? "<yellow>Pee" : "<gold>Poop";
+            Location holoLoc = block.getLocation().add(0.5, 1, 0.5);
+            plugin.getHologramManager().createTemporaryHolo(holoId, holoText, holoLoc);
+        });
     }
 
     private boolean isUsingShovel(PlayerInteractEvent event) {
