@@ -36,7 +36,6 @@ dependencies {
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("de.oliver:FancyHolograms:2.7.0")
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.9.6")
 
     implementation(platform("com.intellectualsites.bom:bom-newest:1.52"))
