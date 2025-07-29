@@ -1,12 +1,14 @@
 package endcrypt.equinox.commands;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
-import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -41,18 +43,28 @@ public class EquineDebugCommand {
     }
 
     private void debugHolo(CommandSender commandSender, CommandArguments args) {
+        HologramManager hologramManager = FancyHologramsPlugin.get().getHologramManager();
         Player player = (Player) commandSender;
         if(!isExecutorDeveloper(player)) {
             return;
         }
 
         String holoId = UUID.randomUUID().toString();
-        Hologram hologram = DHAPI.createHologram(holoId, player.getLocation().add(0, 1, 0));
-        DHAPI.setHologramLine(hologram, 0, 0, "This is a test hologram!");
+        TextHologramData textHologramData = new TextHologramData(holoId, player.getLocation().add(0, 1, 0));
+        textHologramData.removeLine(0);
+        textHologramData.addLine("This is a test hologram.");
+        textHologramData.setPersistent(false);
+        textHologramData.setTextUpdateInterval(10);
+
+        Hologram hologram = hologramManager.create(textHologramData);
+        hologramManager.addHologram(hologram);
+
+        hologram.queueUpdate();
+        hologram.forceUpdate();
 
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            DHAPI.removeHologram(holoId);
+            hologramManager.removeHologram(hologram);
         }, 60L);
     }
 

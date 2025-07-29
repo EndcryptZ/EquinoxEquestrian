@@ -1,8 +1,10 @@
 package endcrypt.equinox.utils;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import endcrypt.equinox.EquinoxEquestrian;
-import eu.decentsoftware.holograms.api.DHAPI;
-import eu.decentsoftware.holograms.api.holograms.Hologram;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -12,19 +14,48 @@ import java.util.UUID;
 public class HoloUtils {
 
     public static void createPersistentHolo(String id, String text, Location location) {
+        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
 
-        Hologram hologram = DHAPI.createHologram(id, location, true);
-        DHAPI.setHologramLine(hologram, 0, 0, text);
+        TextHologramData textHologram = new TextHologramData(id, location);
+
+        textHologram.removeLine(0);
+        textHologram.addLine(text);
+        textHologram.setPersistent(true);
+        textHologram.setTextUpdateInterval(10);
+
+        Hologram hologram = manager.create(textHologram);
+        manager.addHologram(hologram);
+
+        hologram.forceUpdate();
+        hologram.queueUpdate();
     }
 
     public static void removePersistentHolo(String id) {
-        DHAPI.removeHologram(id);
+        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+        for (Hologram hologram : manager.getHolograms()) {
+            if(hologram.getName().equals(id)) {
+                manager.removeHologram(hologram);
+                break;
+            }
+        }
+
     }
 
     public static void createFlyoutHolo(String text, Location location) {
-        String id = UUID.randomUUID().toString();
-        Hologram hologram = DHAPI.createHologram(id, location);
-        DHAPI.setHologramLine(hologram, 0, 0, text);
+        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+
+        TextHologramData textHologram = new TextHologramData(UUID.randomUUID().toString(), location);
+
+        textHologram.setPersistent(false);
+        textHologram.removeLine(0);
+        textHologram.addLine(text);
+        textHologram.setTextUpdateInterval(10);
+
+        Hologram hologram = manager.create(textHologram);
+        manager.addHologram(hologram);
+
+        hologram.forceUpdate();
+        hologram.queueUpdate();
 
         // Animation config
         int duration = 40; // total ticks (1 second)
@@ -37,15 +68,17 @@ public class HoloUtils {
             @Override
             public void run() {
                 if (ticks >= duration) {
-                    DHAPI.removeHologram(id);
+                    manager.removeHologram(hologram);
                     cancel(); // this stops the task
                     return;
                 }
 
-                Location current = hologram.getLocation();
+                Location current = textHologram.getLocation();
                 if (current != null) {
                     current.add(0, step, 0);
-                    hologram.setLocation(current);
+                    textHologram.setLocation(current);
+                    hologram.forceUpdate();
+                    hologram.queueUpdate();
                 }
 
                 ticks++;
