@@ -119,33 +119,32 @@ public class DatabaseWaste {
     }
 
     public List<Location> getPeeAndPooLocationsInChunk(Chunk chunk) {
+        List<Location> locations = new ArrayList<>();
+        String sql = "SELECT x, y, z FROM EQUINE_WASTE_BLOCKS WHERE world = ? AND x BETWEEN ? AND ? AND z BETWEEN ? AND ?";
+
         World world = chunk.getWorld();
         int minX = chunk.getX() << 4;
         int minZ = chunk.getZ() << 4;
         int maxX = minX + 15;
         int maxZ = minZ + 15;
 
-        List<Location> locations = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, world.getName());
+            ps.setInt(2, minX);
+            ps.setInt(3, maxX);
+            ps.setInt(4, minZ);
+            ps.setInt(5, maxZ);
 
-        try (Connection conn = connection;
-             PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT x, y, z FROM pee_poo_locations WHERE world = ? AND x BETWEEN ? AND ? AND z BETWEEN ? AND ?"
-             )) {
-            stmt.setString(1, world.getName());
-            stmt.setInt(2, minX);
-            stmt.setInt(3, maxX);
-            stmt.setInt(4, minZ);
-            stmt.setInt(5, maxZ);
-
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                int x = rs.getInt("x");
-                int y = rs.getInt("y");
-                int z = rs.getInt("z");
-                locations.add(new Location(world, x, y, z));
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    int x = rs.getInt("x");
+                    int y = rs.getInt("y");
+                    int z = rs.getInt("z");
+                    locations.add(new Location(world, x, y, z));
+                }
             }
         } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to load pee/poo locations for chunk " + chunk, e);
+            plugin.getLogger().severe("Failed to load pee/poo locations for chunk: " + e.getMessage());
         }
 
         return locations;
