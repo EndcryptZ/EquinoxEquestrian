@@ -34,6 +34,8 @@ public class HologramManager {
     public Hologram createTemporaryHolo(String id, String text, Location location) {
         de.oliver.fancyholograms.api.HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
 
+        if(manager.getHologram(id).isPresent()) manager.getHologram(id).get();
+
         TextHologramData textHologram = new TextHologramData(id, location);
 
         textHologram.removeLine(0);
