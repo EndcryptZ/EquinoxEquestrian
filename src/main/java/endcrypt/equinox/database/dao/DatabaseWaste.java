@@ -2,11 +2,16 @@ package endcrypt.equinox.database.dao;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.DatabaseUtils;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class DatabaseWaste {
 
@@ -111,5 +116,38 @@ public class DatabaseWaste {
             plugin.getLogger().severe("Failed to check waste block: " + e.getMessage());
             return false;
         }
+    }
+
+    public List<Location> getPeeAndPooLocationsInChunk(Chunk chunk) {
+        World world = chunk.getWorld();
+        int minX = chunk.getX() << 4;
+        int minZ = chunk.getZ() << 4;
+        int maxX = minX + 15;
+        int maxZ = minZ + 15;
+
+        List<Location> locations = new ArrayList<>();
+
+        try (Connection conn = connection;
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT x, y, z FROM pee_poo_locations WHERE world = ? AND x BETWEEN ? AND ? AND z BETWEEN ? AND ?"
+             )) {
+            stmt.setString(1, world.getName());
+            stmt.setInt(2, minX);
+            stmt.setInt(3, maxX);
+            stmt.setInt(4, minZ);
+            stmt.setInt(5, maxZ);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int x = rs.getInt("x");
+                int y = rs.getInt("y");
+                int z = rs.getInt("z");
+                locations.add(new Location(world, x, y, z));
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to load pee/poo locations for chunk " + chunk, e);
+        }
+
+        return locations;
     }
 }
