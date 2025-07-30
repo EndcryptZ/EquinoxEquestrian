@@ -51,9 +51,7 @@ public enum Keys {
     LAST_PEE("EQUINE_LAST_PEE", System.currentTimeMillis()),
     LAST_POOP("EQUINE_LAST_POOP", System.currentTimeMillis()),
 
-    // Experience Item
-    IS_EXPERIENCE_ITEM("EQUINE_IS_EXPERIENCE_ITEM", false),
-    IS_EXPERIENCE_PROCESSED("EQUINE_IS_EXPERIENCE_PROCESSED", false),
+
     ;
 
 

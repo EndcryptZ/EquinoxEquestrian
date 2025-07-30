@@ -210,15 +210,6 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_BREED));
     }
 
-    public static boolean isExperienceItem(ItemStack itemStack) {
-        return NBT.get(itemStack, nbt -> (boolean) nbt.getBoolean(Keys.IS_EXPERIENCE_ITEM.getKey()));
-    }
-
-    public static boolean isExperienceProcessed(ItemStack itemStack) {
-        return NBT.get(itemStack, nbt -> (boolean) nbt.getBoolean(Keys.IS_EXPERIENCE_PROCESSED.getKey()));
-    }
-
-
 
     public static void printEquineNBTData(EquineLiveHorse horse) {
         if (horse == null) return;
