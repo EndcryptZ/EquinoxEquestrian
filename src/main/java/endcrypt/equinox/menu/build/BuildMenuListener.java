@@ -3,14 +3,15 @@ package endcrypt.equinox.menu.build;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.utils.ColorUtils;
-import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -24,13 +25,14 @@ public class BuildMenuListener implements Listener {
     }
 
     // Events
-    @EventHandler
-    public void onPlayerChat(AsyncChatEvent event) {
+    @EventHandler (priority = EventPriority.LOWEST)
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+        final String originalMessage = ColorUtils.stripColor(LegacyComponentSerializer.legacySection().deserialize(event.getMessage()));
         if(!plugin.getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
             return;
         }
 
-        final String originalMessage = ColorUtils.stripColor(event.originalMessage());
+
         if(originalMessage.equalsIgnoreCase("cancel")) {
             plugin.getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
                     plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
@@ -41,18 +43,20 @@ public class BuildMenuListener implements Listener {
         }
 
         if(originalMessage.length() < 2) {
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cName too short! Please keep it above 1 character."));
+            event.getPlayer().sendMessage(ColorUtils.color("<prefix><red>Name too short! Please keep it above 1 character.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
             event.setCancelled(true);
             return;
         }
 
         if(originalMessage.length() > 30) {
-            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cName too long! Please keep it under 16 characters."));
+            event.getPlayer().sendMessage(ColorUtils.color("<prefix><red>Name too long! Please keep it under 16 characters.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
             event.setCancelled(true);
             return;
         }
 
-        plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(LegacyComponentSerializer.legacyAmpersand().serialize(event.message()));
+        plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(LegacyComponentSerializer.legacyAmpersand().serialize(LegacyComponentSerializer.legacySection().deserialize(event.getMessage())));
         plugin.getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
                 plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
         );
@@ -65,7 +69,8 @@ public class BuildMenuListener implements Listener {
         if(!plugin.getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
             return;
         }
-        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getPrefix() + "&cCommands are disabled during Horse Creation!"));
+        event.getPlayer().sendMessage(ColorUtils.color("<prefix><red>Commands are disabled during Horse Creation!",
+                Placeholder.parsed("prefix", plugin.getPrefix())));
         event.setCancelled(true);
     }
 
