@@ -51,9 +51,9 @@ public enum Keys {
     LAST_PEE("EQUINE_LAST_PEE", System.currentTimeMillis()),
     LAST_POOP("EQUINE_LAST_POOP", System.currentTimeMillis()),
 
-
-    ;
-
+    // Food and Thirst
+    HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0),
+    THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0);
 
 
     public final String key;
