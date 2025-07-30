@@ -37,7 +37,7 @@ public class EquineLiveHorse {
     private Height height;
     private List<Trait> traits;
 
-    // Others
+    // Misc
     private UUID uuid;
     private long claimTime;
     private long birthTime;
@@ -50,21 +50,31 @@ public class EquineLiveHorse {
     private boolean isCrossTied;
     private boolean isPublic;
 
+    // In Heat
     private boolean isInHeat;
     private long lastInHeat;
 
+    // Breeding
     private boolean isBreeding;
     private long breedingStartTime;
     private String breedingPartnerUUID;
     private boolean isInstantBreed;
 
+    // Pregnancy
     private boolean isPregnant;
     private long pregnancyStartTime;
     private String pregnancyPartnerUUID;
     private boolean isInstantFoal;
 
+    // Wasting
     private long lastPoop;
     private long lastPee;
+
+    // Hunger
+    private double hungerPercentage;
+
+    // Thirst
+    private double thirstPercentage;
 
     private final AbstractHorse horse;
     
@@ -100,6 +110,8 @@ public class EquineLiveHorse {
         this.breedingPartnerUUID = null;
         this.lastPoop = 0L;
         this.lastPee = 0L;
+        this.hungerPercentage = 100.0;
+        this.thirstPercentage = 100.0;
     }
 
 
@@ -145,6 +157,9 @@ public class EquineLiveHorse {
 
         NBT.getPersistentData(horse, nbt -> this.lastPoop = nbt.getLong(Keys.LAST_POOP.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastPee = nbt.getLong(Keys.LAST_PEE.getKey()));
+
+        NBT.getPersistentData(horse, nbt -> this.hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
@@ -207,6 +222,8 @@ public class EquineLiveHorse {
             nbt.setLong(Keys.LAST_POOP.getKey(), this.lastPoop);
             nbt.setLong(Keys.LAST_PEE.getKey(), this.lastPee);
             nbt.setDouble(Keys.HEIGHT.getKey(), this.height.getHands());
+            nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), this.hungerPercentage);
+            nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), this.thirstPercentage);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {
