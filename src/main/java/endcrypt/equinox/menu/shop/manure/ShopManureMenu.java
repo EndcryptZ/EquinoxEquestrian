@@ -49,11 +49,8 @@ public class ShopManureMenu {
 
         boolean hasEnough = playerManureAmount >= amount;
         List<String> lore = new java.util.ArrayList<>(List.of());
-        String name = "&fSell" + amount;
         if (hasEnough) {
-            name = "&aSell " + amount;
-            lore.add("&aClick to sell " + amount);
-            lore.add("&amanure for $" + amount * 0.5);
+            lore.add("&aClick to sell for $" + amount + ".");
         } else {
             lore.add("&7You don't have enough");
             lore.add("&7manure to sell.");
@@ -61,7 +58,7 @@ public class ShopManureMenu {
 
         return new SGButton(
                 new ItemBuilder(Material.RED_TERRACOTTA)
-                        .name(name)
+                        .name("&fSell " + amount)
                         .lore(lore)
                         .build()
         )
@@ -74,11 +71,8 @@ public class ShopManureMenu {
 
         boolean hasEnough = playerManureAmount > 0;
         List<String> lore = new java.util.ArrayList<>(List.of());
-        String name = "&fSell" + playerManureAmount;
         if (hasEnough) {
-            name = "&aSell " + playerManureAmount;
-            lore.add("&aClick to sell " + playerManureAmount);
-            lore.add("&amanure for $" + playerManureAmount * 0.5);
+            lore.add("&aClick to sell for $" + playerManureAmount + ".");
         } else {
             lore.add("&7You don't have enough");
             lore.add("&7manure to sell.");
@@ -86,7 +80,7 @@ public class ShopManureMenu {
 
         return new SGButton(
                 new ItemBuilder(Material.RED_TERRACOTTA)
-                        .name(name)
+                        .name("&fSell " + playerManureAmount)
                         .lore(lore)
                         .build()
         )
