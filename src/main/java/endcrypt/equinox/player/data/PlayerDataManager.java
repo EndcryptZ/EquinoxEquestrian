@@ -38,6 +38,7 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(null, plugin.getDatabaseManager().getDatabasePlayer().getTokenAmount(player));
             playerData.setLevel(plugin.getDatabaseManager().getDatabasePlayer().getLevel(player));
             playerData.setExp(plugin.getDatabaseManager().getDatabasePlayer().getExp(player));
+            playerData.setManure(plugin.getDatabaseManager().getDatabasePlayer().getManure(player));
 
             playerDataMap.put(player, playerData);
         });
@@ -53,5 +54,6 @@ public class PlayerDataManager {
         plugin.getDatabaseManager().getDatabasePlayer().setTokenAmount(player, playerData.getTokens());
         plugin.getDatabaseManager().getDatabasePlayer().setLevel(player, playerData.getLevel());
         plugin.getDatabaseManager().getDatabasePlayer().setExp(player, playerData.getExp());
+        plugin.getDatabaseManager().getDatabasePlayer().setManure(player, playerData.getManure());
     }
 }
