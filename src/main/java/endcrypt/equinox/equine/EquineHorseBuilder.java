@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.TimeUtils;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -138,6 +139,10 @@ public class EquineHorseBuilder {
             nbt.setDouble(Keys.LAST_LOCATION_X.getKey(), horse.getLocation().getX());
             nbt.setDouble(Keys.LAST_LOCATION_Y.getKey(), horse.getLocation().getY());
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
+
+            // No Instant Waste
+            nbt.setLong(Keys.LAST_PEE.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
+            nbt.setLong(Keys.LAST_POOP.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
         });
 
         plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
