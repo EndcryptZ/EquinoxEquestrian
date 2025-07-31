@@ -5,10 +5,13 @@ import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,6 +32,10 @@ public class EquineDebugCommand {
 
                 .withSubcommand(new CommandAPICommand("debugholo")
                         .executesPlayer(this::debugHolo))
+
+                .withSubcommand(new CommandAPICommand("stresstesthoresesspawn")
+                        .withArguments(new IntegerArgument("count"))
+                        .executesPlayer(this::stressTestHorsesSpawn))
 
                 .register();
     }
@@ -66,6 +73,22 @@ public class EquineDebugCommand {
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             hologramManager.removeHologram(hologram);
         }, 60L);
+    }
+
+    private void stressTestHorsesSpawn(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        if (!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        EquineHorseBuilder equineHorseBuilder = new EquineHorseBuilder(plugin);
+        int count = args.getUnchecked("count");
+
+        Bukkit.broadcastMessage("§c[Warning] §eStress test initiated by " + player.getName() + " - spawning " + count + " horses. Server performance may be affected.");
+
+        for (int i = 0; i < count; i++) {
+            equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse("Stress Test Horse"), false);
+        }
     }
 
 
