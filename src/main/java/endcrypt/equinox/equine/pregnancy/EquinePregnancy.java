@@ -1,7 +1,10 @@
 package endcrypt.equinox.equine.pregnancy;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineUtils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ public class EquinePregnancy {
     public EquinePregnancy(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         new EquinePregnancyTask(plugin);
+        addAllLoadedPregnantHorses();
     }
 
     public void add(AbstractHorse horse) {
@@ -37,5 +41,15 @@ public class EquinePregnancy {
         return pregnantHorses.size();
     }
 
+    private void addAllLoadedPregnantHorses() {
+        for (World world : Bukkit.getWorlds()) {
+            for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
+                if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
+                if(EquineUtils.isHorsePregnant(abstractHorse)) {
+                    pregnantHorses.add(abstractHorse);
+                }
+            }
+        }
+    }
 }

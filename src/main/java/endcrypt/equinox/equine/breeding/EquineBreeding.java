@@ -1,8 +1,12 @@
 package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeat;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ public class EquineBreeding {
         this.plugin = plugin;
         new EquineBreedingTask(plugin);
         breedingInHeat = new EquineBreedingInHeat(plugin);
+        addAllLoadedBreedingHorses();
     }
 
     public void add(AbstractHorse horse) {
@@ -43,5 +48,17 @@ public class EquineBreeding {
         return breedingHorses.size();
     }
 
+    private void addAllLoadedBreedingHorses() {
+        for (World world : Bukkit.getWorlds()) {
+            for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
+                if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
+
+                EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
+                if (equineLiveHorse.isBreeding()) {
+                    breedingHorses.add(abstractHorse);
+                }
+            }
+        }
+    }
 
 }
