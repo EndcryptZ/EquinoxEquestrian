@@ -23,6 +23,7 @@ import endcrypt.equinox.equine.waste.EquineWasteListener;
 import endcrypt.equinox.hologram.HologramManager;
 import endcrypt.equinox.hooks.placeholderapi.Placeholders;
 import endcrypt.equinox.equine.EquineManager;
+import endcrypt.equinox.menu.MenuManager;
 import endcrypt.equinox.menu.build.BuildMenuListener;
 import endcrypt.equinox.menu.build.BuildMenuManager;
 import endcrypt.equinox.menu.horse.HorseMenuListener;
@@ -53,8 +54,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
     private BedrockBuildForm bedrockBuildForm;
     private FloodgateApi floodgateApi;
 
-    private BuildMenuManager buildMenuManager;
-    private HorseMenuManager horseMenuManager;
+    private MenuManager menuManager;
     private EquineManager equineManager;
     private ProtocolManager protocolManager;
     private PlayerDataManager playerDataManager;
@@ -103,8 +103,8 @@ public final class EquinoxEquestrian extends JavaPlugin {
         bedrockBuildForm = new BedrockBuildForm(this);
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-        buildMenuManager = new BuildMenuManager(this);
-        horseMenuManager = new HorseMenuManager(this);
+        menuManager = new MenuManager(this);
+
         equineManager = new EquineManager(this);
         playerDataManager = new PlayerDataManager(this);
         commandManager = new CommandManager(this);
