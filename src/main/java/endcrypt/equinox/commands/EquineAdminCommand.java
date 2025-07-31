@@ -287,7 +287,7 @@ public class EquineAdminCommand {
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
         equineLiveHorse.setCoatColor(coatColor);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> <green>to <color>",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("color", coatColor.getCoatColorName())));
@@ -307,7 +307,7 @@ public class EquineAdminCommand {
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
         equineLiveHorse.setCoatModifier(coatModifier);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> <green>to <color>",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("color", coatModifier.getCoatModifierName())));
@@ -330,7 +330,7 @@ public class EquineAdminCommand {
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(abstractHorse);
         equineLiveHorse.setHeight(height);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<prefix><green>You set the height of <horse> to <height> hands",
+        player.sendMessage(ColorUtils.color("<prefix><green>You set the height of <horse> <green>to <height> hands",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("height", String.valueOf(height.getHands()))));
@@ -355,7 +355,7 @@ public class EquineAdminCommand {
             nbt.setDouble(Keys.BASE_JUMP.getKey(), EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
         });
 
-        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength> blocks!",
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s <green>to <jumpstrength> blocks!",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
         ));
@@ -380,7 +380,7 @@ public class EquineAdminCommand {
             nbt.setDouble(Keys.BASE_SPEED.getKey(), speed);
         });
 
-        commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s to <speed> blocks per second!",
+        commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s <green>to <speed> blocks per second!",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("speed", String.valueOf(speed))
         ));
@@ -403,7 +403,7 @@ public class EquineAdminCommand {
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         equineLiveHorse.setTraits(traitList);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<green>You set the traits of <horse> to <traits>",
+        player.sendMessage(ColorUtils.color("<green>You set the traits of <horse> <green>to <traits>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("traits", String.join(", ", traitList.stream().map(Trait::getTraitName).toList()))));
 
@@ -425,7 +425,7 @@ public class EquineAdminCommand {
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         equineLiveHorse.setAge(ageInput);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<green>You set the age of <horse> to <age>",
+        player.sendMessage(ColorUtils.color("<green>You set the age of <horse> <green>to <age>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("age", String.valueOf(equineLiveHorse.getAge()))));
     }
@@ -466,7 +466,7 @@ public class EquineAdminCommand {
             equineLiveHorse.setLastInHeat(System.currentTimeMillis());
         }
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<green>You set the in heat state of <horse> to <inheat>",
+        player.sendMessage(ColorUtils.color("<green>You set the in heat state of <horse> <green>to <inheat>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("inheat", String.valueOf(equineLiveHorse.isInHeat()))));
     }
@@ -490,9 +490,15 @@ public class EquineAdminCommand {
             return;
         }
 
+        if(equineLiveHorse.isInstantFoal()) {
+            player.sendMessage(ColorUtils.color("<yellow><horse> <yellow>is already set to instant foal!",
+                    Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
+            return;
+        }
+
         equineLiveHorse.setInstantFoal(true);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<green>You set the instant foal state of <horse> to <instafoal>",
+        player.sendMessage(ColorUtils.color("<green>You set the instant foal state of <horse> <green>to <instafoal>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("instafoal", String.valueOf(equineLiveHorse.isInstantFoal()))));
 
@@ -521,7 +527,7 @@ public class EquineAdminCommand {
 
         equineLiveHorse.setInstantBreed(true);
         equineLiveHorse.update();
-        player.sendMessage(ColorUtils.color("<green>You set the instant breed state of <horse> to <instabreed>",
+        player.sendMessage(ColorUtils.color("<green>You set the instant breed state of <horse> <green>to <instabreed>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("instabreed", String.valueOf(equineLiveHorse.isInstantBreed()))));
 
