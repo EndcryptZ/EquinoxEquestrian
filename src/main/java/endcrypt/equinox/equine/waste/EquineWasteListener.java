@@ -2,7 +2,9 @@ package endcrypt.equinox.equine.waste;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseWaste;
+import endcrypt.equinox.player.data.PlayerData;
 import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -51,6 +53,21 @@ public class EquineWasteListener implements Listener {
             player.sendMessage(ColorUtils.color("<red>You need a shovel to clean up horse waste."));
             return;
         }
+
+        if ("Poop".equalsIgnoreCase(wasteDatabase.getType(blockLocation))) {
+            PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
+            int newManure = data.getManure() + 1;
+            data.setManure(newManure);
+
+            if (newManure % 10 == 0) {
+                player.sendMessage(ColorUtils.color(
+                        "<prefix><gold>you’ve collected <yellow><manure> <gold>manure! sell it in <green>/manuremarket</green> <gold>GUI.",
+                        Placeholder.parsed("prefix", plugin.getPrefix()),
+                        Placeholder.parsed("manure", String.valueOf(newManure))
+                ));
+            }
+        }
+
 
         String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
         wasteDatabase.removeWasteBlock(blockLocation);
