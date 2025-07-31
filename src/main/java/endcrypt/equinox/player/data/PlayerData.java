@@ -12,6 +12,7 @@ public class PlayerData {
     private int tokens;
     private int level;
     private double exp;
+    private int manure;
 
     public PlayerData(AbstractHorse selectedHorse, int tokens) {
         this.selectedHorse = selectedHorse;
