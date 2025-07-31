@@ -82,6 +82,11 @@ public class HorseCommand {
                                 .map(Player::getName)
                                 .toArray(String[]::new))))
                         .executesPlayer(this::untrust))
+
+                .withSubcommand(new CommandAPICommand("manuremarket")
+                        .withArguments(new PlayerArgument("target").setOptional(true)
+                                .withPermission("equinox.cmd.horse.manuremarket.others"))
+                        .executes(this::manureMarket))
                 .register();
     }
 
@@ -332,6 +337,30 @@ public class HorseCommand {
                         Placeholder.parsed("horse", horse.getName())));
             }
         }
+    }
+
+    private void manureMarket(CommandSender commandSender, CommandArguments args) {
+        Player target = (Player) args.get("target");
+
+        if (target != null) {
+            plugin.getMenuManager().getShopMenuManager().getShopManureMenu().open(target);
+            commandSender.sendMessage(ColorUtils.color(
+                    "<prefix><green>You have opened the Manure Market menu for <yellow><target><green>.",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("target", target.getName())
+            ));
+            return;
+        }
+
+        if (!(commandSender instanceof Player)) {
+            commandSender.sendMessage(ColorUtils.color(
+                    "<prefix><red>Only players can use this command without specifying a target.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())
+            ));
+            return;
+        }
+
+        plugin.getMenuManager().getShopMenuManager().getShopManureMenu().open((Player) commandSender);
     }
 
 }
