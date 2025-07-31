@@ -101,8 +101,13 @@ public class EquineLeveling {
         return totalExp;
     }
 
-    public   void syncExpBar(Player player) {
+    public void syncExpBar(Player player) {
         PlayerData playerData = plugin.getPlayerDataManager().getPlayerData(player);
+        if (playerData == null) {
+            plugin.getLogger().warning("PlayerData is null for " + player.getName() + ". Exp bar sync aborted.");
+            return;
+        }
+
         double totalExp = playerData.getExp();
 
         // recalculate level based on total exp
