@@ -69,7 +69,7 @@ public class EquineAdminCommand {
 
                 .withSubcommand(new CommandAPICommand("remove")
                         .withPermission("equinox.cmd.equineadmin.remove")
-                        .withArguments(new IntegerArgument("range", 1, 10).setOptional(true))
+                        .withArguments(new IntegerArgument("range", 1, 50).setOptional(true))
                         .executesPlayer(this::remove))
 
                 .withSubcommand(new CommandAPICommand("bypass")
