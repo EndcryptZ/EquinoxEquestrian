@@ -50,7 +50,7 @@ public class ShopManureMenu {
         boolean hasEnough = playerManureAmount >= amount;
         List<String> lore = new java.util.ArrayList<>(List.of());
         if (hasEnough) {
-            lore.add("&aClick to sell for $" + amount + ".");
+            lore.add("&aClick to sell for $" + amount * 0.5 + ".");
         } else {
             lore.add("&7You don't have enough");
             lore.add("&7manure to sell.");
@@ -72,7 +72,7 @@ public class ShopManureMenu {
         boolean hasEnough = playerManureAmount > 0;
         List<String> lore = new java.util.ArrayList<>(List.of());
         if (hasEnough) {
-            lore.add("&aClick to sell for $" + playerManureAmount + ".");
+            lore.add("&aClick to sell for $" + playerManureAmount * 0.5 + ".");
         } else {
             lore.add("&7You don't have enough");
             lore.add("&7manure to sell.");
