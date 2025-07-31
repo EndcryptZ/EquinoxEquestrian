@@ -18,6 +18,7 @@ public class DatabasePlayer {
         put("token", "INTEGER");  // Using INTEGER for cross-compatibility
         put("level", "INTEGER");  // Player level
         put("exp", "REAL");       // Use REAL in case you want fractional exp (e.g., 10.5)
+        put("manure", "INTEGER");
     }};
 
     public DatabasePlayer(EquinoxEquestrian plugin) {
@@ -114,18 +115,6 @@ public class DatabasePlayer {
         }
     }
 
-    public void setLevel(Player player, int level) {
-        String query = "UPDATE PLAYERS SET level = ? WHERE uuid = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, level);
-            ps.setString(2, player.getUniqueId().toString());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            plugin.getLogger().warning("Failed to update level for player " + player.getName() + ": " + e.getMessage());
-        }
-    }
-
     public double getExp(Player player) {
         String query = "SELECT exp FROM PLAYERS WHERE uuid = ?";
 
@@ -141,6 +130,19 @@ public class DatabasePlayer {
         }
 
         return 0.0; // Default value if not found
+    }
+
+
+    public void setLevel(Player player, int level) {
+        String query = "UPDATE PLAYERS SET level = ? WHERE uuid = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, level);
+            ps.setString(2, player.getUniqueId().toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to update level for player " + player.getName() + ": " + e.getMessage());
+        }
     }
 
     public int getLevel(Player player) {
@@ -159,4 +161,34 @@ public class DatabasePlayer {
 
         return 1; // Default value if not found
     }
+
+    public void setManure(Player player, int manure) {
+        String query = "UPDATE PLAYERS SET manure = ? WHERE uuid = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, manure);
+            ps.setString(2, player.getUniqueId().toString());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to update manure count for player " + player.getName() + ": " + e.getMessage());
+        }
+    }
+
+    public int getManure(Player player) {
+        String query = "SELECT manure FROM PLAYERS WHERE uuid = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, player.getUniqueId().toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("manure");
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to fetch manure count for player " + player.getName() + ": " + e.getMessage());
+        }
+
+        return 0; // Default value if not found
+    }
+
 }
