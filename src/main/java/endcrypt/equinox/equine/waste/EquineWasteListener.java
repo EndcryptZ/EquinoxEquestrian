@@ -122,7 +122,7 @@ public class EquineWasteListener implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         plugin.getDatabaseManager().getDatabaseWaste().getPeeAndPooLocationsInChunk(event.getChunk()).forEach(location -> {
-            plugin.getLogger().info("Trying to load waste holo at " + location);
+            // plugin.getLogger().info("Trying to load waste holo at " + location);
             Block block = location.getBlock();
             Location blockLocation = block.getLocation();
             String holoId = "Waste" + blockLocation.getWorld().getName() + block.getX() + block.getY() + block.getZ();
