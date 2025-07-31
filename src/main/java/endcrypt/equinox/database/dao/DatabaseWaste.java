@@ -118,6 +118,27 @@ public class DatabaseWaste {
         }
     }
 
+    public String getType(Location location) {
+        String sql = "SELECT type FROM EQUINE_WASTE_BLOCKS WHERE x = ? AND y = ? AND z = ? AND world = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, location.getBlockX());
+            ps.setInt(2, location.getBlockY());
+            ps.setInt(3, location.getBlockZ());
+            ps.setString(4, location.getWorld().getName());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("type"); // return the 'type' column (Poo or Pee)
+                }
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to fetch waste type: " + e.getMessage());
+        }
+
+        return null; // or optionally "UNKNOWN" or throw exception
+    }
+
     public List<Location> getPeeAndPooLocationsInChunk(Chunk chunk) {
         List<Location> locations = new ArrayList<>();
         String sql = "SELECT x, y, z FROM EQUINE_WASTE_BLOCKS WHERE world = ? AND x BETWEEN ? AND ? AND z BETWEEN ? AND ?";
