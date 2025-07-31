@@ -51,7 +51,7 @@ public class ShopManureMenu {
         List<String> lore = new java.util.ArrayList<>(List.of());
         if (hasEnough) {
             lore.add("&aClick to sell " + amount);
-            lore.add("manure for $" + amount * 0.5);
+            lore.add("&amanure for $" + amount * 0.5);
         } else {
             lore.add("&7You don't have enough");
             lore.add("&7manure to sell.");
@@ -69,13 +69,21 @@ public class ShopManureMenu {
     }
 
     private SGButton sellAllButton(Player player, int playerManureAmount) {
+
+        boolean hasEnough = playerManureAmount <= 0;
+        List<String> lore = new java.util.ArrayList<>(List.of());
+        if (hasEnough) {
+            lore.add("&aClick to sell " + playerManureAmount);
+            lore.add("&amanure for $" + playerManureAmount * 0.5);
+        } else {
+            lore.add("&7You don't have enough");
+            lore.add("&7manure to sell.");
+        }
+
         return new SGButton(
                 new ItemBuilder(Material.RED_TERRACOTTA)
                         .name("&fSell " + playerManureAmount)
-                        .lore(
-                                "&aClick to sell " + playerManureAmount,
-                                "&7manure to sell."
-                        )
+                        .lore(lore)
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
@@ -97,7 +105,7 @@ public class ShopManureMenu {
     private void sellPlayerManure(Player player, int amount) {
         int playerManureAmount = plugin.getPlayerDataManager().getPlayerData(player).getManure();
         boolean hasEnough = playerManureAmount >= amount;
-        if(!hasEnough) {
+        if(!hasEnough || playerManureAmount <= 0) {
             player.sendMessage(ColorUtils.color("<prefix><red>You don't have enough manure to sell!",
                     Placeholder.parsed("prefix", plugin.getPrefix())));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
@@ -109,7 +117,7 @@ public class ShopManureMenu {
         plugin.getPlayerDataManager().getPlayerData(player).setManure(manureResult);
         plugin.getEcon().depositPlayer(player, gain);
         player.sendMessage(ColorUtils.color(
-                "<prefix><green>you've sold <yellow><amount> <green>manure for <gold>$<gain><green>!",
+                "<prefix><green>You've sold <yellow><amount> <green>manure for <gold>$<gain><green>!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("amount", String.valueOf(amount)),
                 Placeholder.parsed("gain", String.valueOf(gain))
