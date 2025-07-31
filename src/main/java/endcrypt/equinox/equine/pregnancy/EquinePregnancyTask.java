@@ -3,7 +3,10 @@ package endcrypt.equinox.equine.pregnancy;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.TimeUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.AbstractHorse;
 

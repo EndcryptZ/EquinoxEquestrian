@@ -2,6 +2,7 @@ package endcrypt.equinox.equine.pregnancy;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.TaskUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -18,7 +19,7 @@ public class EquinePregnancy {
     public EquinePregnancy(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         new EquinePregnancyTask(plugin);
-        addAllLoadedPregnantHorses();
+        TaskUtils.runTaskLater(2, this::addAllLoadedPregnantHorses);
     }
 
     public void add(AbstractHorse horse) {
@@ -42,14 +43,16 @@ public class EquinePregnancy {
     }
 
     private void addAllLoadedPregnantHorses() {
+        plugin.getLogger().info("[Equine] Loading all currently pregnant horses from loaded worlds...");
         for (World world : Bukkit.getWorlds()) {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if(EquineUtils.isHorsePregnant(abstractHorse)) {
+                if (EquineUtils.isHorsePregnant(abstractHorse)) {
                     pregnantHorses.add(abstractHorse);
                 }
             }
         }
+        plugin.getLogger().info("[Equine] Loaded " + pregnantHorses.size() + " pregnant horses from loaded worlds.");
     }
 }

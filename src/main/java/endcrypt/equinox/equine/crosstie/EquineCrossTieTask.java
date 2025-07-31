@@ -36,6 +36,8 @@ public class EquineCrossTieTask {
 
                     AbstractHorse horse = (AbstractHorse) Bukkit.getEntity(UUID.fromString(horseUUID));
                     if (horse == null) {
+                        bat.setLeashHolder(null);
+                        bat.remove();
                         continue;
                     }
 
