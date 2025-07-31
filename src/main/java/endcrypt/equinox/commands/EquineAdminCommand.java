@@ -248,7 +248,7 @@ public class EquineAdminCommand {
         abstractHorse.remove();
         player.sendMessage(ColorUtils.color("<prefix><green>You have permanently removed <horse>",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(abstractHorse.getName())))));
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name()))));
 
         Bukkit.getOnlinePlayers().forEach(eachPlayer -> {
             if (plugin.getPlayerDataManager().getPlayerData(eachPlayer).getSelectedHorse() == abstractHorse) {
@@ -289,7 +289,7 @@ public class EquineAdminCommand {
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("color", coatColor.getCoatColorName())));
 
     }
@@ -309,7 +309,7 @@ public class EquineAdminCommand {
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<prefix><green>You set the color of <horse> to <color>",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("color", coatModifier.getCoatModifierName())));
     }
 
@@ -332,7 +332,7 @@ public class EquineAdminCommand {
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<prefix><green>You set the height of <horse> to <height> hands",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", abstractHorse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name())),
                 Placeholder.parsed("height", String.valueOf(height.getHands()))));
     }
 
@@ -356,7 +356,7 @@ public class EquineAdminCommand {
         });
 
         commandSender.sendMessage(ColorUtils.color("<green>You set the base jump strength of <horse>'s to <jumpstrength> blocks!",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("jumpstrength", String.valueOf(jumpStrength))
         ));
     }
@@ -381,7 +381,7 @@ public class EquineAdminCommand {
         });
 
         commandSender.sendMessage(ColorUtils.color("<green>You set the base speed of <horse>'s to <speed> blocks per second!",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("speed", String.valueOf(speed))
         ));
     }
@@ -404,7 +404,7 @@ public class EquineAdminCommand {
         equineLiveHorse.setTraits(traitList);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the traits of <horse> to <traits>",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("traits", String.join(", ", traitList.stream().map(Trait::getTraitName).toList()))));
 
     }
@@ -426,7 +426,7 @@ public class EquineAdminCommand {
         equineLiveHorse.setAge(ageInput);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the age of <horse> to <age>",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("age", String.valueOf(equineLiveHorse.getAge()))));
     }
 
@@ -493,7 +493,7 @@ public class EquineAdminCommand {
         equineLiveHorse.setInstantFoal(true);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the instant foal state of <horse> to <instafoal>",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("instafoal", String.valueOf(equineLiveHorse.isInstantFoal()))));
 
 
@@ -522,7 +522,7 @@ public class EquineAdminCommand {
         equineLiveHorse.setInstantBreed(true);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the instant breed state of <horse> to <instabreed>",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("instabreed", String.valueOf(equineLiveHorse.isInstantBreed()))));
 
     }
