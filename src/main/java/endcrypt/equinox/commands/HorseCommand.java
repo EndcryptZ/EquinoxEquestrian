@@ -12,6 +12,7 @@ import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -281,7 +282,7 @@ public class HorseCommand {
         target.sendMessage(ColorUtils.color("<prefix><green><player> has trusted you to <horse>!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("player", player.getName()),
-                Placeholder.parsed("horse", horse.getName())));
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
     }
 
     private void untrust(CommandSender commandSender, CommandArguments args) {
@@ -334,7 +335,7 @@ public class HorseCommand {
                 onlineTarget.sendMessage(ColorUtils.color("<prefix><green><player> has untrusted you from <horse>!",
                         Placeholder.parsed("prefix", plugin.getPrefix()),
                         Placeholder.parsed("player", player.getName()),
-                        Placeholder.parsed("horse", horse.getName())));
+                        Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
             }
         }
     }

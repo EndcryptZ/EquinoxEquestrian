@@ -467,7 +467,7 @@ public class EquineAdminCommand {
         }
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You set the in heat state of <horse> to <inheat>",
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("inheat", String.valueOf(equineLiveHorse.isInHeat()))));
     }
 
