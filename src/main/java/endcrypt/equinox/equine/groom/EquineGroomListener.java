@@ -90,7 +90,7 @@ public class EquineGroomListener implements Listener {
                 Placeholder.parsed("times", String.valueOf(plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).getGroomTimes()))));
 
         if(plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).getGroomTimes() == 2) {
-            player.openInventory(plugin.getHorseMenuManager().getGroomMenu().menu(player, playerHorse));
+            player.openInventory(plugin.getMenuManager().getHorseMenuManager().getGroomMenu().menu(player, playerHorse));
             player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             plugin.getEquineManager().getEquineGroomManager().resetGroom(player);
         }

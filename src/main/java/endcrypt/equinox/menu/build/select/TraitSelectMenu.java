@@ -117,7 +117,7 @@ public class TraitSelectMenu {
                     List<Trait> playerTraits = playerTraitMap.get(player);
                     if (playerTraits != null && playerTraits.size() >= 1) {
                         equineHorse.setTraits(playerTraits);
-                        plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
+                        plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                     } else {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§a§lCONFIRM", "§cYou need to select at least 1 trait to confirm.", null, null);

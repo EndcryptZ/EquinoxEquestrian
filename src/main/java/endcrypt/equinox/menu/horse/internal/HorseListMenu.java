@@ -111,10 +111,10 @@ public class    HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getHorseMenuManager().getListOrganizerMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorses);
+                        plugin.getMenuManager().getHorseMenuManager().getListOrganizerMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorses);
                         return;
                     }
-                    plugin.getHorseMenuManager().getListOrganizerMenu().open(player.getPlayer(), listOrganizeType, isTrustedHorses);
+                    plugin.getMenuManager().getHorseMenuManager().getListOrganizerMenu().open(player.getPlayer(), listOrganizeType, isTrustedHorses);
 
 
                 });
@@ -133,10 +133,10 @@ public class    HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, true);
+                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, true);
                         return;
                     }
-                    plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, true);
+                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, true);
 
                 });
     }
@@ -154,11 +154,11 @@ public class    HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, false);
+                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, false);
                         return;
                     }
 
-                    plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, false);
+                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, false);
 
                 });
     }
@@ -182,11 +182,11 @@ public class    HorseListMenu {
 
                 .withListener((InventoryClickEvent event) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getHorseMenuManager().getHorseInfoMenu().openToOther((Player) event.getWhoClicked(), player, equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
+                        plugin.getMenuManager().getHorseMenuManager().getHorseInfoMenu().openToOther((Player) event.getWhoClicked(), player, equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
                         return;
                     }
 
-                    plugin.getHorseMenuManager().getHorseInfoMenu().open(player.getPlayer(), equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
+                    plugin.getMenuManager().getHorseMenuManager().getHorseInfoMenu().open(player.getPlayer(), equineLiveHorse, ListOrganizeType.AGE, isTrustedHorses);
                 });
     }
 

@@ -43,7 +43,7 @@ public class CoatModifierSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setCoatModifier(coatModifier);
-                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
+                    plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 

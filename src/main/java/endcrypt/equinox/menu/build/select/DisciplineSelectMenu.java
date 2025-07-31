@@ -51,7 +51,7 @@ public class DisciplineSelectMenu implements Listener {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setDiscipline(discipline);
-                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
+                    plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 

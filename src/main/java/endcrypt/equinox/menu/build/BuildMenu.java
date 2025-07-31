@@ -139,7 +139,7 @@ public class BuildMenu implements Listener {
                     Player player = (Player) event.getWhoClicked();
 
 
-                    plugin.getBuildMenuManager().getPlayerEquineHorseInput().put(player, equineHorse);
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().put(player, equineHorse);
 
                     player.closeInventory();
 
@@ -165,8 +165,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getDisciplineSelectMenu().disciplineMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getDisciplineSelectMenu().disciplineMenu(player, equineHorse));
 
                 });
     }
@@ -181,8 +181,8 @@ public class BuildMenu implements Listener {
         )
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getBreedSelectMenu().breedMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getBreedSelectMenu().breedMenu(player, equineHorse));
                 });
 
     }
@@ -200,8 +200,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getCoatColorSelectMenu().coatColorMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getCoatColorSelectMenu().coatColorMenu(player, equineHorse));
 
                 });
     }
@@ -219,8 +219,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getCoatModifierSelectMenu().coatModifierMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getCoatModifierSelectMenu().coatModifierMenu(player, equineHorse));
 
                 });
     }
@@ -238,8 +238,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getGenderSelectMenu().genderMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getGenderSelectMenu().genderMenu(player, equineHorse));
 
                 });
     }
@@ -392,8 +392,8 @@ public class BuildMenu implements Listener {
                 .withListener((InventoryClickEvent event) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
-                    player.openInventory(plugin.getBuildMenuManager().getTraitSelectMenu().traitMenu(player, equineHorse));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().put(player, equineHorse);
+                    player.openInventory(plugin.getMenuManager().getBuildMenuManager().getTraitSelectMenu().traitMenu(player, equineHorse));
     
                 });
     }
@@ -439,16 +439,16 @@ public class BuildMenu implements Listener {
                         return;
                     }
                     if(plugin.getPlayerDataManager().getPlayerData(player).getTokens() < 1) {
-                        if (plugin.getEcon().getBalance(player) < plugin.getBuildMenuManager().getPlayerCost().get(player)) {
+                        if (plugin.getEcon().getBalance(player) < plugin.getMenuManager().getBuildMenuManager().getPlayerCost().get(player)) {
                             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1, 1);
                             List<String> loreMessage = new ArrayList<>();
                             loreMessage.add("§eYour balance: §a$§f" + plugin.getEcon().getBalance(player));
-                            loreMessage.add("§eCost: §a$§f" + plugin.getBuildMenuManager().getPlayerCost().get(player));
+                            loreMessage.add("§eCost: §a$§f" + plugin.getMenuManager().getBuildMenuManager().getPlayerCost().get(player));
 
                             ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§7[§aBuy§7]", "§4You don't have enough money!", null, loreMessage);
                             return;
                         }
-                        plugin.getEcon().withdrawPlayer(player, plugin.getBuildMenuManager().getPlayerCost().get(player));
+                        plugin.getEcon().withdrawPlayer(player, plugin.getMenuManager().getBuildMenuManager().getPlayerCost().get(player));
                     } else {
                         plugin.getPlayerDataManager().getPlayerData(player).setTokens(plugin.getPlayerDataManager().getPlayerData(player).getTokens() - 1);
                         player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<gray>You used a token!"));
@@ -456,8 +456,8 @@ public class BuildMenu implements Listener {
 
                     EquineHorseBuilder horseBuilder = new EquineHorseBuilder(plugin);
                     player.closeInventory();
-                    plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(player);
-                    plugin.getBuildMenuManager().getPlayerCost().remove(player);
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().remove(player);
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerCost().remove(player);
                     horseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorse, false);
                 });
     }
@@ -484,7 +484,7 @@ public class BuildMenu implements Listener {
         int traitsPrice = equineHorse.getTraits().stream().mapToInt(Trait::getPrice).sum();
 
         double price = namePrice + disciplinePrice + coatColorPrice + coatStylePrice + genderPrice + agePrice + heightPrice + traitsPrice;
-        plugin.getBuildMenuManager().getPlayerCost().put(player, price);
+        plugin.getMenuManager().getBuildMenuManager().getPlayerCost().put(player, price);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)

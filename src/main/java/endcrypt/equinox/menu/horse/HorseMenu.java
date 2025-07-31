@@ -58,12 +58,12 @@ public class HorseMenu {
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    if(plugin.getHorseMenuManager().getInventoryHorseMenu().isHorseInventoryOpened(abstractHorse)) {
+                    if(plugin.getMenuManager().getHorseMenuManager().getInventoryHorseMenu().isHorseInventoryOpened(abstractHorse)) {
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fInventory", ChatColor.RED + "The inventory is currently being edited by another player!", null, null);
                         return;
                     }
 
-                    player.openInventory(plugin.getHorseMenuManager().getInventoryHorseMenu().inventoryMenu(player, abstractHorse));
+                    player.openInventory(plugin.getMenuManager().getHorseMenuManager().getInventoryHorseMenu().inventoryMenu(player, abstractHorse));
                 });
     }
 
@@ -77,7 +77,7 @@ public class HorseMenu {
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getHorseMenuManager().getHomeMenu().menu(player, abstractHorse));
+                    player.openInventory(plugin.getMenuManager().getHorseMenuManager().getHomeMenu().menu(player, abstractHorse));
                 });
     }
 
@@ -91,7 +91,7 @@ public class HorseMenu {
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getHorseMenuManager().getGroomMenu().menu(player, abstractHorse));
+                    player.openInventory(plugin.getMenuManager().getHorseMenuManager().getGroomMenu().menu(player, abstractHorse));
                 });
     }
 
@@ -111,7 +111,7 @@ public class HorseMenu {
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getHorseMenuManager().getAutoVetMenu().menu(player, abstractHorse));
+                    player.openInventory(plugin.getMenuManager().getHorseMenuManager().getAutoVetMenu().menu(player, abstractHorse));
                 });
     }
 
@@ -127,7 +127,7 @@ public class HorseMenu {
                 .withListener((InventoryClickEvent event ) -> {
                     Player player = (Player) event.getWhoClicked();
 
-                    player.openInventory(plugin.getHorseMenuManager().getHealthMenu().menu(player, abstractHorse));
+                    player.openInventory(plugin.getMenuManager().getHorseMenuManager().getHealthMenu().menu(player, abstractHorse));
                 });
     }
 

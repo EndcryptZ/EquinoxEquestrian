@@ -245,10 +245,10 @@ public class    HorseInfoMenu {
                         .build()
         ).withListener((InventoryClickEvent event) -> {
             if(player != event.getWhoClicked()) {
-                plugin.getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorse);
+                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, isTrustedHorse);
                 return;
             }
-            plugin.getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, isTrustedHorse);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, isTrustedHorse);
         });
     }
 }

@@ -28,16 +28,16 @@ public class BuildMenuListener implements Listener {
     @EventHandler (priority = EventPriority.LOWEST)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         final String originalMessage = ColorUtils.stripColor(LegacyComponentSerializer.legacySection().deserialize(event.getMessage()));
-        if(!plugin.getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
+        if(!plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
             return;
         }
 
 
         if(originalMessage.equalsIgnoreCase("cancel")) {
-            plugin.getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
-                    plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
+            plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
             );
-            plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
+            plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
             event.setCancelled(true);
             return;
         }
@@ -56,17 +56,17 @@ public class BuildMenuListener implements Listener {
             return;
         }
 
-        plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(LegacyComponentSerializer.legacyAmpersand().serialize(LegacyComponentSerializer.legacySection().deserialize(event.getMessage())));
-        plugin.getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
-                plugin.getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
+        plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer()).setName(LegacyComponentSerializer.legacyAmpersand().serialize(LegacyComponentSerializer.legacySection().deserialize(event.getMessage())));
+        plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(event.getPlayer(),
+                plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().get(event.getPlayer())
         );
-        plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
+        plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
         event.setCancelled(true);
     }
 
     @EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
-        if(!plugin.getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
+        if(!plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
             return;
         }
         event.getPlayer().sendMessage(ColorUtils.color("<prefix><red>Commands are disabled during Horse Creation!",
@@ -76,11 +76,11 @@ public class BuildMenuListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-        if(!plugin.getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
+        if(!plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().containsKey(event.getPlayer())) {
             return;
         }
 
-        plugin.getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
+        plugin.getMenuManager().getBuildMenuManager().getPlayerEquineHorseInput().remove(event.getPlayer());
     }
 
     @EventHandler
@@ -90,8 +90,8 @@ public class BuildMenuListener implements Listener {
             if (menu.getName().contains("Select")) { // assuming your sub-menus have "Select" in their title
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Player player = (Player) event.getPlayer();
-                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().get(event.getPlayer()));
-                    plugin.getBuildMenuManager().getPlayerEquineSubMenuInput().remove(event.getPlayer());
+                    plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().get(event.getPlayer()));
+                    plugin.getMenuManager().getBuildMenuManager().getPlayerEquineSubMenuInput().remove(event.getPlayer());
                 }, 1L);
             }
         }

@@ -45,10 +45,10 @@ public class HorseMenuListener implements Listener {
 
 
             if(plugin.getEquineManager().getEquineGroomManager().getHorse(event.getPlayer()) == event.getRightClicked()) {
-                event.getPlayer().openInventory(plugin.getHorseMenuManager().getGroomMenu().menu(event.getPlayer(), (AbstractHorse) event.getRightClicked()));
+                event.getPlayer().openInventory(plugin.getMenuManager().getHorseMenuManager().getGroomMenu().menu(event.getPlayer(), (AbstractHorse) event.getRightClicked()));
 
             } else {
-                plugin.getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
+                plugin.getMenuManager().getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
             }
 
             plugin.getEquineManager().getEquineGroomManager().resetGroom(event.getPlayer());
@@ -57,7 +57,7 @@ public class HorseMenuListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGroomManager().resetGroom(event.getPlayer());
-        plugin.getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
+        plugin.getMenuManager().getHorseMenuManager().getHorseMenu().open(event.getPlayer(), (AbstractHorse) event.getRightClicked());
         event.setCancelled(true);
     }
 
@@ -68,6 +68,6 @@ public class HorseMenuListener implements Listener {
         }
 
         event.setCancelled(true);
-        plugin.getHorseMenuManager().getHorseMenu().open((Player) event.getPlayer(), (AbstractHorse) event.getInventory().getHolder());
+        plugin.getMenuManager().getHorseMenuManager().getHorseMenu().open((Player) event.getPlayer(), (AbstractHorse) event.getInventory().getHolder());
     }
 }

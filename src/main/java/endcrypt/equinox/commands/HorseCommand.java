@@ -95,7 +95,7 @@ public class HorseCommand {
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
 
-        plugin.getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE, false);
+        plugin.getMenuManager().getHorseMenuManager().getHorseInfoMenu().open(player, equineLiveHorse, ListOrganizeType.AGE, false);
     }
 
     private void list(CommandSender sender, CommandArguments args) {
@@ -103,7 +103,7 @@ public class HorseCommand {
         String iniTarget = args.getUnchecked("target");
 
         if(iniTarget == null) {
-            plugin.getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE, false);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE, false);
             return;
         }
 
@@ -111,7 +111,7 @@ public class HorseCommand {
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(iniTarget);
 
         if (offlineTarget.hasPlayedBefore()) {
-            plugin.getHorseMenuManager().getHorseListMenu().openToOther(player, offlineTarget, ListOrganizeType.AGE, false);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther(player, offlineTarget, ListOrganizeType.AGE, false);
             return;
         }
 
@@ -126,7 +126,7 @@ public class HorseCommand {
             return;
         }
 
-        plugin.getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE, false);
+        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE, false);
 
     }
 
@@ -158,7 +158,7 @@ public class HorseCommand {
             plugin.getBedrockBuildForm().openDefault(player);
             return;
         }
-        plugin.getBuildMenuManager().getBuildMenu().openDefault(player);
+        plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openDefault(player);
     }
 
     private void horseSetHome(CommandSender commandSender, CommandArguments args) {

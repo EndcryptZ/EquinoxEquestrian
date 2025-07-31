@@ -44,7 +44,7 @@ public class CoatColorSelectMenu {
         )
                 .withListener((InventoryClickEvent event) -> {
                     equineHorse.setCoatColor(coatColor);
-                    plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
+                    plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                 });
     }
 }

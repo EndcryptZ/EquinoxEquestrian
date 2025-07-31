@@ -128,7 +128,7 @@ public class BreedSelectMenu implements Listener {
                     List<Breed> playerBreeds = playerBreedMap.get(player);
                     if (playerBreeds != null && !playerBreeds.isEmpty()) {
                         equineHorse.setBreeds(playerBreeds);
-                        plugin.getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
+                        plugin.getMenuManager().getBuildMenuManager().getBuildMenu().openWithParameters(player, equineHorse);
                     } else {
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
                         ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§a§lCONFIRM", "§cYou need to select at least 1 breed to confirm.", null, null);
