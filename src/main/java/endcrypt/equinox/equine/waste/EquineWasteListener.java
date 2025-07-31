@@ -61,7 +61,7 @@ public class EquineWasteListener implements Listener {
 
             if (newManure % 10 == 0) {
                 player.sendMessage(ColorUtils.color(
-                        "<prefix><gold>you’ve collected <yellow><manure> <gold>manure! sell it in <green>/manuremarket</green> <gold>GUI.",
+                        "<prefix><green>You’ve collected <yellow><manure> <green>manure! sell it in <yellow>/h manuremarket <green>GUI.",
                         Placeholder.parsed("prefix", plugin.getPrefix()),
                         Placeholder.parsed("manure", String.valueOf(newManure))
                 ));
