@@ -1,4 +1,4 @@
-package endcrypt.equinox.equine.tokens;
+package endcrypt.equinox.token;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.event.EventHandler;
@@ -6,10 +6,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class EquineTokensListener implements Listener {
+public class TokenListener implements Listener {
 
     private final EquinoxEquestrian plugin;
-    public EquineTokensListener(EquinoxEquestrian plugin) {
+    public TokenListener(EquinoxEquestrian plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

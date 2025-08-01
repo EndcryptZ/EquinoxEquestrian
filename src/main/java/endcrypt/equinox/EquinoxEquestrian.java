@@ -18,16 +18,14 @@ import endcrypt.equinox.equine.leveling.EquineLevelingListener;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancyListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
-import endcrypt.equinox.equine.tokens.EquineTokensListener;
+import endcrypt.equinox.token.TokenListener;
 import endcrypt.equinox.equine.waste.EquineWasteListener;
 import endcrypt.equinox.hologram.HologramManager;
 import endcrypt.equinox.hooks.placeholderapi.Placeholders;
 import endcrypt.equinox.equine.EquineManager;
 import endcrypt.equinox.menu.MenuManager;
 import endcrypt.equinox.menu.build.BuildMenuListener;
-import endcrypt.equinox.menu.build.BuildMenuManager;
 import endcrypt.equinox.menu.horse.HorseMenuListener;
-import endcrypt.equinox.menu.horse.HorseMenuManager;
 import endcrypt.equinox.permissions.PermissionManager;
 import endcrypt.equinox.player.data.PlayerDataListener;
 import endcrypt.equinox.player.data.PlayerDataManager;
@@ -128,7 +126,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineBreedingInHeatListener(this);
         new EquineLevelingListener(this);
         new EquineWasteListener(this);
-        new EquineTokensListener(this);
+        new TokenListener(this);
 
     }
 
