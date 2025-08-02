@@ -7,6 +7,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.player.data.PlayerData;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +41,7 @@ public class    HorseListMenu {
 
         SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
 
-        SGButton menu = isTrustedHorses ? horseListButton(player, listOrganizeType) : trustedHorsesButton(player, listOrganizeType);
+        SGButton trustedHorsesButton = isTrustedHorses ? horseListButton(player, listOrganizeType) : trustedHorsesButton(player, listOrganizeType);
 
 
         List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(player) : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
@@ -71,15 +72,16 @@ public class    HorseListMenu {
         int tempoSlot = 0;
         int slot = 0;
         gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
-        gui.setButton(slot + 35, menu);
+        gui.setButton(slot + 35, trustedHorsesButton);
         for (EquineLiveHorse equineHorse : sortedHorses ) {
             if(tempoSlot == 0) {
-                if(gui.getMaxPage() > 1) {
-                    if(gui.getCurrentPage() > 1) gui.setButton(slot + 30, previousPageButton(gui));
-                    if(gui.getMaxPage() != gui.getCurrentPage()) gui.setButton(slot + 32, nextPageButton(gui));
+                if(gui.getMaxPage() > 0) {
+                    if(slot > (gui.getRowsPerPage() * 9) - 1) gui.setButton(slot + 30, previousPageButton(gui));
+                    if (sortedHorses.size() > slot) gui.setButton(slot + 32, nextPageButton(gui));
+
                 }
                 gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
-                gui.setButton(slot + 35, menu);
+                gui.setButton(slot + 35, trustedHorsesButton);
             }
             SGButton horseButton = horseButton(player, equineHorse, isTrustedHorses);
             if(tempoSlot == 27) {
@@ -94,7 +96,6 @@ public class    HorseListMenu {
             tempoSlot++;
             slot++;
         }
-
 
 
         return gui.getInventory();
@@ -196,12 +197,12 @@ public class    HorseListMenu {
                         .name("&c&lPrevious Page")
                         .lore(
                                 "&aClick to move back to",
-                                "&apage " + (gui.getCurrentPage() - 1)
+                                "&apage " + (gui.getMaxPage() - 1)
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    gui.setCurrentPage(gui.getCurrentPage() - 1);
+                    gui.previousPage(event.getWhoClicked());
                 });
     }
 
@@ -211,12 +212,12 @@ public class    HorseListMenu {
                         .name("&a&lNext Page")
                         .lore(
                                 "&aClick to move forward to",
-                                "&apage " + (gui.getCurrentPage() + 1)
+                                "&apage " + gui.getMaxPage()
                         )
                         .build()
         )
                 .withListener((InventoryClickEvent event) -> {
-                    gui.setCurrentPage(gui.getCurrentPage() + 1);
+                    gui.nextPage(event.getWhoClicked());
                 });
     }
 }
