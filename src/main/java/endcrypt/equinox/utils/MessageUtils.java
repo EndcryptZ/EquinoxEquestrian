@@ -16,4 +16,9 @@ public class MessageUtils {
                 Placeholder.parsed("prefix", instance.getPrefix()),
                 Placeholder.parsed("owner", equineLiveHorse.getOwnerName()));
     }
+
+    public static @NotNull Component cantInteractWithNotEquineHorse() {
+        return ColorUtils.color("<prefix><red>You can only interact with registered Equine horses.",
+                Placeholder.parsed("prefix", instance.getPrefix()));
+    }
 }

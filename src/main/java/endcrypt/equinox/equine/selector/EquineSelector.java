@@ -28,8 +28,7 @@ public class EquineSelector {
         }
 
         if (!EquineUtils.isLivingEquineHorse(horse)) {
-            player.sendMessage(ColorUtils.color("<prefix><red>You can only interact with registered Equine horses.",
-                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            player.sendMessage(MessageUtils.cantInteractWithNotEquineHorse());
             return;
         }
 

@@ -35,6 +35,11 @@ public class HorseMenuListener implements Listener {
             return;
         }
 
+        if(!EquineUtils.isLivingEquineHorse(horse)) {
+            event.getPlayer().sendMessage(MessageUtils.cantInteractWithNotEquineHorse());
+            return;
+        }
+
         if(!EquineUtils.hasPermissionToHorse(event.getPlayer(), horse)) {
             event.getPlayer().sendMessage(MessageUtils.cantInteractWithHorse(horse));
             event.setCancelled(true);
