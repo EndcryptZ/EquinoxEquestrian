@@ -19,7 +19,6 @@ public class EquineSelector {
     }
 
 
-
     public void selectHorse(Player player, AbstractHorse horse) {
         EquinePlayerSelectHorseEvent equinePlayerSelectHorseEvent = new EquinePlayerSelectHorseEvent(player, horse);
         plugin.getServer().getPluginManager().callEvent(equinePlayerSelectHorseEvent);
@@ -27,6 +26,13 @@ public class EquineSelector {
         if (equinePlayerSelectHorseEvent.isCancelled()) {
             return;
         }
+
+        if (!EquineUtils.isLivingEquineHorse(horse)) {
+            player.sendMessage(ColorUtils.color("<prefix><red>You can only interact with registered Equine horses.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            return;
+        }
+
 
         if(!EquineUtils.hasPermissionToHorse(player, horse)) {
             player.sendMessage(MessageUtils.cantInteractWithHorse(horse));
