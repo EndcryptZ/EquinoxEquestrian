@@ -29,6 +29,7 @@ public class EquineSelector {
 
         if (!EquineUtils.isLivingEquineHorse(horse)) {
             player.sendMessage(MessageUtils.cantInteractWithNotEquineHorse());
+            horse.remove();
             return;
         }
 
@@ -36,10 +37,6 @@ public class EquineSelector {
         if(!EquineUtils.hasPermissionToHorse(player, horse)) {
             player.sendMessage(MessageUtils.cantInteractWithHorse(horse));
             return;
-        }
-
-        if(plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse() != null) {
-
         }
 
         player.sendMessage(ColorUtils.color("<prefix><green>You have selected <horse>!",

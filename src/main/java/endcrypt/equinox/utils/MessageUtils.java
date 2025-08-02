@@ -18,7 +18,9 @@ public class MessageUtils {
     }
 
     public static @NotNull Component cantInteractWithNotEquineHorse() {
-        return ColorUtils.color("<prefix><red>You can only interact with registered Equine horses.",
-                Placeholder.parsed("prefix", instance.getPrefix()));
+        return ColorUtils.color(
+                "<prefix><red>You can only interact with registered Equine horses. This unregistered horse has been permanently removed.",
+                Placeholder.parsed("prefix", instance.getPrefix())
+        );
     }
 }
