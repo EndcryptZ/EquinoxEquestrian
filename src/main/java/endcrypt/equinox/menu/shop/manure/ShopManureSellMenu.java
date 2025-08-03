@@ -14,12 +14,12 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 
-public class ShopManureMenu {
+public class ShopManureSellMenu {
 
 
     private final EquinoxEquestrian plugin;
 
-    public ShopManureMenu(EquinoxEquestrian plugin) {
+    public ShopManureSellMenu(EquinoxEquestrian plugin) {
         this.plugin = plugin;
     }
 
