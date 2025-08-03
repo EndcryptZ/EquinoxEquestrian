@@ -58,7 +58,7 @@ public class DatabaseTrustedPlayers {
 
 
 
-    public void addTrustedPlayer(AbstractHorse horse, Player player) {
+    public void addTrustedPlayer(AbstractHorse horse, OfflinePlayer player) {
         // Get database type from connection metadata
         String sql;
         try {

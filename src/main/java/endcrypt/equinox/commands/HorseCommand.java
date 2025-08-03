@@ -1,10 +1,7 @@
 package endcrypt.equinox.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
-import dev.jorel.commandapi.arguments.MultiLiteralArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
@@ -75,13 +72,11 @@ public class HorseCommand {
                         .executesPlayer(this::horseSetPrivacy))
 
                 .withSubcommand(new CommandAPICommand("trust")
-                        .withArguments(new PlayerArgument("target"))
+                        .withArguments(new OfflinePlayerArgument("target"))
                         .executesPlayer(this::trust))
 
                 .withSubcommand(new CommandAPICommand("untrust")
-                        .withArguments(new StringArgument("target").replaceSuggestions(ArgumentSuggestions.strings(Bukkit.getOnlinePlayers().stream()
-                                .map(Player::getName)
-                                .toArray(String[]::new))))
+                        .withArguments(new OfflinePlayerArgument("target"))
                         .executesPlayer(this::untrust))
 
                 .withSubcommand(new CommandAPICommand("manuremarket")
@@ -250,7 +245,7 @@ public class HorseCommand {
 
     private void trust(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
-        Player target = (Player) args.get("target");
+        OfflinePlayer target = (Player) args.get("target");
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
 
         if (horse == null) {
@@ -279,15 +274,17 @@ public class HorseCommand {
         player.sendMessage(ColorUtils.color("<prefix><green><target> has been trusted!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("target", target.getName())));
-        target.sendMessage(ColorUtils.color("<prefix><green><player> has trusted you to <horse>!",
-                Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("player", player.getName()),
-                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
+        if(target.getPlayer() != null) {
+            target.getPlayer().sendMessage(ColorUtils.color("<prefix><green><player> has trusted you to <horse>!",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("player", player.getName()),
+                    Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
+        }
     }
 
     private void untrust(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
-        String iniTarget = args.getUnchecked("target");
+        OfflinePlayer target = args.getUnchecked("target");
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
 
         if (horse == null) {
@@ -296,47 +293,34 @@ public class HorseCommand {
             return;
         }
 
-        assert iniTarget != null;
-        Player target = Bukkit.getPlayer(iniTarget);
-        OfflinePlayer offlineTarget = (target != null) ? target : Bukkit.getOfflinePlayer(iniTarget);
-
-        if (!offlineTarget.hasPlayedBefore()) {
-            player.sendMessage(ColorUtils.color("<prefix><red>Player named <target> is not found!",
-                    Placeholder.parsed("prefix", plugin.getPrefix()),
-                    Placeholder.parsed("target", iniTarget)));
-            return;
-        }
-
-        if (Objects.equals(horse.getOwner(), offlineTarget)) {
+        if (Objects.equals(horse.getOwner(), target)) {
             player.sendMessage(ColorUtils.color("<prefix><red>You can't untrust the owner of the horse!",
                     Placeholder.parsed("prefix", plugin.getPrefix())));
             return;
         }
 
-        if (!plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, offlineTarget)) {
+        assert target != null;
+        if (!plugin.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, target)) {
             player.sendMessage(ColorUtils.color("<prefix><red><target> is not trusted!",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
-                    Placeholder.parsed("target", Objects.requireNonNull(offlineTarget.getName()))));
+                    Placeholder.parsed("target", Objects.requireNonNull(target.getName()))));
             return;
         }
 
         // Call event and untrust
         EquinePlayerUntrustEvent event = new EquinePlayerUntrustEvent(horse, player, target);
         Bukkit.getPluginManager().callEvent(event);
-        plugin.getDatabaseManager().getDatabaseTrustedPlayers().removeTrustedPlayer(horse, offlineTarget);
+        plugin.getDatabaseManager().getDatabaseTrustedPlayers().removeTrustedPlayer(horse, target);
 
         player.sendMessage(ColorUtils.color("<prefix><green><target> has been untrusted!",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("target", Objects.requireNonNull(offlineTarget.getName()))));
+                Placeholder.parsed("target", Objects.requireNonNull(target.getName()))));
 
-        if (offlineTarget.isOnline()) {
-            Player onlineTarget = Bukkit.getPlayer(offlineTarget.getUniqueId());
-            if (onlineTarget != null) {
-                onlineTarget.sendMessage(ColorUtils.color("<prefix><green><player> has untrusted you from <horse>!",
-                        Placeholder.parsed("prefix", plugin.getPrefix()),
-                        Placeholder.parsed("player", player.getName()),
-                        Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
-            }
+        if (target.getPlayer() != null) {
+            target.getPlayer().sendMessage(ColorUtils.color("<prefix><green><player> has untrusted you from <horse>!",
+                    Placeholder.parsed("prefix", plugin.getPrefix()),
+                    Placeholder.parsed("player", player.getName()),
+                    Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
         }
     }
 
