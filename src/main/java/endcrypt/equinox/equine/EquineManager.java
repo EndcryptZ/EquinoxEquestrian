@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.aging.EquineAging;
 import endcrypt.equinox.equine.breeding.EquineBreeding;
 import endcrypt.equinox.equine.crosstie.EquineCrossTie;
 import endcrypt.equinox.equine.gaits.EquineGaits;
@@ -34,6 +35,7 @@ public class EquineManager {
     private final EquinePregnancy equinePregnancy;
     private final EquineWaste equineWaste;
     private final EquineLeveling equineLeveling;
+    private final EquineAging equineAging;
 
     private final EquinoxEquestrian plugin;
     public EquineManager(EquinoxEquestrian plugin) {
@@ -54,6 +56,8 @@ public class EquineManager {
         equinePregnancy = new EquinePregnancy(plugin);
         equineWaste = new EquineWaste(plugin);
         equineLeveling = new EquineLeveling(plugin);
+        equineAging = new EquineAging(plugin);
+
 
     }
 
