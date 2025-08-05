@@ -14,6 +14,7 @@ import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeatListener;
 import endcrypt.equinox.equine.bypass.EquineBypassListener;
 import endcrypt.equinox.equine.crosstie.EquineCrossTieListener;
 import endcrypt.equinox.equine.groom.EquineGroomListener;
+import endcrypt.equinox.equine.items.misc.WaterBucketListener;
 import endcrypt.equinox.equine.leveling.EquineLevelingListener;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancyListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
@@ -127,6 +128,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineLevelingListener(this);
         new EquineWasteListener(this);
         new TokenListener(this);
+        new WaterBucketListener(this);
 
     }
 
