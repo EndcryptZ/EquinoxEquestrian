@@ -12,6 +12,8 @@ import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
+import endcrypt.equinox.utils.CommandCooldownUtils;
+import endcrypt.equinox.utils.TimeUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
@@ -392,11 +394,18 @@ public class HorseCommand {
     public void leads(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
 
+        if(CommandCooldownUtils.isOnCooldown(player,  "horse leads")) {
+            player.sendMessage(ColorUtils.color("<red>Please wait <time> before using this again!",
+                    Placeholder.parsed("time", TimeUtils.formatDuration(CommandCooldownUtils.getRemaining(player, "horse leads")))));
+            return;
+        };
+
         if (player.getInventory().firstEmpty() == -1) {
             player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of lead."));
             return;
         }
 
+        CommandCooldownUtils.addCooldown(player, "horse leads", TimeUtils.minutesToMillis(5));
         ItemStack item = new ItemStack(Material.LEAD);
         item.setAmount(64);
         player.getInventory().addItem(item);

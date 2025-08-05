@@ -1,4 +1,4 @@
-package endcrypt.equinox.commands.cooldowns;
+package endcrypt.equinox.utils;
 
 import org.bukkit.entity.Player;
 
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CommandCooldown {
+public class CommandCooldownUtils {
 
-    private final Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
+    private static final Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
 
     /**
      * Adds a cooldown for a specific command and player.
@@ -17,7 +17,7 @@ public class CommandCooldown {
      * @param command The command string identifier.
      * @param cooldownMillis Cooldown duration in milliseconds.
      */
-    public void addCooldown(Player player, String command, long cooldownMillis) {
+    public static void addCooldown(Player player, String command, long cooldownMillis) {
         UUID uuid = player.getUniqueId();
         cooldowns.putIfAbsent(uuid, new HashMap<>());
         cooldowns.get(uuid).put(command, System.currentTimeMillis() + cooldownMillis);
@@ -30,7 +30,7 @@ public class CommandCooldown {
      * @param command The command to check.
      * @return True if the command is still on cooldown, false otherwise.
      */
-    public boolean isOnCooldown(Player player, String command) {
+    public static boolean isOnCooldown(Player player, String command) {
         UUID uuid = player.getUniqueId();
         if (!cooldowns.containsKey(uuid)) return false;
 
@@ -55,7 +55,7 @@ public class CommandCooldown {
      * @param command The command to check.
      * @return Remaining time in milliseconds. Returns 0 if not on cooldown.
      */
-    public long getRemaining(Player player, String command) {
+    public static long getRemaining(Player player, String command) {
         UUID uuid = player.getUniqueId();
         if (!cooldowns.containsKey(uuid)) return 0;
 
