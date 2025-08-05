@@ -95,9 +95,12 @@ public class HorseCommand {
                                 .withPermission("equinox.cmd.horse.manuremarket.others"))
                         .executes(this::manureMarket))
 
-
                 .withSubcommand(new CommandAPICommand("leads")
                         .executesPlayer(this::leads))
+
+                .withSubcommand(new CommandAPICommand("water")
+                        .executesPlayer(this::water))
+
                 .register();
     }
 
@@ -410,5 +413,26 @@ public class HorseCommand {
         item.setAmount(64);
         player.getInventory().addItem(item);
         player.sendMessage(ColorUtils.color("<green>You received a stack of lead."));
+    }
+
+    public void water(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+
+        if(CommandCooldownUtils.isOnCooldown(player,  "horse water")) {
+            player.sendMessage(ColorUtils.color("<red>Please wait <time> before using this again!",
+                    Placeholder.parsed("time", TimeUtils.formatDuration(CommandCooldownUtils.getRemaining(player, "horse water")))));
+            return;
+        };
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of lead."));
+            return;
+        }
+
+        CommandCooldownUtils.addCooldown(player, "horse water", TimeUtils.minutesToMillis(5));
+        ItemStack item = new ItemStack(Material.WATER_BUCKET);
+        item.setAmount(64);
+        player.getInventory().addItem(item);
+        player.sendMessage(ColorUtils.color("<green>You received a stack of water bucket."));
     }
 }
