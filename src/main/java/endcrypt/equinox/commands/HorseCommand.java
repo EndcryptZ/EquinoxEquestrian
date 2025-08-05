@@ -20,7 +20,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -402,7 +401,7 @@ public class HorseCommand {
             player.sendMessage(ColorUtils.color("<red>Please wait <time> before using this again!",
                     Placeholder.parsed("time", TimeUtils.formatDuration(CommandCooldownUtils.getRemaining(player, "horse leads")))));
             return;
-        };
+        }
 
         if (player.getInventory().firstEmpty() == -1) {
             player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of lead."));
