@@ -15,10 +15,12 @@ import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -90,6 +92,10 @@ public class HorseCommand {
                         .withArguments(new PlayerArgument("target").setOptional(true)
                                 .withPermission("equinox.cmd.horse.manuremarket.others"))
                         .executes(this::manureMarket))
+
+
+                .withSubcommand(new CommandAPICommand("leads")
+                        .executesPlayer(this::leads))
                 .register();
     }
 
@@ -383,4 +389,17 @@ public class HorseCommand {
         plugin.getMenuManager().getShopMenuManager().getShopManureMenu().open((Player) commandSender);
     }
 
+    public void leads(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+
+        if (player.getInventory().firstEmpty() == -1) {
+            player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of lead."));
+            return;
+        }
+
+        ItemStack item = new ItemStack(Material.LEAD);
+        item.setAmount(64);
+        player.getInventory().addItem(item);
+        player.sendMessage(ColorUtils.color("<green>You received a stack of lead."));
+    }
 }
