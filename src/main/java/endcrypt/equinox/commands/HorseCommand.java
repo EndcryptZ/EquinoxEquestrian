@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -418,21 +419,25 @@ public class HorseCommand {
     public void water(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
 
-        if(CommandCooldownUtils.isOnCooldown(player,  "horse water")) {
-            player.sendMessage(ColorUtils.color("<red>Please wait <time> before using this again!",
-                    Placeholder.parsed("time", TimeUtils.formatDuration(CommandCooldownUtils.getRemaining(player, "horse water")))));
+        if (CommandCooldownUtils.isOnCooldown(player, "horse water")) {
+            player.sendMessage(ColorUtils.color(
+                    "<red>Please wait <time> before using this again!",
+                    Placeholder.parsed("time", TimeUtils.formatDuration(CommandCooldownUtils.getRemaining(player, "horse water")))
+            ));
             return;
-        };
+        }
 
-        if (player.getInventory().firstEmpty() == -1) {
-            player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of lead."));
+        int firstEmptySlot = player.getInventory().firstEmpty();
+        if (firstEmptySlot == -1) {
+            player.sendMessage(ColorUtils.color("<red>Your inventory is full. Make some space to receive a stack of water buckets."));
             return;
         }
 
         CommandCooldownUtils.addCooldown(player, "horse water", TimeUtils.minutesToMillis(5));
-        ItemStack item = new ItemStack(Material.WATER_BUCKET);
-        item.setAmount(64);
-        player.getInventory().addItem(item);
-        player.sendMessage(ColorUtils.color("<green>You received a stack of water bucket."));
+
+        ItemStack waterBucketItem = new ItemStack(Material.WATER_BUCKET, 64);
+        player.getInventory().setItem(firstEmptySlot, waterBucketItem);
+
+        player.sendMessage(ColorUtils.color("<green>You received a stack of water buckets."));
     }
 }
