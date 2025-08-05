@@ -51,8 +51,10 @@ public enum Keys {
     LAST_PEE("EQUINE_LAST_PEE", System.currentTimeMillis()),
     LAST_POOP("EQUINE_LAST_POOP", System.currentTimeMillis()),
 
-    // Food and Thirst
+    // Hunger
     HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0),
+
+    // Thirst
     THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0);
 
 
@@ -83,6 +85,22 @@ public enum Keys {
             }
 
             return value != null ? (T) value : (T) nbtKey.getDefaultValue();
+        });
+    }
+
+    public static <T> void writePersistentData(AbstractHorse horse, Keys nbtKey, T value) {
+        NBT.modifyPersistentData(horse, nbt -> {
+            if (value instanceof String) {
+                nbt.setString(nbtKey.getKey(), (String) value);
+            } else if (value instanceof Integer) {
+                nbt.setInteger(nbtKey.getKey(), (Integer) value);
+            } else if (value instanceof Double) {
+                nbt.setDouble(nbtKey.getKey(), (Double) value);
+            } else if (value instanceof Long) {
+                nbt.setLong(nbtKey.getKey(), (Long) value);
+            } else if (value instanceof Boolean) {
+                nbt.setBoolean(nbtKey.getKey(), (Boolean) value);
+            }
         });
     }
 
