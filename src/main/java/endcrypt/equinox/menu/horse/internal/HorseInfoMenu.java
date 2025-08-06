@@ -11,6 +11,7 @@ import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.equine.attributes.Trait;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import endcrypt.equinox.utils.TimeUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -88,7 +89,7 @@ public class    HorseInfoMenu {
                                 "&7▸ &bOwner: &7" + horse.getOwnerName(),
                                 "&7▸ &bRegistered: &7WIP",
                                 "&7▸ &bID: &7WIP",
-                                "&7▸ &bClaim Date: &7" + EquineUtils.getHorseClaimDate(horse)
+                                "&7▸ &bClaim Date: &7" + TimeUtils.formatEpochToDate(horse.getClaimTime())
                                 )
                         .build()
         );
