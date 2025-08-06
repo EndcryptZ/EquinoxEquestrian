@@ -410,26 +410,33 @@ public class EquineAdminCommand {
     }
 
     private void setAge(CommandSender commandSender, CommandArguments args) {
+        final long MILLIS_PER_YEAR = 30L * 24 * 60 * 60 * 1000;
         Player player = (Player) commandSender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if(horse == null) {
+        if (horse == null) {
             commandSender.sendMessage(ColorUtils.color("<red>You must select a horse to change the age!"));
             return;
         }
 
         int ageInput = (int) args.get("age");
-        if(ageInput < 0 || ageInput > 45) {
+        if (ageInput < 0 || ageInput > 45) {
             commandSender.sendMessage(ColorUtils.color("<red>Age must be between 0 and 45!"));
             return;
         }
+
+        // Calculate the birthdate based on current time and age input
+        long currentTime = System.currentTimeMillis();
+        long birthTime = currentTime - (ageInput * MILLIS_PER_YEAR);
+
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         equineLiveHorse.setAge(ageInput);
+        equineLiveHorse.setClaimTime(birthTime); // Assuming claim time is used as birthdate
         equineLiveHorse.update();
+
         player.sendMessage(ColorUtils.color("<green>You set the age of <horse> <green>to <age>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("age", String.valueOf(equineLiveHorse.getAge()))));
     }
-
     private void setInHeat(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
