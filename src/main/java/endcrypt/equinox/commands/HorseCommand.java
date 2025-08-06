@@ -1,10 +1,7 @@
 package endcrypt.equinox.commands;
 
 import dev.jorel.commandapi.CommandAPICommand;
-import dev.jorel.commandapi.arguments.ArgumentSuggestions;
-import dev.jorel.commandapi.arguments.MultiLiteralArgument;
-import dev.jorel.commandapi.arguments.PlayerArgument;
-import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
@@ -14,8 +11,10 @@ import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.CommandCooldownUtils;
 import endcrypt.equinox.utils.TimeUtils;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -101,16 +100,19 @@ public class HorseCommand {
                 .withSubcommand(new CommandAPICommand("water")
                         .executesPlayer(this::water))
 
+                .withSubcommand(new CommandAPICommand("rename")
+                        .withArguments(new GreedyStringArgument("name"))
+                        .executesPlayer(this::rename))
+
+
                 .register();
     }
 
     private void info(CommandSender sender, CommandArguments args) {
         Player player = (Player) sender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if(horse == null) {
-            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
-            return;
-        }
+
+        if (!EquineUtils.hasSelectedHorse(player)) return;
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
 
@@ -197,11 +199,7 @@ public class HorseCommand {
         }
 
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if (horse == null) {
-            player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
-                    Placeholder.parsed("prefix", plugin.getPrefix())));
-            return;
-        }
+        if (!EquineUtils.hasSelectedHorse(player)) return;
 
         player.teleport(horse);
         player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
@@ -438,5 +436,40 @@ public class HorseCommand {
         player.getInventory().setItem(firstEmptySlot, waterBucketItem);
 
         player.sendMessage(ColorUtils.color("<green>You received a stack of water buckets."));
+    }
+
+    public void rename(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+
+
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (!EquineUtils.hasSelectedHorse(player)) return;
+
+        String newName = args.getUnchecked("name");
+        assert newName != null;
+        Component oldName = horse.name();
+        Component newNameComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(newName);
+        int newNameLength = ColorUtils.stripColor(newNameComponent).length();
+
+
+        if(newNameLength < 2) {
+            player.sendMessage(ColorUtils.color("<prefix><red>Name too short! Please keep it above 1 character.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            return;
+        }
+
+        if(newNameLength > 30) {
+            player.sendMessage(ColorUtils.color("<prefix><red>Name too long! Please keep it under 16 characters.",
+                    Placeholder.parsed("prefix", plugin.getPrefix())));
+            return;
+        }
+
+        horse.customName(newNameComponent);
+        player.sendMessage(ColorUtils.color(
+                "<prefix><green>You renamed your horse from <old> <green>to <new><green>!",
+                Placeholder.parsed("prefix", plugin.getPrefix()),
+                Placeholder.parsed("old", MiniMessage.miniMessage().serialize(oldName)),
+                Placeholder.parsed("new", MiniMessage.miniMessage().serialize(horse.name()))
+        ));
     }
 }
