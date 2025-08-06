@@ -19,7 +19,7 @@ public class EquineTransferManager {
 
 
     @Getter
-    private final Map<Player, List<EquineTransfer>> requestMap = new HashMap<>();
+    private final Map<Player, EquineTransfer> requestMap = new HashMap<>();
     private final Map<Player, EquineTransfer> confirmationCache = new HashMap<>();
     private final EquinoxEquestrian plugin;
     public EquineTransferManager(EquinoxEquestrian plugin) {
@@ -39,29 +39,25 @@ public class EquineTransferManager {
             return;
         }
 
-        EquineTransfer transfer = new EquineTransfer(sender, receiver, abstractHorse);
+        // Check for existing pending request
+        EquineTransfer existingTransfer = requestMap.get(sender);
+        EquineTransfer newTransfer = new EquineTransfer(sender, receiver, abstractHorse);
 
-        // Check if already requested
-        List<EquineTransfer> currentTransfers = requestMap.getOrDefault(receiver, new ArrayList<>());
-        boolean alreadyRequested = currentTransfers.stream().anyMatch(t ->
-                t.getSender().equals(sender) && t.getHorse().equals(abstractHorse));
-
-        if (alreadyRequested) {
-            sender.sendMessage(ColorUtils.color("<red>Transfer Request Failed: You have already sent a transfer request to this player."));
-            confirmationCache.remove(sender); // Clean up just in case
+        if (existingTransfer != null && existingTransfer.equals(newTransfer)) {
+            sender.sendMessage(ColorUtils.color("<red>You have already sent a transfer request to this player for this horse."));
             return;
         }
 
-        // Check if this is a confirmation
-        if (!confirmationCache.containsKey(sender) || !confirmationCache.get(sender).equals(transfer)) {
-            confirmationCache.put(sender, transfer);
+        // Check if confirmation is required
+        if (!confirmationCache.containsKey(sender) || !confirmationCache.get(sender).equals(newTransfer)) {
+            confirmationCache.put(sender, newTransfer);
             sender.sendMessage(ColorUtils.color(
                     "\n\n" +
-                    "<prefix><yellow>Are you sure you want to send a horse ownership transfer request?\n" +
+                            "<prefix><yellow>Are you sure you want to send a horse ownership transfer request?\n" +
                             "<prefix><green>Receiver: <yellow><receiver>\n" +
                             "<prefix><green>Horse: <reset><horse>\n" +
                             "<prefix><gray>Type the same command again to confirm." +
-                            "\n\n" ,
+                            "\n\n",
                     Placeholder.parsed("prefix", plugin.getPrefix()),
                     Placeholder.parsed("receiver", receiver.getName()),
                     Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name()))
@@ -69,14 +65,13 @@ public class EquineTransferManager {
             return;
         }
 
-        // Confirmed
-        currentTransfers.add(transfer);
-        requestMap.put(receiver, currentTransfers);
-        confirmationCache.remove(sender); // clean up
+        // Confirmed, proceed with request
+        requestMap.put(sender, newTransfer);
+        confirmationCache.remove(sender);
 
         sender.sendMessage(ColorUtils.color(
                 "\n\n" +
-                "<prefix><green>You have sent a horse ownership transfer request!\n" +
+                        "<prefix><green>You have sent a horse ownership transfer request!\n" +
                         "<prefix><green>Receiver: <yellow><receiver>\n" +
                         "<prefix><green>Horse: <reset><horse>" +
                         "\n\n",
@@ -87,16 +82,17 @@ public class EquineTransferManager {
 
         receiver.sendMessage(ColorUtils.color(
                 "\n\n" +
-                "<prefix><green>You have received a horse ownership transfer request!\n" +
+                        "<prefix><green>You have received a horse ownership transfer request!\n" +
                         "<prefix><green>From: <yellow><sender>\n" +
                         "<prefix><green>Horse: <reset><horse>\n" +
                         "<prefix><green>To accept, use <yellow>/h toaccept <sender>" +
-                        "\n\n" ,
+                        "\n\n",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("sender", sender.getName()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name()))
         ));
     }
+
 
     public void acceptTransferOwnership(Player receiver, Player sender) {
         if (EquineUtils.isPlayerHorseSlotsMax(receiver)) {
@@ -104,14 +100,11 @@ public class EquineTransferManager {
             return;
         }
 
-        List<EquineTransfer> requests = requestMap.getOrDefault(receiver, new ArrayList<>());
+        EquineTransfer request = requestMap.get(sender);
         EquineTransfer matchedTransfer = null;
 
-        for (EquineTransfer transfer : requests) {
-            if (transfer.getSender().equals(sender)) {
-                matchedTransfer = transfer;
-                break;
-            }
+        if (request.getSender().equals(sender)) {
+            matchedTransfer = request;
         }
 
         if (matchedTransfer == null) {
@@ -134,12 +127,7 @@ public class EquineTransferManager {
         plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
 
         // Remove the request
-        requests.remove(matchedTransfer);
-        if (requests.isEmpty()) {
-            requestMap.remove(receiver);
-        } else {
-            requestMap.put(receiver, requests);
-        }
+        requestMap.remove(sender);
 
         // Unset sender's selected horse if it's the one transferred
         AbstractHorse selected = plugin.getPlayerDataManager().getPlayerData(sender).getSelectedHorse();

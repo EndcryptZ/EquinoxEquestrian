@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 @Getter
 public class EquineTransfer {
 
@@ -18,22 +20,17 @@ public class EquineTransfer {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EquineTransfer that = (EquineTransfer) o;
-
-        return sender.equals(that.sender)
-                && receiver.equals(that.receiver)
-                && horse.equals(that.horse);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof EquineTransfer other)) return false;
+        return sender.equals(other.sender)
+                && receiver.equals(other.receiver)
+                && horse.equals(other.horse);
     }
 
     @Override
     public int hashCode() {
-        int result = sender.hashCode();
-        result = 31 * result + receiver.hashCode();
-        result = 31 * result + horse.hashCode();
-        return result;
+        return Objects.hash(sender, receiver, horse);
     }
+
 }

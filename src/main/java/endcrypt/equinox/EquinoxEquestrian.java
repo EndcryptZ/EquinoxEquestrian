@@ -19,6 +19,7 @@ import endcrypt.equinox.equine.leveling.EquineLevelingListener;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancyListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
+import endcrypt.equinox.equine.transfer.EquineTransferListener;
 import endcrypt.equinox.token.TokenListener;
 import endcrypt.equinox.equine.waste.EquineWasteListener;
 import endcrypt.equinox.hologram.HologramManager;
@@ -129,6 +130,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineWasteListener(this);
         new TokenListener(this);
         new WaterBucketListener(this);
+        new EquineTransferListener(this);
 
     }
 
