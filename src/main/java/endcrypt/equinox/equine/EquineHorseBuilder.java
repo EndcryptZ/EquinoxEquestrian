@@ -62,7 +62,7 @@ public class EquineHorseBuilder {
         );
     }
 
-    private static final long MILLIS_PER_YEAR = 21 * 24 * 60 * 60 * 1000;
+    private static final long MILLIS_PER_YEAR = 30L * 24 * 60 * 60 * 1000;
 
     // Method to spawn the horse at a player's location
     public void spawnHorse(String ownerUUID, Location loc, EquineHorse equineHorse, boolean isBaby) {
