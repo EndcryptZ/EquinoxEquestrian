@@ -5,6 +5,7 @@ import dev.jorel.commandapi.arguments.*;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
+import endcrypt.equinox.commands.arg.TransferOwnershipRequestsArgument;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
@@ -23,11 +24,9 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class HorseCommand {
-
 
     private final EquinoxEquestrian plugin;
     public HorseCommand(EquinoxEquestrian plugin) {
@@ -104,6 +103,15 @@ public class HorseCommand {
                         .withArguments(new GreedyStringArgument("name"))
                         .executesPlayer(this::rename))
 
+                .withSubcommand(new CommandAPICommand("transferownership")
+                        .withAliases("to")
+                        .withArguments(new PlayerArgument("target"))
+                        .executesPlayer(this::transferOwnership))
+
+                .withSubcommand(new CommandAPICommand("transferownershipaccept")
+                        .withAliases("toaccept")
+                        .withArguments(new TransferOwnershipRequestsArgument())
+                        .executesPlayer(this::transferOwnershipAccept))
 
                 .register();
     }
@@ -471,5 +479,22 @@ public class HorseCommand {
                 Placeholder.parsed("old", MiniMessage.miniMessage().serialize(oldName)),
                 Placeholder.parsed("new", MiniMessage.miniMessage().serialize(horse.name()))
         ));
+    }
+
+    public void transferOwnership(CommandSender commandSender, CommandArguments args) {
+        Player sender = (Player) commandSender;
+        Player receiver = args.getUnchecked("target");
+
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(sender).getSelectedHorse();
+        if (!EquineUtils.hasSelectedHorse(sender)) return;
+
+        plugin.getEquineManager().getEquineTransferManager().requestTransferOwnership(receiver, sender, horse);
+    }
+
+    public void transferOwnershipAccept(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        Player sender = args.getUnchecked("target");
+
+        plugin.getEquineManager().getEquineTransferManager().acceptTransferOwnership(player, sender);
     }
 }

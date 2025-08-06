@@ -14,7 +14,7 @@ import endcrypt.equinox.equine.lunge.EquineLunge;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancy;
 import endcrypt.equinox.equine.privacy.EquinePrivacy;
 import endcrypt.equinox.equine.selector.EquineSelector;
-import endcrypt.equinox.equine.transfer.EquineTransfer;
+import endcrypt.equinox.equine.transfer.EquineTransferManager;
 import endcrypt.equinox.equine.waste.EquineWaste;
 import lombok.Getter;
 
@@ -37,7 +37,7 @@ public class EquineManager {
     private final EquineWaste equineWaste;
     private final EquineLeveling equineLeveling;
     private final EquineAging equineAging;
-    private final EquineTransfer equineTransfer;
+    private final EquineTransferManager equineTransferManager;
 
     private final EquinoxEquestrian plugin;
     public EquineManager(EquinoxEquestrian plugin) {
@@ -59,7 +59,7 @@ public class EquineManager {
         equineWaste = new EquineWaste(plugin);
         equineLeveling = new EquineLeveling(plugin);
         equineAging = new EquineAging(plugin);
-        equineTransfer = new EquineTransfer(plugin);
+        equineTransferManager = new EquineTransferManager(plugin);
 
 
     }
