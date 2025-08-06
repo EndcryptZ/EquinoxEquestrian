@@ -104,7 +104,7 @@ public class EquineDebugCommand {
 
     private void debugBirthTime(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
-        long newClaimTime = args.getUnchecked("epoch");
+        long newBirthTime = args.getUnchecked("epoch");
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
 
         if(!isExecutorDeveloper(player)) {
@@ -117,11 +117,11 @@ public class EquineDebugCommand {
         }
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
-        equineLiveHorse.setClaimTime(newClaimTime);
+        equineLiveHorse.setBirthTime(newBirthTime);
         equineLiveHorse.update();
         player.sendMessage(ColorUtils.color("<green>You adjusted the birth time of <horse> to <date>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
-                Placeholder.parsed("date", TimeUtils.formatEpochToDate(equineLiveHorse.getBirthTime()))));
+                Placeholder.parsed("date", TimeUtils.formatEpochToDate(newBirthTime))));
     }
 
 
