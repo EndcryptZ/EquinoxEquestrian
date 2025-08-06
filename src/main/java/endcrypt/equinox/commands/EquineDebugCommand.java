@@ -11,7 +11,6 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
 import endcrypt.equinox.utils.TimeUtils;
@@ -19,6 +18,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.entity.CraftHorse;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
@@ -47,6 +47,9 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("debugbirthdate")
                         .withArguments(new LongArgument("epoch"))
                         .executesPlayer(this::debugBirthTime))
+
+                .withSubcommand(new CommandAPICommand("debughorseeatanimation")
+                        .executesPlayer(this::debugHorseEatAnimation))
 
                 .register();
     }
@@ -122,6 +125,23 @@ public class EquineDebugCommand {
         player.sendMessage(ColorUtils.color("<green>You adjusted the birth time of <horse> to <date>",
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("date", TimeUtils.formatEpochToDate(newBirthTime))));
+    }
+
+    private void debugHorseEatAnimation(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        if(horse == null) {
+            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
+            return;
+        }
+
+        CraftHorse nmsHorse = (CraftHorse) horse;
+        nmsHorse.getHandle().setEating(true);
     }
 
 
