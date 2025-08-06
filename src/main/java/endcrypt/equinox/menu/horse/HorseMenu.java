@@ -3,7 +3,10 @@ package endcrypt.equinox.menu.horse;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
+import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -151,10 +154,28 @@ public class HorseMenu {
                             .build()
             )
                     .withListener((InventoryClickEvent event) -> {
+                        if (!canMountHorse(player, abstractHorse)) return;
                         abstractHorse.addPassenger(player);
                         player.closeInventory();
                     });
         }
+
+    }
+
+    public boolean canMountHorse(Player player, AbstractHorse horse) {
+        int age = Keys.readPersistentData(horse, Keys.AGE);
+
+        // check age restriction
+        if (age < 4) {
+            player.sendMessage(ColorUtils.color("<red>This horse is too young to ride. It must be at least 4 years old!"));
+            player.closeInventory();
+            return false;
+        }
+
+        // add more conditions here in the future
+        // e.g., cleanliness, health, taming, etc.
+
+        return true;
     }
 
 }
