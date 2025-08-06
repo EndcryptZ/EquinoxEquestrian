@@ -24,14 +24,14 @@ public class EquineAgingTask {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                Long claimTime = Keys.readPersistentData(abstractHorse, Keys.CLAIM_TIME);
-                if (claimTime == null) continue;
+                Long birthTime = Keys.readPersistentData(abstractHorse, Keys.BIRTH_TIME);
+                if (birthTime == null) continue;
 
                 int currentAge = Keys.readPersistentData(abstractHorse, Keys.AGE);
                 long now = System.currentTimeMillis();
 
                 // Time difference in milliseconds
-                long elapsed = now - claimTime;
+                long elapsed = now - birthTime;
 
                 // 1 month in milliseconds (approx. 30 days)
                 long monthMillis = 30L * 24 * 60 * 60 * 1000;
