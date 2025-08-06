@@ -4,6 +4,8 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -230,6 +232,18 @@ public class EquineUtils {
             }
             return null;
         });
+    }
+
+    public static boolean hasSelectedHorse(Player player) {
+        AbstractHorse horse = instance.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        if (horse == null) {
+            player.sendMessage(ColorUtils.color("<prefix><red>You have not selected a horse!",
+                    Placeholder.parsed("prefix", instance.getPrefix())));
+            return false;
+        }
+
+        return true;
+
     }
 
 }
