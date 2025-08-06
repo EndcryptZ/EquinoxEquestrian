@@ -6,13 +6,20 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.IntegerArgument;
+import dev.jorel.commandapi.arguments.LongArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
+import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import endcrypt.equinox.utils.TimeUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -36,6 +43,10 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("stresstesthoresesspawn")
                         .withArguments(new IntegerArgument("count"))
                         .executesPlayer(this::stressTestHorsesSpawn))
+
+                .withSubcommand(new CommandAPICommand("debugbirthdate")
+                        .withArguments(new LongArgument("epoch"))
+                        .executesPlayer(this::debugBirthTime))
 
                 .register();
     }
@@ -89,6 +100,28 @@ public class EquineDebugCommand {
         for (int i = 0; i < count; i++) {
             equineHorseBuilder.spawnHorse(player.getUniqueId().toString(), player.getLocation(), equineHorseBuilder.randomHorse("Stress Test Horse"), false);
         }
+    }
+
+    private void debugBirthTime(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        long newClaimTime = args.getUnchecked("epoch");
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        if(horse == null) {
+            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
+            return;
+        }
+
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        equineLiveHorse.setClaimTime(newClaimTime);
+        equineLiveHorse.update();
+        player.sendMessage(ColorUtils.color("<green>You adjusted the birth time of <horse> to <date>",
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
+                Placeholder.parsed("date", TimeUtils.formatEpochToDate(equineLiveHorse.getBirthTime()))));
     }
 
 
