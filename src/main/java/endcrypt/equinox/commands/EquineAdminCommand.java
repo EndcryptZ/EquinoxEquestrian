@@ -430,7 +430,7 @@ public class EquineAdminCommand {
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         equineLiveHorse.setAge(ageInput);
-        equineLiveHorse.setClaimTime(birthTime); // Assuming claim time is used as birthdate
+        equineLiveHorse.setBirthTime(birthTime); // Assuming claim time is used as birthdate
         equineLiveHorse.update();
 
         player.sendMessage(ColorUtils.color("<green>You set the age of <horse> <green>to <age>",
