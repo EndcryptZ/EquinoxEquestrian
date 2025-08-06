@@ -135,7 +135,7 @@ public class EquineTransferManager {
             plugin.getPlayerDataManager().getPlayerData(sender).setSelectedHorse(null);
         }
 
-// Receiver success message
+        // Receiver success message
         receiver.sendMessage(ColorUtils.color(
                 "\n\n" + // extra spacing
                         plugin.getPrefix() + "<green>You have successfully accepted the horse\n" +
@@ -147,7 +147,7 @@ public class EquineTransferManager {
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))
         ));
 
-// Sender notification message
+        // Sender notification message
         sender.sendMessage(ColorUtils.color(
                 "\n\n" + // extra spacing
                         plugin.getPrefix() + "<yellow><receiver>\n" +
