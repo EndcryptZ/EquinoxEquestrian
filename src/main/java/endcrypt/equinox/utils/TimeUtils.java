@@ -1,5 +1,7 @@
 package endcrypt.equinox.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,5 +74,9 @@ public class TimeUtils {
         if (seconds > 0 || sb.length() == 0) sb.append(seconds).append("s");
 
         return sb.toString();
+    }
+
+    public static String formatEpochToDate(long epoch) {
+        return new SimpleDateFormat("dd MMM yyyy").format(new Date(epoch));
     }
 }
