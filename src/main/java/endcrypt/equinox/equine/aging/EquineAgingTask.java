@@ -43,7 +43,14 @@ public class EquineAgingTask {
                 if (calculatedAge != currentAge) {
                     Keys.writePersistentData(abstractHorse, Keys.AGE, calculatedAge);
                 }
+
+                if (currentAge >= 3) {
+                    abstractHorse.setAdult();
+                } else {
+                    abstractHorse.setBaby();
+                }
             }
         }
     }
+
 }
