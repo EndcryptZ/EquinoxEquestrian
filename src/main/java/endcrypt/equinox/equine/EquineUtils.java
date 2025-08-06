@@ -246,4 +246,12 @@ public class EquineUtils {
 
     }
 
+    public static boolean isPlayerHorseSlotsMax(Player player) {
+        if (instance.getPermissionManager().getMaxHorsesAllowed(player) <= instance.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size()) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
