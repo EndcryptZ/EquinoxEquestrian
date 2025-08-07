@@ -37,16 +37,10 @@ public class EquineTransferManager {
             return;
         }
 
-        // Check for existing pending request
-        EquineTransfer existingTransfer = requestMap.get(sender);
         EquineTransfer newTransfer = new EquineTransfer(sender, receiver, abstractHorse);
+        EquineTransfer existingTransfer = requestMap.get(sender);
 
-        if (existingTransfer != null && existingTransfer.equals(newTransfer)) {
-            sender.sendMessage(ColorUtils.color("<red>You have already sent a transfer request to this player for this horse."));
-            return;
-        }
-
-        // Check if confirmation is required
+        // Step 1: Handle confirmation (required before proceeding)
         if (!confirmationCache.containsKey(sender) || !confirmationCache.get(sender).equals(newTransfer)) {
             confirmationCache.put(sender, newTransfer);
             sender.sendMessage(ColorUtils.color(
@@ -63,7 +57,21 @@ public class EquineTransferManager {
             return;
         }
 
-        // Confirmed, proceed with request
+        // Step 2: Confirmed — notify previous receiver if they're different
+        if (existingTransfer != null && !existingTransfer.getReceiver().equals(receiver)) {
+            Player oldReceiver = existingTransfer.getReceiver();
+            if (oldReceiver.isOnline()) {
+                oldReceiver.sendMessage(ColorUtils.color(
+                        "\n\n" +
+                                "<prefix><red>The horse transfer request from <yellow><sender> <red>is no longer valid.\n" +
+                                "<prefix><gray>They sent a request to another player.\n\n",
+                        Placeholder.parsed("prefix", plugin.getPrefix()),
+                        Placeholder.parsed("sender", sender.getName())
+                ));
+            }
+        }
+
+        // Step 3: Save and notify sender & receiver
         requestMap.put(sender, newTransfer);
         confirmationCache.remove(sender);
 
@@ -90,7 +98,6 @@ public class EquineTransferManager {
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(abstractHorse.name()))
         ));
     }
-
 
     public void acceptTransferOwnership(Player receiver, Player sender) {
         if (EquineUtils.isPlayerHorseSlotsMax(receiver)) {
