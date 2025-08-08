@@ -76,6 +76,8 @@ public class EquineLiveHorse {
     // Thirst
     private double thirstPercentage;
 
+    private long lastUnload;
+
     private final AbstractHorse horse;
     
     public EquineLiveHorse() {
@@ -112,6 +114,7 @@ public class EquineLiveHorse {
         this.lastPee = 0L;
         this.hungerPercentage = 100.0;
         this.thirstPercentage = 100.0;
+        this.lastUnload = 0L;
     }
 
 
@@ -160,6 +163,8 @@ public class EquineLiveHorse {
 
         NBT.getPersistentData(horse, nbt -> this.hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey()));
+
+        NBT.getPersistentData(horse, nbt -> this.lastUnload = nbt.getLong(Keys.LAST_UNLOAD.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
@@ -224,6 +229,7 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.HEIGHT.getKey(), this.height.getHands());
             nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), this.hungerPercentage);
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), this.thirstPercentage);
+            nbt.setLong(Keys.LAST_UNLOAD.getKey(), this.lastUnload);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {

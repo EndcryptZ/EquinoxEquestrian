@@ -47,7 +47,7 @@ public enum Keys {
     BREEDING_PARTNER("EQUINE_BREEDING_PARTNER", ""),
     INSTANT_BREED("EQUINE_INSTANT_BREED", "false"),
 
-    // Wasting
+    // Waste
     LAST_PEE("EQUINE_LAST_PEE", System.currentTimeMillis()),
     LAST_POOP("EQUINE_LAST_POOP", System.currentTimeMillis()),
 
@@ -55,7 +55,9 @@ public enum Keys {
     HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0),
 
     // Thirst
-    THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0);
+    THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0),
+
+    LAST_UNLOAD("EQUINE_LAST_UNLOAD", System.currentTimeMillis());
 
 
     public final String key;
