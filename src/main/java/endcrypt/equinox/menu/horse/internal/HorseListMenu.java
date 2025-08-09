@@ -89,7 +89,7 @@ public class    HorseListMenu {
                 if (gui.getMaxPage() > 0) {
                     if (slot > (gui.getRowsPerPage() * 9) - 1)
                         gui.setButton(slot + 30, previousPageButton(gui));
-                    if (sortedHorses.size() > slot)
+                    if (sortedHorses.size() > slot + 27)
                         gui.setButton(slot + 32, nextPageButton(gui));
                 }
                 gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
