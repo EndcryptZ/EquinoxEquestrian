@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.hunger;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractHorse;
 
@@ -16,7 +17,10 @@ public class EquineHungerTask {
 
 
     private void start() {
-        plugin.getServer().getScheduler().runTaskTimer(plugin, this::checkHunger, 20L, 20L);
+        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
+            checkHunger();
+            checkFood();
+        }, 20L, 20L);
     }
 
     private void checkHunger() {
@@ -60,6 +64,28 @@ public class EquineHungerTask {
                 ));
                  */
 
+            }
+        }
+    }
+
+    private void checkFood() {
+        long now = System.currentTimeMillis();
+
+        for (World world : plugin.getServer().getWorlds()) {
+            for (AbstractHorse horse : world.getEntitiesByClass(AbstractHorse.class)) {
+                if (!EquineUtils.isLivingEquineHorse(horse)) continue;
+
+                if (!Keys.hasPersistentData(horse, Keys.LAST_SEEK_FOOD)) {
+                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                    continue; // Skip this tick so decay doesn't happen instantly
+                }
+
+
+                long lastSeekFood = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
+                if (lastSeekFood + TimeUtils.hoursToMillis(1) < now) {
+                    plugin.getEquineManager().getEquineHunger().checkFood(horse);
+                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                }
             }
         }
     }
