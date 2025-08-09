@@ -45,6 +45,11 @@ public class DatabaseHorses {
         put("last_location_z", "REAL"); // Changed from DOUBLE to be compatible with both MySQL and SQLite
         put("is_pregnant", "TINYINT(1)"); // Boolean-like value, 0 = false, 1 = true
         put("is_in_heat", "TINYINT(1)");  // Boolean-like value, 0 = false, 1 = true
+        put("hunger_percentage", "REAL"); // 0–100, decimal safe
+        put("last_hunger_update", "BIGINT"); // Epoch millis
+        put("thirst_percentage", "REAL"); // 0–100, decimal safe
+        put("last_thirst_update", "BIGINT"); // Epoch millis
+
     }};
 
 
@@ -106,6 +111,10 @@ public class DatabaseHorses {
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
             boolean isPregnant = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
             boolean isInHeat = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
+            double hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey());
+            long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
+            double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());
+            long lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey());
 
             boolean isMySQL;
             try {
@@ -117,8 +126,9 @@ public class DatabaseHorses {
             String sql = (isMySQL ? "INSERT INTO " : "INSERT OR REPLACE INTO ") + "EQUINE_HORSES (" +
                     "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
                     "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, " +
-                    "skull_id, last_world, last_location_x, last_location_y, last_location_z, is_pregnant, is_in_heat" +
-                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "skull_id, last_world, last_location_x, last_location_y, last_location_z, is_pregnant, is_in_heat, hunger_percentage, " +
+                    "last_hunger_update, thirst_percentage, last_thirst_update" +
+                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, uuid);
@@ -148,6 +158,10 @@ public class DatabaseHorses {
                 ps.setDouble(25, lastZ);
                 ps.setBoolean(26, isPregnant);
                 ps.setBoolean(27, isInHeat);
+                ps.setDouble(28, hungerPercentage);
+                ps.setLong(29, lastHungerUpdate);
+                ps.setDouble(30, thirstPercentage);
+                ps.setLong(31, lastThirstUpdate);
 
                 ps.executeUpdate();
                 return true;
@@ -249,6 +263,10 @@ public class DatabaseHorses {
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
             boolean isPregnant = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
             boolean isInHeat = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
+            double hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey());
+            long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
+            double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());
+            long lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey());
 
             boolean isMySQL;
             try {
@@ -262,7 +280,8 @@ public class DatabaseHorses {
                     "coat_color = ?, coat_modifier = ?, gender = ?, age = ?, height = ?, trait_1 = ?, trait_2 = ?, " +
                     "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
                     "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ?, " +
-                    "is_pregnant = ?, is_in_heat = ? " +
+                    "is_pregnant = ?, is_in_heat = ?, hunger_percentage = ?, last_hunger_update = ?, thirst_percentage = ?, " +
+                    "last_thirst_update = ? " +
                     "WHERE uuid = ?";
 
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -292,7 +311,11 @@ public class DatabaseHorses {
                 ps.setDouble(24, lastZ);
                 ps.setBoolean(25, isPregnant);
                 ps.setBoolean(26, isInHeat);
-                ps.setString(27, uuid);
+                ps.setDouble(27, hungerPercentage);
+                ps.setLong(28, lastHungerUpdate);
+                ps.setDouble(29, thirstPercentage);
+                ps.setLong(30, lastThirstUpdate);
+                ps.setString(31, uuid);
 
                 ps.executeUpdate();
                 return true;

@@ -141,12 +141,14 @@ public class EquineHorseBuilder {
             nbt.setDouble(Keys.LAST_LOCATION_Z.getKey(), horse.getLocation().getZ());
 
             // No Instant Waste
-            nbt.setLong(Keys.LAST_PEE.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
-            nbt.setLong(Keys.LAST_POOP.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
+            nbt.setLong(Keys.LAST_PEE.getKey(), System.currentTimeMillis());
+            nbt.setLong(Keys.LAST_POOP.getKey(), System.currentTimeMillis());
 
             // Set Hunger & Thirst
             nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), 100.0);
+            nbt.setLong(Keys.LAST_HUNGER_UPDATE.getKey(), System.currentTimeMillis());
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), 100.0);
+            nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), System.currentTimeMillis());
 
         });
 
