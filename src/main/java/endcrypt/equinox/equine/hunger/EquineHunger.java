@@ -3,7 +3,6 @@ package endcrypt.equinox.equine.hunger;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
-import groovyjarjarantlr4.v4.runtime.misc.NotNull;
 import org.bukkit.entity.AbstractHorse;
 
 public class EquineHunger {
@@ -23,7 +22,7 @@ public class EquineHunger {
      *
      * @param horse The horse whose hunger should be recalculated.
      */
-    public void calculateHungerElapsed(@NotNull AbstractHorse horse) {
+    public void calculateHungerElapsed(AbstractHorse horse) {
         if (!EquineUtils.isLivingEquineHorse(horse)) {
             plugin.getLogger().warning(() -> "[Equine] Tried to calculate hunger for a non-equine horse: " + horse.getUniqueId());
             return;
