@@ -23,17 +23,12 @@ public class HorseMenuListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    List<Material> allowedHorseRightClickItems = Arrays.asList(Material.LEAD, Material.WHEAT);
+    List<Material> allowedHorseRightClickItems = Arrays.asList(Material.LEAD, Material.HAY_BLOCK, Material.DRIED_KELP_BLOCK);
 
     @EventHandler
     public void onHorseClick(PlayerInteractEntityEvent event) {
-        if(!(event.getRightClicked() instanceof AbstractHorse horse)) {
-            return;
-        }
-
-        if(allowedHorseRightClickItems.contains(event.getPlayer().getInventory().getItemInMainHand().getType())){
-            return;
-        }
+        if(!(event.getRightClicked() instanceof AbstractHorse horse)) return;
+        if(allowedHorseRightClickItems.contains(event.getPlayer().getInventory().getItemInMainHand().getType())) return;
 
         if(!EquineUtils.isLivingEquineHorse(horse)) {
             event.getPlayer().sendMessage(MessageUtils.cantInteractWithNotEquineHorse());
