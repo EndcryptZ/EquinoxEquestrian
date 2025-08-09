@@ -20,6 +20,7 @@ import endcrypt.equinox.equine.leveling.EquineLevelingListener;
 import endcrypt.equinox.equine.pregnancy.EquinePregnancyListener;
 import endcrypt.equinox.equine.privacy.EquinePrivacyListener;
 import endcrypt.equinox.equine.selector.EquineSelectorListener;
+import endcrypt.equinox.equine.thirst.EquineThirstListener;
 import endcrypt.equinox.equine.transfer.EquineTransferListener;
 import endcrypt.equinox.token.TokenListener;
 import endcrypt.equinox.equine.waste.EquineWasteListener;
@@ -133,6 +134,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new WaterBucketListener(this);
         new EquineTransferListener(this);
         new EquineHungerListener(this);
+        new EquineThirstListener(this);
 
     }
 

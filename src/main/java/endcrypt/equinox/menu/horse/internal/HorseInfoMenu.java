@@ -176,26 +176,20 @@ public class    HorseInfoMenu {
     }
 
     private SGButton welfareInformation(EquineLiveHorse horse) {
-        double hunger = horse.getHungerPercentage();
+        double hunger = Math.max(0, Math.min(100, horse.getHungerPercentage()));
+        double thirst = Math.max(0, Math.min(100, horse.getThirstPercentage()));
 
-        // Clamp to range [0, 100]
-        hunger = Math.max(0, Math.min(100, hunger));
+        // Hunger color
+        String hungerColor = getLevelColor(hunger);
+        // Thirst color
+        String thirstColor = getLevelColor(thirst);
 
-        // Pick color based on hunger level
-        String hungerColor;
-        if (hunger >= 60) {
-            hungerColor = "&a"; // Green
-        } else if (hunger >= 40) {
-            hungerColor = "&6"; // Orange
-        } else if (hunger >= 30) {
-            hungerColor = "&c"; // Light Red
-        } else {
-            hungerColor = "&4"; // Dark Red
-        }
-
-        // Truncate to 2 decimal places (no rounding)
+        // Truncate without rounding
         double truncatedHunger = Math.floor(hunger * 100) / 100.0;
+        double truncatedThirst = Math.floor(thirst * 100) / 100.0;
+
         String hungerText = hungerColor + String.format("%.2f%%", truncatedHunger);
+        String thirstText = thirstColor + String.format("%.2f%%", truncatedThirst);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
@@ -205,13 +199,21 @@ public class    HorseInfoMenu {
                                 "&7▸ &bRelationship: &7WIP",
                                 "&7▸ &bNutrition:",
                                 "&7▸ &b+ Hunger: " + hungerText,
-                                "&7▸ &b+ Thirst: &7WIP",
+                                "&7▸ &b+ Thirst: " + thirstText,
                                 "&7▸ &b+ Weight: &7WIP",
                                 "&7▸ &bCleanliness: &7WIP"
                         )
                         .build()
         );
     }
+
+    private String getLevelColor(double value) {
+        if (value >= 60) return "&a"; // Green
+        else if (value >= 40) return "&6"; // Orange
+        else if (value >= 30) return "&c"; // Light Red
+        else return "&4"; // Dark Red
+    }
+
 
     private SGButton horseInformation3(EquineLiveHorse horse) {
         return new SGButton(
