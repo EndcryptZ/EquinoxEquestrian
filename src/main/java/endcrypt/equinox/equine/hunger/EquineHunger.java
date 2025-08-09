@@ -28,6 +28,8 @@ public class EquineHunger {
         );
 
         if (targetBlock == null) return;
+        if (Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK)) return;
+        Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, true);
 
 
         // Schedule a repeating task to check distance until reached
@@ -67,6 +69,7 @@ public class EquineHunger {
                     }
 
                     // Restore hunger
+                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
                     Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, Math.min(100, hunger + 10));
 
                 }, 60L); // 3 seconds later

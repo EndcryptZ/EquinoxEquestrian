@@ -37,6 +37,8 @@ public class HorseNBTUpdaterListener implements Listener {
 
             EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
             equineLiveHorse.setLastLocation(horse.getLocation());
+            equineLiveHorse.setInFoodTask(false);
+            equineLiveHorse.setInWaterTask(false);
 
             if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();

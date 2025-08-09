@@ -55,10 +55,13 @@ public enum Keys {
     HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0, Double.class),
     LAST_HUNGER_UPDATE("EQUINE_LAST_HUNGER_UPDATE", System.currentTimeMillis(), Long.class),
     LAST_SEEK_FOOD("EQUINE_LAST_SEEK_FOOD", System.currentTimeMillis(), Long.class),
+    IS_IN_FOOD_TASK("EQUINE_IS_IN_FOOD_TASK", false, Boolean.class),
 
     // Thirst
     THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0, Double.class),
-    LAST_THIRST_UPDATE("EQUINE_LAST_THIRST_UPDATE", System.currentTimeMillis(), Long.class);
+    LAST_THIRST_UPDATE("EQUINE_LAST_THIRST_UPDATE", System.currentTimeMillis(), Long.class),
+    LAST_SEEK_WATER("EQUINE_LAST_SEEK_WATER", System.currentTimeMillis(), Long.class),
+    IS_IN_WATER_TASK("EQUINE_IS_IN_WATER_TASK", false, Boolean.class);
 
 
     public final String key;

@@ -74,10 +74,13 @@ public class EquineLiveHorse {
     private double hungerPercentage;
     private long lastHungerUpdate;
     private long lastSeekFood;
+    private boolean isInFoodTask;
 
     // Thirst
     private double thirstPercentage;
     private long lastThirstUpdate;
+    private long lastSeekWater;
+    private boolean isInWaterTask;
 
     private final AbstractHorse horse;
     
@@ -116,8 +119,11 @@ public class EquineLiveHorse {
         this.hungerPercentage = 100.0;
         this.lastHungerUpdate = 0L;
         this.lastSeekFood = 0L;
+        this.isInFoodTask = false;
         this.thirstPercentage = 100.0;
         this.lastThirstUpdate = 0L;
+        this.lastSeekWater = 0L;
+        this.isInWaterTask = false;
     }
 
 
@@ -167,9 +173,12 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastSeekFood = nbt.getLong(Keys.LAST_SEEK_FOOD.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.isInFoodTask = nbt.getBoolean(Keys.IS_IN_FOOD_TASK.getKey()));
 
         NBT.getPersistentData(horse, nbt -> this.thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.lastSeekWater = nbt.getLong(Keys.LAST_SEEK_WATER.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.isInWaterTask = nbt.getBoolean(Keys.IS_IN_WATER_TASK.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
@@ -235,8 +244,11 @@ public class EquineLiveHorse {
             nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), this.hungerPercentage);
             nbt.setLong(Keys.LAST_HUNGER_UPDATE.getKey(), this.lastHungerUpdate);
             nbt.setLong(Keys.LAST_SEEK_FOOD.getKey(), this.lastSeekFood);
+            nbt.setBoolean(Keys.IS_IN_FOOD_TASK.getKey(), this.isInFoodTask);
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), this.thirstPercentage);
             nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), this.lastThirstUpdate);
+            nbt.setLong(Keys.LAST_SEEK_WATER.getKey(), this.lastSeekWater);
+            nbt.setBoolean(Keys.IS_IN_WATER_TASK.getKey(), this.isInWaterTask);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {
