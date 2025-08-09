@@ -1,9 +1,13 @@
 package endcrypt.equinox.equine.hunger;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.entity.CraftHorse;
 import org.bukkit.entity.AbstractHorse;
+
+import java.util.Set;
 
 public class EquineHunger {
 
@@ -13,42 +17,96 @@ public class EquineHunger {
         new EquineHungerTask(plugin);
     }
 
-    /**
-     * Calculates and applies hunger loss based on the real-world time elapsed
-     * since the last hunger update for this horse.
-     * <p>
-     * This method should be called when the horse entity loads into the world,
-     * ensuring hunger stays consistent regardless of whether the horse was loaded.
-     *
-     * @param horse The horse whose hunger should be recalculated.
-     */
-    public void calculateHungerElapsed(AbstractHorse horse) {
-        if (!EquineUtils.isLivingEquineHorse(horse)) {
-            plugin.getLogger().warning(() -> "[Equine] Tried to calculate hunger for a non-equine horse: " + horse.getUniqueId());
-            return;
+    public void checkFood(AbstractHorse horse) {
+        double hunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+
+        // Find the nearest edible blocks for horse
+        Block targetBlock = findNearestBlock(
+                horse.getLocation(),
+                Set.of(Material.GRASS_BLOCK, Material.SHORT_GRASS, Material.TALL_GRASS),
+                7 // radius
+        );
+
+        if (targetBlock == null) return;
+
+
+        // Schedule a repeating task to check distance until reached
+        Bukkit.getScheduler().runTaskTimer(plugin, task -> {
+            if (!horse.isValid() || horse.isDead()) {
+                task.cancel();
+                return;
+            }
+
+            double dist = horse.getLocation().distance(targetBlock.getLocation());
+            horse.getPathfinder().moveTo(targetBlock.getLocation(), 2);
+            if (dist <= 1.5) {
+                task.cancel();
+
+                // Start eating animation for 3 seconds
+                CraftHorse craftHorse = (CraftHorse) horse;
+                craftHorse.getHandle().setEating(true);
+
+                // Play eating sound and happy particles immediately
+                horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_HORSE_EAT, 1.0f, 1.0f);
+                horse.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, horse.getLocation().add(0, 1, 0), 8);
+
+                // After 3 seconds, stop eating and consume the block
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    craftHorse.getHandle().setEating(false);
+
+                    // Play block break effect and particles
+                    horse.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_GRASS_BREAK, 1.0f, 1.0f);
+                    horse.getWorld().spawnParticle(Particle.BLOCK, targetBlock.getLocation().add(0.5, 0.5, 0.5), 20,
+                            0.3, 0.3, 0.3, targetBlock.getBlockData());
+
+                    // Replace grass block with dirt
+                    if(targetBlock.getType().equals(Material.GRASS_BLOCK)) targetBlock.setType(Material.DIRT);
+                    else targetBlock.setType(Material.AIR);
+
+                    // Restore hunger
+                    Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, Math.min(100, hunger + 10));
+
+                }, 60L); // 3 seconds later
+            }
+        }, 0L, 10L); // check every 10 ticks
+    }
+
+
+
+    public static Block findNearestBlock(Location start, Set<Material> targetTypes, int radius) {
+        if (start == null || targetTypes == null || targetTypes.isEmpty()) {
+            return null;
         }
 
-        double currentHunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
-        long lastUpdate = Keys.readPersistentData(horse, Keys.LAST_HUNGER_UPDATE);
-        long now = System.currentTimeMillis();
-
-        if (lastUpdate <= 0L) {
-            // If no recorded update, set baseline
-            Keys.writePersistentData(horse, Keys.LAST_HUNGER_UPDATE, now);
-            return;
+        World world = start.getWorld();
+        if (world == null) {
+            return null;
         }
 
-        long elapsedMillis = now - lastUpdate;
-        if (elapsedMillis <= 0L) return; // No time passed or system clock issue
+        Block nearestBlock = null;
+        double nearestDistanceSq = Double.MAX_VALUE;
 
-        // Hunger decreases 3% per real hour
-        final double percentPerSecond = 3.0 / 3600.0;
-        double elapsedSeconds = elapsedMillis / 1000.0;
-        double hungerLoss = percentPerSecond * elapsedSeconds;
+        // Scan a cube around the location
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Block block = world.getBlockAt(
+                            start.getBlockX() + x,
+                            start.getBlockY() + y,
+                            start.getBlockZ() + z
+                    );
 
-        double newHunger = Math.max(0.0, Math.min(100.0, currentHunger - hungerLoss));
+                    if (targetTypes.contains(block.getType())) {
+                        double distSq = start.distanceSquared(block.getLocation().add(0.5, 0.5, 0.5));
+                        if (distSq < nearestDistanceSq) {
+                            nearestDistanceSq = distSq;
+                            nearestBlock = block;
+                        }
+                    }
+                }
+            }
+        }
 
-        Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, newHunger);
-        Keys.writePersistentData(horse, Keys.LAST_HUNGER_UPDATE, now);
+        return nearestBlock;
     }
 }
