@@ -53,11 +53,11 @@ public enum Keys {
 
     // Hunger
     HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0),
+    LAST_HUNGER_UPDATE("EQUINE_LAST_HUNGER_UPDATE", System.currentTimeMillis()),
 
     // Thirst
     THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0),
-
-    LAST_UNLOAD("EQUINE_LAST_UNLOAD", System.currentTimeMillis());
+    LAST_THIRST_UPDATE("EQUINE_LAST_THIRST_UPDATE", System.currentTimeMillis());
 
 
     public final String key;
