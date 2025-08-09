@@ -143,6 +143,11 @@ public class EquineHorseBuilder {
             // No Instant Waste
             nbt.setLong(Keys.LAST_PEE.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
             nbt.setLong(Keys.LAST_POOP.getKey(), System.currentTimeMillis() + TimeUtils.hoursToMillis(2));
+
+            // Set Hunger & Thirst
+            nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), 100.0);
+            nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), 100.0);
+
         });
 
         plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
