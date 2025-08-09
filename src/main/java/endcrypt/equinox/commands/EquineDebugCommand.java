@@ -57,6 +57,9 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("checkfoodhorse")
                         .executesPlayer(this::checkFoodHorse))
 
+                .withSubcommand(new CommandAPICommand("checkwaterhorse")
+                        .executesPlayer(this::checkWaterHorse))
+
                 .withSubcommand(new CommandAPICommand("modeifyhorsenbtkey")
                         .withArguments(new KeysArgument())
                         .withArguments(new KeyValueArgument())
@@ -167,6 +170,22 @@ public class EquineDebugCommand {
         }
 
         plugin.getEquineManager().getEquineHunger().checkFood(horse);
+    }
+
+    private void checkWaterHorse(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        if(horse == null) {
+            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
+            return;
+        }
+
+        plugin.getEquineManager().getEquineThirst().checkWater(horse);
     }
 
     private void modifyHorseNbtKey(CommandSender commandSender, CommandArguments args) {
