@@ -74,6 +74,7 @@ public class EquineHungerTask {
         for (World world : plugin.getServer().getWorlds()) {
             for (AbstractHorse horse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(horse)) continue;
+                double currentHunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
 
                 if (!Keys.hasPersistentData(horse, Keys.LAST_SEEK_FOOD)) {
                     Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
@@ -82,6 +83,13 @@ public class EquineHungerTask {
 
 
                 long lastSeekFood = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
+                if (currentHunger < 50 && lastSeekFood + TimeUtils.secondsToMillis(10) < now) {
+                    plugin.getEquineManager().getEquineHunger().checkFood(horse);
+                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                    continue;
+                }
+
+
                 if (lastSeekFood + TimeUtils.hoursToMillis(1) < now) {
                     plugin.getEquineManager().getEquineHunger().checkFood(horse);
                     Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
