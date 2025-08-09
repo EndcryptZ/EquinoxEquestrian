@@ -39,7 +39,7 @@ public class EquineHunger {
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             horse.getPathfinder().moveTo(targetBlock.getLocation(), 2);
-            if (dist <= 1.5) {
+            if (dist <= 2) {
                 task.cancel();
 
                 // Start eating animation for 3 seconds
@@ -60,8 +60,11 @@ public class EquineHunger {
                             0.3, 0.3, 0.3, targetBlock.getBlockData());
 
                     // Replace grass block with dirt
-                    if(targetBlock.getType().equals(Material.GRASS_BLOCK)) targetBlock.setType(Material.DIRT);
-                    else targetBlock.setType(Material.AIR);
+                    if(targetBlock.getType().equals(Material.GRASS_BLOCK)) {
+                        targetBlock.setType(Material.DIRT);
+                    } else {
+                        targetBlock.setType(Material.AIR);
+                    }
 
                     // Restore hunger
                     Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, Math.min(100, hunger + 10));
