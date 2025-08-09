@@ -7,6 +7,7 @@ import endcrypt.equinox.equine.crosstie.EquineCrossTie;
 import endcrypt.equinox.equine.gaits.EquineGaits;
 import endcrypt.equinox.equine.groom.EquineGroomManager;
 import endcrypt.equinox.equine.home.EquineHome;
+import endcrypt.equinox.equine.hunger.EquineHunger;
 import endcrypt.equinox.equine.invulnerable.EquineInvulnerable;
 import endcrypt.equinox.equine.items.EquineItems;
 import endcrypt.equinox.equine.leveling.EquineLeveling;
@@ -38,6 +39,7 @@ public class EquineManager {
     private final EquineLeveling equineLeveling;
     private final EquineAging equineAging;
     private final EquineTransferManager equineTransferManager;
+    private final EquineHunger equineHunger;
 
     private final EquinoxEquestrian plugin;
     public EquineManager(EquinoxEquestrian plugin) {
@@ -60,6 +62,7 @@ public class EquineManager {
         equineLeveling = new EquineLeveling(plugin);
         equineAging = new EquineAging(plugin);
         equineTransferManager = new EquineTransferManager(plugin);
+        equineHunger = new EquineHunger(plugin);
 
 
     }
