@@ -106,4 +106,8 @@ public enum Keys {
         });
     }
 
+    public static boolean hasPersistentData(AbstractHorse horse, Keys nbtKey) {
+        return NBT.getPersistentData(horse, nbt -> nbt.hasTag(nbtKey.getKey()));
+    }
+
 }
