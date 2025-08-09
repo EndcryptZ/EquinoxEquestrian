@@ -51,6 +51,9 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("debughorseeatanimation")
                         .executesPlayer(this::debugHorseEatAnimation))
 
+                .withSubcommand(new CommandAPICommand("checkfoodhorse")
+                        .executesPlayer(this::checkFoodHorse))
+
                 .register();
     }
 
@@ -142,6 +145,22 @@ public class EquineDebugCommand {
 
         CraftHorse nmsHorse = (CraftHorse) horse;
         nmsHorse.getHandle().setEating(true);
+    }
+
+    private void checkFoodHorse(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if(!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        if(horse == null) {
+            player.sendMessage(ColorUtils.color(plugin.getPrefix() + "<red>You have not selected a horse!"));
+            return;
+        }
+
+        plugin.getEquineManager().getEquineHunger().checkFood(horse);
     }
 
 
