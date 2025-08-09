@@ -9,8 +9,11 @@ import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LongArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.commands.arg.KeyValueArgument;
+import endcrypt.equinox.commands.arg.KeysArgument;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
 import endcrypt.equinox.utils.TimeUtils;
@@ -54,6 +57,11 @@ public class EquineDebugCommand {
                 .withSubcommand(new CommandAPICommand("checkfoodhorse")
                         .executesPlayer(this::checkFoodHorse))
 
+                .withSubcommand(new CommandAPICommand("modeifyhorsenbtkey")
+                        .withArguments(new KeysArgument())
+                        .withArguments(new KeyValueArgument())
+                        .executesPlayer(this::modifyHorseNbtKey))
+
                 .register();
     }
 
@@ -87,9 +95,7 @@ public class EquineDebugCommand {
         hologram.forceUpdate();
 
 
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            hologramManager.removeHologram(hologram);
-        }, 60L);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> hologramManager.removeHologram(hologram), 60L);
     }
 
     private void stressTestHorsesSpawn(CommandSender commandSender, CommandArguments args) {
@@ -161,6 +167,27 @@ public class EquineDebugCommand {
         }
 
         plugin.getEquineManager().getEquineHunger().checkFood(horse);
+    }
+
+    private void modifyHorseNbtKey(CommandSender commandSender, CommandArguments args) {
+        Player player = (Player) commandSender;
+        Keys key = args.getUnchecked("key");
+        Object value = args.getUnchecked("value"); // This comes from KeyValueArgument
+
+        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+
+        if (!isExecutorDeveloper(player)) {
+            return;
+        }
+
+        // Write the data (Keys.writePersistentData should handle the type properly)
+        Keys.writePersistentData(horse, key, value);
+
+        player.sendMessage(ColorUtils.color(
+                "<green>Successfully set <key> to <value> for your selected horse!",
+                Placeholder.parsed("key", key.getKey()),
+                Placeholder.parsed("value", String.valueOf(value))
+        ));
     }
 
 
