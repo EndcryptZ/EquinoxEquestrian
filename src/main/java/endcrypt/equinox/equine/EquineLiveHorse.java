@@ -73,6 +73,7 @@ public class EquineLiveHorse {
     // Hunger
     private double hungerPercentage;
     private long lastHungerUpdate;
+    private long lastSeekFood;
 
     // Thirst
     private double thirstPercentage;
@@ -114,6 +115,7 @@ public class EquineLiveHorse {
         this.lastPee = 0L;
         this.hungerPercentage = 100.0;
         this.lastHungerUpdate = 0L;
+        this.lastSeekFood = 0L;
         this.thirstPercentage = 100.0;
         this.lastThirstUpdate = 0L;
     }
@@ -164,6 +166,7 @@ public class EquineLiveHorse {
 
         NBT.getPersistentData(horse, nbt -> this.hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.lastSeekFood = nbt.getLong(Keys.LAST_SEEK_FOOD.getKey()));
 
         NBT.getPersistentData(horse, nbt -> this.thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey()));
@@ -230,7 +233,10 @@ public class EquineLiveHorse {
             nbt.setLong(Keys.LAST_PEE.getKey(), this.lastPee);
             nbt.setDouble(Keys.HEIGHT.getKey(), this.height.getHands());
             nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), this.hungerPercentage);
+            nbt.setLong(Keys.LAST_HUNGER_UPDATE.getKey(), this.lastHungerUpdate);
+            nbt.setLong(Keys.LAST_SEEK_FOOD.getKey(), this.lastSeekFood);
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), this.thirstPercentage);
+            nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), this.lastThirstUpdate);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {

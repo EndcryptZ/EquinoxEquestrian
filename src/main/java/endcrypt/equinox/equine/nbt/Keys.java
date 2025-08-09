@@ -54,6 +54,7 @@ public enum Keys {
     // Hunger
     HUNGER_PERCENTAGE("EQUINE_HUNGER_PERCENTAGE", 100.0),
     LAST_HUNGER_UPDATE("EQUINE_LAST_HUNGER_UPDATE", System.currentTimeMillis()),
+    LAST_SEEK_FOOD("EQUINE_LAST_SEEK_FOOD", System.currentTimeMillis()),
 
     // Thirst
     THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0),
