@@ -38,7 +38,7 @@ public class EquineHunger {
             }
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
-            horse.getPathfinder().moveTo(targetBlock.getLocation(), 2);
+            horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
             if (dist <= 2) {
                 task.cancel();
 
