@@ -7,8 +7,8 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.player.data.PlayerData;
-import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.HeadUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.AbstractHorse;
@@ -41,12 +41,15 @@ public class    HorseListMenu {
 
         SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
 
-        SGButton trustedHorsesButton = isTrustedHorses ? horseListButton(player, listOrganizeType) : trustedHorsesButton(player, listOrganizeType);
+        SGButton trustedHorsesButton = isTrustedHorses
+                ? horseListButton(player, listOrganizeType)
+                : trustedHorsesButton(player, listOrganizeType);
 
+        List<EquineLiveHorse> horseIds = isTrustedHorses
+                ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(player)
+                : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
 
-        List<EquineLiveHorse> horseIds = isTrustedHorses ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(player) : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
         List<EquineLiveHorse> sortedHorses;
-
         switch (listOrganizeType) {
             case AGE -> sortedHorses = horseIds.stream()
                     .filter(Objects::nonNull)
@@ -73,30 +76,42 @@ public class    HorseListMenu {
         int slot = 0;
         gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
         gui.setButton(slot + 35, trustedHorsesButton);
-        for (EquineLiveHorse equineHorse : sortedHorses ) {
-            if(tempoSlot == 0) {
-                if(gui.getMaxPage() > 0) {
-                    if(slot > (gui.getRowsPerPage() * 9) - 1) gui.setButton(slot + 30, previousPageButton(gui));
-                    if (sortedHorses.size() > slot) gui.setButton(slot + 32, nextPageButton(gui));
 
+        for (EquineLiveHorse equineHorse : sortedHorses) {
+            EquineLiveHorse liveHorse = null;
+            // Try to get live Bukkit entity
+            AbstractHorse entity = (AbstractHorse) Bukkit.getEntity(equineHorse.getUuid());
+            if (entity != null) {
+                liveHorse = new EquineLiveHorse(entity);
+            }
+
+            if (tempoSlot == 0) {
+                if (gui.getMaxPage() > 0) {
+                    if (slot > (gui.getRowsPerPage() * 9) - 1)
+                        gui.setButton(slot + 30, previousPageButton(gui));
+                    if (sortedHorses.size() > slot)
+                        gui.setButton(slot + 32, nextPageButton(gui));
                 }
                 gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
                 gui.setButton(slot + 35, trustedHorsesButton);
             }
-            SGButton horseButton = horseButton(player, equineHorse, isTrustedHorses);
-            if(tempoSlot == 27) {
+
+            // Use live horse if loaded, otherwise use database object
+            SGButton horseButton = (entity != null)
+                    ? horseButton(player, liveHorse, isTrustedHorses) // overload for live horse
+                    : horseButton(player, equineHorse, isTrustedHorses);
+
+            if (tempoSlot == 27) {
                 slot += 9;
                 tempoSlot = 0;
                 gui.setButton(slot, horseButton);
                 continue;
             }
 
-
             gui.setButton(slot, horseButton);
             tempoSlot++;
             slot++;
         }
-
 
         return gui.getInventory();
     }
