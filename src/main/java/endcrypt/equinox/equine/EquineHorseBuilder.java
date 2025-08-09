@@ -147,6 +147,7 @@ public class EquineHorseBuilder {
             // Set Hunger & Thirst
             nbt.setDouble(Keys.HUNGER_PERCENTAGE.getKey(), 100.0);
             nbt.setLong(Keys.LAST_HUNGER_UPDATE.getKey(), System.currentTimeMillis());
+            nbt.setLong(Keys.LAST_SEEK_FOOD.getKey(), System.currentTimeMillis());
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), 100.0);
             nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), System.currentTimeMillis());
 
