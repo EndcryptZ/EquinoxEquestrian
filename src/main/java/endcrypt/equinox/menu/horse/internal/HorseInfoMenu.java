@@ -176,18 +176,26 @@ public class    HorseInfoMenu {
     }
 
     private SGButton welfareInformation(EquineLiveHorse horse) {
-        double hungerPercentage = horse.getHungerPercentage();
-        String hungerColor;
+        double hunger = horse.getHungerPercentage();
 
-        if (hungerPercentage >= 60) {
+        // Clamp to range [0, 100]
+        hunger = Math.max(0, Math.min(100, hunger));
+
+        // Pick color based on hunger level
+        String hungerColor;
+        if (hunger >= 60) {
             hungerColor = "&a"; // Green
-        } else if (hungerPercentage >= 40) {
+        } else if (hunger >= 40) {
             hungerColor = "&6"; // Orange
-        } else if (hungerPercentage >= 30) {
+        } else if (hunger >= 30) {
             hungerColor = "&c"; // Light Red
         } else {
             hungerColor = "&4"; // Dark Red
         }
+
+        // Truncate to 2 decimal places (no rounding)
+        double truncatedHunger = Math.floor(hunger * 100) / 100.0;
+        String hungerText = hungerColor + String.format("%.2f%%", truncatedHunger);
 
         return new SGButton(
                 new ItemBuilder(Material.MAP)
@@ -196,7 +204,7 @@ public class    HorseInfoMenu {
                                 "&7▸ &bHappiness: &7WIP",
                                 "&7▸ &bRelationship: &7WIP",
                                 "&7▸ &bNutrition:",
-                                "&7▸ &b+ Hunger: " + hungerColor + String.format("%.1f%%", hungerPercentage),
+                                "&7▸ &b+ Hunger: " + hungerText,
                                 "&7▸ &b+ Thirst: &7WIP",
                                 "&7▸ &b+ Weight: &7WIP",
                                 "&7▸ &bCleanliness: &7WIP"
