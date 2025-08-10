@@ -28,15 +28,13 @@ public class WaterBucketListener implements Listener {
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
+        if (clickedBlock.getType() == Material.CAULDRON) return;
 
         BlockFace face = event.getBlockFace();
         Block placeBlock = clickedBlock.getRelative(face);
 
         // Only place if the block is air
         if (!placeBlock.getType().isAir()) return;
-
-        // Try to place water
-        placeBlock.setType(Material.WATER);
 
         // Decrease stack (if > 1), otherwise remove item
         ItemStack item = event.getItem();
@@ -45,6 +43,10 @@ public class WaterBucketListener implements Listener {
         } else {
             player.getInventory().removeItem(item);
         }
+
+
+        // Try to place water
+        placeBlock.setType(Material.WATER);
 
         player.swingMainHand();
         event.setCancelled(true);
