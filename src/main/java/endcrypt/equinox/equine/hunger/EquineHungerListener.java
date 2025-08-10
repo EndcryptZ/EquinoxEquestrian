@@ -84,5 +84,8 @@ public class EquineHungerListener implements Listener {
                 Placeholder.parsed("item", formattedItemName),
                 Placeholder.parsed("hunger", String.format("%.2f", hungerPercentage))
         ));
+
+        event.getPlayer().swingMainHand();
+        event.setCancelled(true);
     }
 }
