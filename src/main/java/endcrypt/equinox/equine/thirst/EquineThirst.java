@@ -27,14 +27,21 @@ public class EquineThirst {
                 7 // radius
         );
 
-        if (targetBlock == null) return;
-        if (Keys.readPersistentData(horse, Keys.IS_IN_FOOD_TASK)) return;
+        if (targetBlock == null) {
+            Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
+            return;
+        }
+        if (Keys.readPersistentData(horse, Keys.IS_IN_FOOD_TASK)) {
+            Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
+            return;
+        }
         Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, true);
 
         // Schedule a repeating task to check distance until reached
         Bukkit.getScheduler().runTaskTimer(plugin, task -> {
             if (!horse.isValid() || horse.isDead()) {
                 task.cancel();
+                Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
                 return;
             }
 
