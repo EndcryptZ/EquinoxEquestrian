@@ -23,7 +23,7 @@ public class HorseMenuListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    List<Material> allowedHorseRightClickItems = Arrays.asList(Material.LEAD, Material.HAY_BLOCK, Material.DRIED_KELP_BLOCK);
+    List<Material> allowedHorseRightClickItems = Arrays.asList(Material.LEAD, Material.HAY_BLOCK, Material.DRIED_KELP_BLOCK, Material.WATER_BUCKET);
 
     @EventHandler
     public void onHorseClick(PlayerInteractEntityEvent event) {
