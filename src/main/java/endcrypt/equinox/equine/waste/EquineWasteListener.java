@@ -1,5 +1,6 @@
 package endcrypt.equinox.equine.waste;
 
+import com.sk89q.worldedit.command.tool.BlockTool;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseWaste;
 import endcrypt.equinox.player.data.PlayerData;
@@ -14,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -116,6 +118,18 @@ public class EquineWasteListener implements Listener {
 
         // prevent the blocks from being affected
         event.blockList().removeAll(toRemove);
+    }
+
+    @EventHandler
+    public void onFluidFlow(BlockFromToEvent event) {
+        Block toBlock = event.getToBlock();
+        Block above = toBlock.getRelative(BlockFace.UP);
+
+        // Check if the destination block or the block above is a waste block (like carpets or heads)
+        if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(toBlock.getLocation()) ||
+                plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(above.getLocation())) {
+            event.setCancelled(true);
+        }
     }
 
     // Hologram Loader
