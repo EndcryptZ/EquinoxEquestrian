@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class    HorseListMenu {
+public class HorseListMenu {
 
     private final EquinoxEquestrian plugin;
     public HorseListMenu(EquinoxEquestrian plugin) {
