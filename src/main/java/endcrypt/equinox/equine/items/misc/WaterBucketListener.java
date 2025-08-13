@@ -2,6 +2,7 @@ package endcrypt.equinox.equine.items.misc;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -22,10 +23,12 @@ public class WaterBucketListener implements Listener {
 
     @EventHandler
     public void onWaterBucket(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getItem() == null || event.getItem().getType() != Material.WATER_BUCKET) return;
 
-        Player player = event.getPlayer();
+
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
         if (clickedBlock.getType() == Material.CAULDRON) return;
