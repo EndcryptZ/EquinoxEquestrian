@@ -20,10 +20,10 @@ public class EquineThirst {
     public void checkWater(AbstractHorse horse) {
         double thirst = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
 
-        // Find the nearest edible blocks for horse
+        // Find the nearest drinkable blocks for horse
         Block targetBlock = findNearestBlock(
                 horse.getLocation(),
-                Set.of(Material.WATER),
+                Set.of(Material.WATER, Material.WATER_CAULDRON),
                 7 // radius
         );
 
