@@ -190,7 +190,4 @@ public class EquineLunge {
         return heightDiff < 2.0;
     }
 
-    private String serializeLocation(Location loc) {
-        return loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
-    }
 }
