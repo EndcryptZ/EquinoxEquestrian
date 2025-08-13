@@ -1,14 +1,17 @@
 package endcrypt.equinox.equine.lunge;
 
-import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -22,146 +25,172 @@ public class EquineLunge {
         this.plugin = plugin;
     }
 
-    private List<Location> makeCylinder(Location center, double radius, int height) {
-        List<Location> placedLocations = new ArrayList<>();
-
-        // Get the Y coordinate (feet of the player or given position)
+    /** Create evenly spaced points in a flat circle */
+    private List<Location> makeCircle(Location center, double radius, int height) {
+        List<Location> points = new ArrayList<>();
         double y = center.getY();
+        int samples = (int) Math.max(8, 2 * Math.PI * radius);
 
-        // Calculate the number of points around the circle based on the radius
-        int points = (int)(2 * Math.PI * radius); // Approximate points for smooth circle
-
-        // Loop through the points around the circle
-        for (int i = 0; i < points; i++) {
-            double angle = 2 * Math.PI * i / points; // Evenly distribute points around the circle
+        for (int i = 0; i < samples; i++) {
+            double angle = 2 * Math.PI * i / samples;
             double x = center.getX() + (radius * Math.cos(angle));
             double z = center.getZ() + (radius * Math.sin(angle));
 
-            // Loop through the height of the cylinder
             for (int j = 0; j < height; j++) {
-                // Create the location at the calculated coordinates with the given material
-                Location point = new Location(center.getWorld(), x, y + j, z);
-
-                // Add the location to the list of placed locations
-                placedLocations.add(point);
+                points.add(new Location(center.getWorld(), x, y + j, z));
             }
         }
-
-        // Return the list of locations where blocks were placed
-        return placedLocations;
+        return points;
     }
 
-
     public void lungeHorse(Player player) {
-
         List<Entity> leashedList = EquineUtils.getLeashedEntities(player);
 
-        if (leashedList.size() > 1) {
-            player.sendMessage("§cPlease only leash one horse at a time.");
+        if (leashedList.size() != 1) {
+            player.sendMessage("§cYou must have exactly one horse leashed to lunge.");
             return;
         }
-
-        if (leashedList.isEmpty()) {
-            player.sendMessage("§cYou don't have a leashed horse to lunge.");
+        if (!(leashedList.getFirst() instanceof AbstractHorse horse)) {
+            player.sendMessage("§cYou can only lunge a horse!");
             return;
         }
-
-        LivingEntity leashedEntity = (LivingEntity) leashedList.getFirst();
-
-        if (!(leashedEntity instanceof AbstractHorse horse)) {
-            player.sendMessage("§cYou can only lunge a horse! The entity you're leashed to is a " + leashedEntity.getType() + ".");
-            return;
-        }
-
         if (!EquineUtils.hasPermissionToHorse(player, horse)) {
             player.sendMessage("§cYou can only lunge your own tamed horse!");
             return;
         }
 
         if (EquineUtils.isLunging(horse)) {
-            NBT.modifyPersistentData(horse, nbt -> {
-                nbt.setString("EQUINE_IS_LUNGING", "false");
-            });
+            Keys.writePersistentData(horse, Keys.IS_LUNGING, "false");
             return;
         }
 
-
-        // Find the closest point to the horse
-        Location horseLocation = horse.getLocation();
-        List<Location> pathwayPoints = makeCylinder(player.getLocation(), 5, 1);
-        double closestDistance = Double.MAX_VALUE;
-
-        int closestIndex = -1; // Initialize with an invalid index
-
-        for (int i = 0; i < pathwayPoints.size(); i++) {
-            Location point = pathwayPoints.get(i);
-            double distance = horseLocation.distance(point);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestIndex = i; // Store the index of the closest point
-            }
+        List<Location> path = makeCircle(player.getLocation(), 5, 1);
+        int startIndex = findClosestIndex(horse.getLocation(), path);
+        if (startIndex == -1) {
+            player.sendMessage("§cNo starting point found.");
+            return;
         }
 
-        int[] pathIndex = {closestIndex};
-
         horse.setAI(false);
-        NBT.modifyPersistentData(horse, nbt -> {
-            nbt.setString("EQUINE_IS_LUNGING", "true");
+        Keys.writePersistentData(horse, Keys.IS_LUNGING, "true");
 
-        });
+        final int[] pathIndex = { startIndex };
 
-        Bukkit.getScheduler().runTaskTimer(plugin, (lungeScheduler) -> {
-
-            if (!horse.isLeashed()) {
-                lungeScheduler.cancel();
-                horse.setAI(true);
-                NBT.modifyPersistentData(horse, nbt -> {
-                    nbt.setString("EQUINE_IS_LUNGING", "false");
-
-                });
+        Bukkit.getScheduler().runTaskTimer(plugin, (task) -> {
+            if (!horse.isLeashed() || horse.getLeashHolder() != player || !EquineUtils.isLunging(horse)) {
+                stopLunging(horse, task);
+                return;
             }
 
-            if(horse.getLeashHolder() != player) {
-                lungeScheduler.cancel();
-                horse.setAI(true);
-                NBT.modifyPersistentData(horse, nbt -> {
-                    nbt.setString("EQUINE_IS_LUNGING", "false");
+            List<Location> updatedPath = makeCircle(player.getLocation(), 5, 1);
 
-                });
+            int nextIndex = (pathIndex[0] + 1) % updatedPath.size();
+            Location intendedPoint = findGround(updatedPath.get(nextIndex));
+
+            Location safePoint = findSafeAdjacent(intendedPoint, horse.getLocation());
+
+            if (safePoint == null) {
+                player.sendMessage("§ePath blocked, waiting...");
+                return;
             }
 
-            if(!(EquineUtils.isLunging(horse))) {
-                lungeScheduler.cancel();
-                horse.setAI(true);
-            }
+            // Rotate horse toward target
+            Vector dir = safePoint.toVector().subtract(horse.getLocation().toVector());
+            float yaw = (float) Math.toDegrees(Math.atan2(dir.getZ(), dir.getX())) - 90;
+            safePoint.setYaw(yaw);
 
-            Location playerLocation = player.getLocation();
-            List<Location> newPathwayPoints = makeCylinder(playerLocation, 5, 1);
-
-            Location nextPoint = newPathwayPoints.get(pathIndex[0]);
-
-            Location currentLocation = horse.getLocation();
-            Vector direction = nextPoint.toVector().subtract(currentLocation.toVector());
-
-            float yaw = (float) Math.toDegrees(Math.atan2(direction.getZ(), direction.getX())) - 90;
-
-            Location nextLocation = newPathwayPoints.get(pathIndex[0]);
-            nextLocation.setYaw(yaw);
-
-            horse.teleport(nextLocation);
-
-            pathIndex[0]++;
-            if (pathIndex[0] >= newPathwayPoints.size()) {
-                pathIndex[0] = 0;
-            }
-
+            horse.teleport(safePoint);
+            pathIndex[0] = nextIndex;
 
         }, 0, 3L);
-
-
-
     }
 
+    private void stopLunging(AbstractHorse horse, BukkitTask task) {
+        task.cancel();
+        horse.setAI(true);
+        Keys.writePersistentData(horse, Keys.IS_LUNGING, "false");
+    }
 
+    private int findClosestIndex(Location loc, List<Location> points) {
+        double closest = Double.MAX_VALUE;
+        int index = -1;
+        for (int i = 0; i < points.size(); i++) {
+            double dist = loc.distance(points.get(i));
+            if (dist < closest) {
+                closest = dist;
+                index = i;
+            }
+        }
+        return index;
+    }
 
+    private boolean isSafeLocation(Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return false;
+
+        Block feet = world.getBlockAt(loc);
+        Block head = feet.getRelative(BlockFace.UP);
+        Block aboveHead = head.getRelative(BlockFace.UP);
+
+        return !feet.getType().isSolid()
+                && !head.getType().isSolid()
+                && !aboveHead.getType().isSolid();
+    }
+
+    private Location findGround(Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return null;
+
+        Location check = loc.clone();
+        for (int y = loc.getBlockY(); y >= world.getMinHeight(); y--) {
+            check.setY(y);
+            if (world.getBlockAt(check).getType().isSolid()) {
+                return check.clone().add(0, 1, 0);
+            }
+        }
+        return null; // no ground found
+    }
+
+    /**
+     * Checks intended point and nearby offsets.
+     * Rejects points if:
+     *  - No ground found
+     *  - Height difference from horse is >= 2
+     *  - Not safe for horse to stand
+     */
+    private Location findSafeAdjacent(Location target, Location horseLoc) {
+        if (isValidForHorse(target, horseLoc)) return target;
+
+        double step = 0.5;
+        Vector[] offsets = {
+                new Vector(step, 0, 0),
+                new Vector(-step, 0, 0),
+                new Vector(0, 0, step),
+                new Vector(0, 0, -step),
+                new Vector(step, 0, step),
+                new Vector(-step, 0, step),
+                new Vector(step, 0, -step),
+                new Vector(-step, 0, -step)
+        };
+
+        for (Vector off : offsets) {
+            Location alt = target.clone().add(off);
+            alt = findGround(alt);
+            if (isValidForHorse(alt, horseLoc)) {
+                return alt;
+            }
+        }
+        return null;
+    }
+
+    private boolean isValidForHorse(Location loc, Location horseLoc) {
+        if (loc == null) return false;
+        if (!isSafeLocation(loc)) return false;
+        double heightDiff = Math.abs(loc.getY() - horseLoc.getY());
+        return heightDiff < 2.0;
+    }
+
+    private String serializeLocation(Location loc) {
+        return loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
+    }
 }
