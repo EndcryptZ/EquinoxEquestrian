@@ -227,7 +227,7 @@ public class    HorseListMenu {
                         .name("&a&lNext Page")
                         .lore(
                                 "&aClick to move forward to",
-                                "&apage " + gui.getMaxPage()
+                                "&apage " + (gui.getMaxPage() + 1)
                         )
                         .build()
         )
