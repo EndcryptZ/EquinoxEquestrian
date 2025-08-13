@@ -49,7 +49,13 @@ public class EquineHunger {
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
-            if (dist <= 2) {
+            if (dist <= 2.5) {
+                Location horseLoc = horse.getLocation();
+                Location targetLoc = targetBlock.getLocation().clone().add(0.5, 0, 0.5); // center of block
+                horseLoc.setDirection(targetLoc.toVector().subtract(horseLoc.toVector()));
+                horse.teleport(horseLoc);
+
+
                 task.cancel();
 
                 // Start eating animation for 3 seconds
