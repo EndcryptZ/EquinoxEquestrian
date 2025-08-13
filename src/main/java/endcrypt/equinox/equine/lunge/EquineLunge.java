@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.lunge;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.api.events.EquinePlayerLungeHorseEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.Bukkit;
@@ -70,6 +71,10 @@ public class EquineLunge {
             player.sendMessage("§cNo starting point found.");
             return;
         }
+
+        EquinePlayerLungeHorseEvent event = new EquinePlayerLungeHorseEvent(player, horse);
+        event.callEvent();
+        if (event.isCancelled()) return;
 
         horse.setAI(false);
         Keys.writePersistentData(horse, Keys.IS_LUNGING, "true");
