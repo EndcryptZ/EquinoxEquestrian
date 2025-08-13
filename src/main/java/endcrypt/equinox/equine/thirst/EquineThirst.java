@@ -46,9 +46,17 @@ public class EquineThirst {
             }
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
+            double reqDistance = targetBlock.getType() == Material.WATER ? 2 : 2.5;
             horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
-            if (dist <= 2) {
+            if (dist <= reqDistance) {
+                // make horse face the target block
+                Location horseLoc = horse.getLocation();
+                Location targetLoc = targetBlock.getLocation().clone().add(0.5, 0, 0.5); // center of block
+                horseLoc.setDirection(targetLoc.toVector().subtract(horseLoc.toVector()));
+                horse.teleport(horseLoc);
+
                 task.cancel();
+                horse.getPathfinder().stopPathfinding();
 
                 // Start eating animation for 3 seconds
                 CraftHorse craftHorse = (CraftHorse) horse;
