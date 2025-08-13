@@ -73,7 +73,7 @@ public class EquineLunge {
         }
 
         EquinePlayerLungeHorseEvent event = new EquinePlayerLungeHorseEvent(player, horse);
-        event.callEvent();
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
 
         horse.setAI(false);
