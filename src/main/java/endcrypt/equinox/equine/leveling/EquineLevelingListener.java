@@ -2,6 +2,7 @@ package endcrypt.equinox.equine.leveling;
 
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.api.events.EquinePlayerLungeHorseEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -68,6 +69,51 @@ public class EquineLevelingListener implements Listener {
 
                 secondsMoving++;
                 lastLocation = horse.getLocation();
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    @EventHandler
+    public void onLunge(EquinePlayerLungeHorseEvent event) {
+        AbstractHorse horse = event.getHorse();
+        Player player = event.getPlayer();
+        player.sendMessage(ColorUtils.color(
+                "<prefix><green>Your horse <horse> has started lunging! <yellow>Move around while it's lunging to earn EXP!",
+                Placeholder.parsed("prefix", plugin.getPrefix().endsWith(" ") ? plugin.getPrefix() : plugin.getPrefix() + " "),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))
+        ));
+
+        new BukkitRunnable() {
+            final int secondsRequired = 59;
+            int secondsLunging = 0;
+            Location lastLocation = player.getLocation();
+
+            @Override
+            public void run() {
+                if (!EquineUtils.isLunging(horse) || !player.isOnline()) {
+                    cancel();
+                    return;
+                }
+
+                // Do not progress
+                if (lastLocation.distanceSquared(player.getLocation()) < 0.0001) return;
+
+                if (secondsLunging == secondsRequired) {
+                    Random random = new Random();
+                    int expToGive = random.nextInt(6) + 1;
+                    secondsLunging = 0;
+                    plugin.getEquineManager().getEquineLeveling().addExp(player, expToGive, true);
+                    player.sendMessage(ColorUtils.color(
+                            "<prefix><green>Woohoo! You earned <exp> EXP lunging your awesome <horse>!",
+                            Placeholder.parsed("prefix", plugin.getPrefix().endsWith(" ") ? plugin.getPrefix() : plugin.getPrefix() + " "),
+                            Placeholder.parsed("exp", String.valueOf(expToGive)),
+                            Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))
+                    ));
+                    return;
+                }
+
+                secondsLunging++;
+                lastLocation = player.getLocation();
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
