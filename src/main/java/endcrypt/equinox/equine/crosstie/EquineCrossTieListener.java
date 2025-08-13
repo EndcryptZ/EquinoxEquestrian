@@ -97,7 +97,7 @@ public class EquineCrossTieListener implements Listener {
         NBT.modifyPersistentData(bat, nbt -> {
             nbt.setString("LEASHED_HORSE", horse.getUniqueId().toString());
         });
-        Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashEvent(horse));
+        Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashEvent(player, horse));
 
         event.setCancelled(true);
     }
