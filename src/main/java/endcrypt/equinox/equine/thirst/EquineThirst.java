@@ -65,7 +65,7 @@ public class EquineThirst {
                     // Play block break effect and particles
                     horse.getWorld().playSound(targetBlock.getLocation(), Sound.ENTITY_WITCH_DRINK, 1.0f, 1.0f);
                     horse.getWorld().spawnParticle(Particle.BLOCK, targetBlock.getLocation().add(0.5, 0.5, 0.5), 20,
-                            0.3, 0.3, 0.3, targetBlock.getBlockData());
+                            0.3, 0.3, 0.3, Bukkit.createBlockData(Material.WATER));
 
 
                     // Restore hunger
