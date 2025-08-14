@@ -49,7 +49,6 @@ public class EquineThirstTask {
                 double decayPerMs = 50.0 / (12.0 * 60.0 * 60.0 * 1000.0);
                 double decay = elapsedMillis * decayPerMs;
 
-                double beforeThirst = currentThirst;
                 currentThirst -= decay;
                 if (currentThirst < 0) currentThirst = 0;
 
