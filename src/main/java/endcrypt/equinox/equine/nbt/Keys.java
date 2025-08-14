@@ -20,7 +20,15 @@ public enum Keys {
     BIRTH_TIME("EQUINE_BIRTH_TIME", System.currentTimeMillis(), Long.class),
     OWNER_UUID("EQUINE_OWNER_UUID", "", String.class),
     OWNER_NAME("EQUINE_OWNER_NAME", "", String.class),
+
+
+    // Speed
     BASE_SPEED("EQUINE_BASE_SPEED", 0.0, Double.class),
+    WALK_SPEED("EQUINE_WALK_SPEED", 0.0, Double.class),
+    TROT_SPEED("EQUINE_TROT_SPEED", 0.0, Double.class),
+    CANTER_SPEED("EQUINE_CANTER_SPEED", 0.0, Double.class),
+    GALLOP_SPEED("EQUINE_GALLOP_SPEED", 0.0, Double.class),
+
     BASE_JUMP("EQUINE_BASE_JUMP_POWER", 0.0, Double.class),
     IS_CROSS_TIED("EQUINE_IS_CROSS_TIED", "false", Boolean.class),
     IS_GROOM_ITEM("EQUINE_GROOM_ITEM", "false", Boolean.class),
