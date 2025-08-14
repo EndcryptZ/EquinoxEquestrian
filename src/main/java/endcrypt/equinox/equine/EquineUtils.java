@@ -131,6 +131,22 @@ public class EquineUtils {
         return blocks * 0.18181818181818182; // 1 / 5.5
     }
 
+    // Reverse of blocksToMinecraftSpeed
+    public static double minecraftSpeedToBlocks(double minecraftSpeed) {
+        return roundToTwoDecimals(minecraftSpeed / 0.02777777777777778);
+    }
+
+    // Reverse of blocksToMinecraftJumpStrength
+    public static double minecraftJumpStrengthToBlocks(double jumpStrength) {
+        return roundToTwoDecimals(jumpStrength / 0.18181818181818182);
+    }
+
+    // Utility to round to 2 decimal places
+    private static double roundToTwoDecimals(double value) {
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+
     public static AbstractHorse findHorseByUuidAndLocation(UUID uuid, Location location) {
         Entity firstEntity = Bukkit.getEntity(uuid);
         if(firstEntity != null) {
