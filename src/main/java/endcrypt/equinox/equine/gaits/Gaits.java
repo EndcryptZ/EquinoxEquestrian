@@ -1,20 +1,21 @@
 package endcrypt.equinox.equine.gaits;
 
+import endcrypt.equinox.equine.nbt.Keys;
 import lombok.Getter;
 
 @Getter
 public enum Gaits {
-    WALK("Walk", 1),
-    TROT("Trot", 2),
-    CANTER("Canter", 3),
-    GALLOP("Gallop", 4);
+    WALK("Walk", Keys.WALK_SPEED),
+    TROT("Trot", Keys.TROT_SPEED),
+    CANTER("Canter", Keys.CANTER_SPEED),
+    GALLOP("Gallop", Keys.GALLOP_SPEED);
 
     private final String name;
-    private final double speedMultiplier;
+    private final Keys gaitSpeedKey;
 
-    Gaits(String name, double speedMultiplier) {
+    Gaits(String name, Keys gaitSpeedKey) {
         this.name = name;
-        this.speedMultiplier = speedMultiplier;
+        this.gaitSpeedKey = gaitSpeedKey;
     }
 
     // Get the next height (or null if none exists)
