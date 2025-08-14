@@ -2,6 +2,7 @@ package endcrypt.equinox.equine.gaits;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -100,7 +101,7 @@ public class EquineGaits implements Listener {
            if (Gaits.getNextGait(currentGait) != null) {
 
                playerCurrentGaits.put(player, Gaits.getNextGait(currentGait));
-               ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
+               ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(Keys.readPersistentData(equineHorse, playerCurrentGaits.get(player).getGaitSpeedKey()));
            }
         }
 
@@ -109,7 +110,7 @@ public class EquineGaits implements Listener {
 
             if (Gaits.getPreviousGait(currentGait) != null) {
                 playerCurrentGaits.put(player, Gaits.getPreviousGait(currentGait));
-                ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
+                ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(Keys.readPersistentData(equineHorse, playerCurrentGaits.get(player).getGaitSpeedKey()));
             }
         }
     }
@@ -211,7 +212,7 @@ public class EquineGaits implements Listener {
             ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0);
             return;
         }
-        ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
+        ((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(Keys.readPersistentData(equineHorse, playerCurrentGaits.get(player).getGaitSpeedKey()));
 
     }
 
@@ -251,7 +252,7 @@ public class EquineGaits implements Listener {
 
         AbstractHorse equineHorse = (AbstractHorse) player.getVehicle();
         playerCurrentGaits.put(player, Gaits.WALK);
-        ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(playerCurrentGaits.get(player).getSpeedMultiplier() * EquineUtils.getBaseSpeed(equineHorse));
+        ((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(Keys.readPersistentData(equineHorse, playerCurrentGaits.get(player).getGaitSpeedKey()));
     }
 
     @EventHandler
