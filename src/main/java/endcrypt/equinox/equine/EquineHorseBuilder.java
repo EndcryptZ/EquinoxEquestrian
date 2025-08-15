@@ -4,7 +4,6 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.nbt.Keys;
-import endcrypt.equinox.utils.TimeUtils;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -34,12 +33,12 @@ public class EquineHorseBuilder {
         Random random = new Random();
 
         List<Breed> foalBreeds = new ArrayList<>();
-        foalBreeds.add(random.nextBoolean() ? mare.getBreeds().get(0) : stallion.getBreeds().get(0));
+        foalBreeds.add(random.nextBoolean() ? mare.getBreeds().getFirst() : stallion.getBreeds().getFirst());
 
         CoatColor foalColor = random.nextBoolean() ? mare.getCoatColor() : stallion.getCoatColor();
         CoatModifier foalModifier = random.nextBoolean() ? mare.getCoatModifier() : stallion.getCoatModifier();
         Gender foalGender = random.nextBoolean() ? Gender.MARE : Gender.STALLION;
-        Height foalHeight = Height.getRandomHeight(foalBreeds.get(0));
+        Height foalHeight = Height.getRandomHeight(foalBreeds.getFirst());
 
         List<Trait> foalTraits = new ArrayList<>();
         int traitCount = Math.min(3, Math.max(mare.getTraits().size(), stallion.getTraits().size()));
@@ -151,6 +150,27 @@ public class EquineHorseBuilder {
             nbt.setDouble(Keys.THIRST_PERCENTAGE.getKey(), 100.0);
             nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), System.currentTimeMillis());
 
+
+            // SPEED
+            // normal horses
+            double walkSpeed = generateSpeed(0.4, 1.2, 80, 1.2, 2.7, 55);
+            double trotSpeed = generateSpeed(3.4, 4.4, 80, 4.4, 5.7, 55);
+            double canterSpeed = generateSpeed(7.3, 8.6, 80, 8.6, 9.5, 55);
+            double gallopSpeed = generateSpeed(11.4, 12.8, 80, 12.8, 13.7, 55);
+
+            // racehorses (overrides for racing disciplines)
+            if (EnumSet.of(Discipline.FLAT_RACING_SHORT, Discipline.FLAT_RACING_LONG)
+                    .contains(equineHorse.getDiscipline())) {
+                canterSpeed = randomInRange(7.6, 10.1); // 13–15 mph
+                gallopSpeed = randomInRange(12.5, 15.0); // 25–45 mph
+            }
+
+            // set NBT speeds
+            nbt.setDouble(Keys.WALK_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(walkSpeed));
+            nbt.setDouble(Keys.TROT_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(trotSpeed));
+            nbt.setDouble(Keys.CANTER_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(canterSpeed));
+            nbt.setDouble(Keys.GALLOP_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(gallopSpeed));
+
         });
 
         plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
@@ -181,5 +201,26 @@ public class EquineHorseBuilder {
         return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
     }
 
+    private double generateSpeed(double min1, double max1, int chance1,
+                                        double min2, double max2, int chance2) {
+        Random random = new Random();
+        int roll = random.nextInt(100) + 1;
+        double value;
 
+        if (roll <= chance1) {
+            value = randomInRange(min1, max1);
+        } else if (roll <= chance1 + chance2) {
+            value = randomInRange(min2, max2);
+        } else {
+            value = randomInRange(min1, max1);
+        }
+
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+    private static double randomInRange(double min, double max) {
+        Random random = new Random();
+        double val = min + (max - min) * random.nextDouble();
+        return Math.round(val * 100.0) / 100.0;
+    }
 }
