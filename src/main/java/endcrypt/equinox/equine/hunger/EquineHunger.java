@@ -51,8 +51,10 @@ public class EquineHunger {
                 plugin.getLogger().warning(String.format(
                         "checkFood: cancelled — horse is in world '%s' but target block is in world '%s'.",
                         horse.getWorld().getName(),
-                        targetBlock.getWorld().getName()
+                targetBlock.getWorld().getName()
                 ));
+                Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                task.cancel();
                 return; // worlds are different, so cancel the method
             }
 
