@@ -17,6 +17,7 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Horse;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -82,6 +83,12 @@ public class EquineLiveHorse {
     private long lastSeekWater;
     private boolean isInWaterTask;
 
+    // Gait Speeds
+    private double walkSpeed;
+    private double trotSpeed;
+    private double canterSpeed;
+    private double gallopSpeed;
+
     private final AbstractHorse horse;
     
     public EquineLiveHorse() {
@@ -124,6 +131,10 @@ public class EquineLiveHorse {
         this.lastThirstUpdate = 0L;
         this.lastSeekWater = 0L;
         this.isInWaterTask = false;
+        this.walkSpeed = 0.0;
+        this.trotSpeed = 0.0;
+        this.canterSpeed = 0.0;
+        this.gallopSpeed = 0.0;
     }
 
 
@@ -179,6 +190,11 @@ public class EquineLiveHorse {
         NBT.getPersistentData(horse, nbt -> this.lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey()));
         NBT.getPersistentData(horse, nbt -> this.lastSeekWater = nbt.getLong(Keys.LAST_SEEK_WATER.getKey()));
         NBT.getPersistentData(horse, nbt -> this.isInWaterTask = nbt.getBoolean(Keys.IS_IN_WATER_TASK.getKey()));
+
+        NBT.getPersistentData(horse, nbt -> this.walkSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.trotSpeed = nbt.getDouble(Keys.TROT_SPEED.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.canterSpeed = nbt.getDouble(Keys.CANTER_SPEED.getKey()));
+        NBT.getPersistentData(horse, nbt -> this.gallopSpeed = nbt.getDouble(Keys.GALLOP_SPEED.getKey()));
 
         World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
         double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
@@ -249,6 +265,10 @@ public class EquineLiveHorse {
             nbt.setLong(Keys.LAST_THIRST_UPDATE.getKey(), this.lastThirstUpdate);
             nbt.setLong(Keys.LAST_SEEK_WATER.getKey(), this.lastSeekWater);
             nbt.setBoolean(Keys.IS_IN_WATER_TASK.getKey(), this.isInWaterTask);
+            nbt.setDouble(Keys.WALK_SPEED.getKey(), this.walkSpeed);
+            nbt.setDouble(Keys.TROT_SPEED.getKey(), this.trotSpeed);
+            nbt.setDouble(Keys.CANTER_SPEED.getKey(), this.canterSpeed);
+            nbt.setDouble(Keys.GALLOP_SPEED.getKey(), this.gallopSpeed);
 
             // Traits Updater
             for (int i = 0; i <= 3; i++) {
@@ -263,7 +283,7 @@ public class EquineLiveHorse {
         Horse horse1 = (Horse) horse;
         horse1.setColor(coatColor.getHorseColor());     
         horse1.setStyle(coatModifier.getHorseCoatModifier());
-        horse.getAttribute(Attribute.SCALE).setBaseValue(height.getSize());
+        Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).setBaseValue(height.getSize());
         horse.setAge(this.age);
     }
 
