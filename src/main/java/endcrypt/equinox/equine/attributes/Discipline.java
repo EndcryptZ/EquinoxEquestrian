@@ -27,7 +27,11 @@ public enum Discipline {
     STEEPLECHASE("Steeplechase", 1000),
     WESTERN_PLEASURE("Western Pleasure", 1000),
     TRAIL_RIDING("Trail Riding", 1000),
-    CROSS_COUNTRY("Cross Country", 1000);
+    CROSS_COUNTRY("Cross Country", 1000),
+    COW_ROPING("Cow Roping", 1000),
+    REINING("Reining", 1000),
+    CUTTING("Cutting", 1000),
+    TEAM_PENNING("Team Penning", 1000);
 
     private final String disciplineName;
     private final int price;
