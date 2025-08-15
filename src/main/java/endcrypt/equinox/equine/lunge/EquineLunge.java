@@ -4,6 +4,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerLungeHorseEvent;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -57,6 +58,11 @@ public class EquineLunge {
         }
         if (!EquineUtils.hasPermissionToHorse(player, horse)) {
             player.sendMessage("§cYou can only lunge your own tamed horse!");
+            return;
+        }
+
+        if (!horse.getPassengers().isEmpty()) {
+            player.sendMessage(ColorUtils.color("<red>You cannot lunge a horse while it is being ridden!"));
             return;
         }
 
