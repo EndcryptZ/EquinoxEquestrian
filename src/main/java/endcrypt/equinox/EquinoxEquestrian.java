@@ -13,6 +13,7 @@ import endcrypt.equinox.equine.breeding.EquineBreedingListener;
 import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeatListener;
 import endcrypt.equinox.equine.bypass.EquineBypassListener;
 import endcrypt.equinox.equine.crosstie.EquineCrossTieListener;
+import endcrypt.equinox.equine.gaits.EquineGaitsListener;
 import endcrypt.equinox.equine.groom.EquineGroomListener;
 import endcrypt.equinox.equine.hunger.EquineHungerListener;
 import endcrypt.equinox.equine.items.misc.WaterBucketListener;
@@ -135,6 +136,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new EquineTransferListener(this);
         new EquineHungerListener(this);
         new EquineThirstListener(this);
+        new EquineGaitsListener(this);
 
     }
 
