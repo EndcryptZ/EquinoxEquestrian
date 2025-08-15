@@ -20,15 +20,7 @@ public enum Keys {
     BIRTH_TIME("EQUINE_BIRTH_TIME", System.currentTimeMillis(), Long.class),
     OWNER_UUID("EQUINE_OWNER_UUID", "", String.class),
     OWNER_NAME("EQUINE_OWNER_NAME", "", String.class),
-
-
-    // Speed
     BASE_SPEED("EQUINE_BASE_SPEED", 0.0, Double.class),
-    WALK_SPEED("EQUINE_WALK_SPEED", 0.0, Double.class),
-    TROT_SPEED("EQUINE_TROT_SPEED", 0.0, Double.class),
-    CANTER_SPEED("EQUINE_CANTER_SPEED", 0.0, Double.class),
-    GALLOP_SPEED("EQUINE_GALLOP_SPEED", 0.0, Double.class),
-
     BASE_JUMP("EQUINE_BASE_JUMP_POWER", 0.0, Double.class),
     IS_CROSS_TIED("EQUINE_IS_CROSS_TIED", "false", Boolean.class),
     IS_GROOM_ITEM("EQUINE_GROOM_ITEM", "false", Boolean.class),
@@ -69,8 +61,13 @@ public enum Keys {
     THIRST_PERCENTAGE("EQUINE_THIRST_PERCENTAGE", 100.0, Double.class),
     LAST_THIRST_UPDATE("EQUINE_LAST_THIRST_UPDATE", System.currentTimeMillis(), Long.class),
     LAST_SEEK_WATER("EQUINE_LAST_SEEK_WATER", System.currentTimeMillis(), Long.class),
-    IS_IN_WATER_TASK("EQUINE_IS_IN_WATER_TASK", false, Boolean.class);
+    IS_IN_WATER_TASK("EQUINE_IS_IN_WATER_TASK", false, Boolean.class),
 
+    // Speed
+    WALK_SPEED("EQUINE_WALK_SPEED", 0.0, Double.class),
+    TROT_SPEED("EQUINE_TROT_SPEED", 0.0, Double.class),
+    CANTER_SPEED("EQUINE_CANTER_SPEED", 0.0, Double.class),
+    GALLOP_SPEED("EQUINE_GALLOP_SPEED", 0.0, Double.class);
 
     public final String key;
     public final Object defaultValue;
