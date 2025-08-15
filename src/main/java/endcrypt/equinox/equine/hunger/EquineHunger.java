@@ -47,6 +47,16 @@ public class EquineHunger {
                 return;
             }
 
+            if (!horse.getWorld().equals(targetBlock.getWorld())) {
+                plugin.getLogger().warning(String.format(
+                        "checkFood: cancelled — horse is in world '%s' but target block is in world '%s'.",
+                        horse.getWorld().getName(),
+                        targetBlock.getWorld().getName()
+                ));
+                return; // worlds are different, so cancel the method
+            }
+
+
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
             if (dist <= 2.5) {
