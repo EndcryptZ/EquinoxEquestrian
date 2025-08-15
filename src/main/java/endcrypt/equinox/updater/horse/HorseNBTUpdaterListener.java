@@ -3,6 +3,7 @@ package endcrypt.equinox.updater.horse;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
@@ -33,6 +34,12 @@ public class HorseNBTUpdaterListener implements Listener {
 
             if((horse.getOwner() == null)) {
                 continue;
+            }
+
+            if (!Keys.hasPersistentData(horse, Keys.WALK_SPEED)) {
+                EquineUtils.applySpeedsToHorse(horse);
+                plugin.getLogger().info("Applied new gait speeds to horse '"
+                        + horse.getName() + "' (" + horse.getUniqueId() + ")");
             }
 
             EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
