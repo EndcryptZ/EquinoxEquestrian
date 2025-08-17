@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.thirst;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.World;
 import org.bukkit.entity.AbstractHorse;
@@ -72,9 +73,17 @@ public class EquineThirstTask {
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
 
+                // Dismount passenger
+                if (currentThirst < 30) {
+                    horse.getPassengers().forEach(passenger -> {
+                        horse.removePassenger(passenger);
+                        passenger.sendMessage(ColorUtils.color("This horse is too thirsty to be ridden. It needs at least 30% thirst."));
+                    });
+                }
 
-                long lastSeekFood = Keys.readPersistentData(horse, Keys.LAST_SEEK_WATER);
-                if (currentThirst < 50 && lastSeekFood + TimeUtils.secondsToMillis(10) < now) {
+
+                long lastSeekWater = Keys.readPersistentData(horse, Keys.LAST_SEEK_WATER);
+                if (currentThirst < 50 && lastSeekWater + TimeUtils.secondsToMillis(10) < now) {
                     plugin.getEquineManager().getEquineThirst().checkWater(horse);
                     Keys.writePersistentData(horse, Keys.LAST_SEEK_WATER, now);
                 }

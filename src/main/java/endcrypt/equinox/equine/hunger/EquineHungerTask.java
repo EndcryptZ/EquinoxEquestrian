@@ -3,9 +3,11 @@ package endcrypt.equinox.equine.hunger;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Player;
 
 public class EquineHungerTask {
 
@@ -80,6 +82,14 @@ public class EquineHungerTask {
                     Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
+
+                    // Dismount passenger
+                    if (currentHunger < 30) {
+                        horse.getPassengers().forEach(passenger -> {
+                            horse.removePassenger(passenger);
+                            passenger.sendMessage(ColorUtils.color("This horse is too hungry to be ridden. It needs at least 30% hunger."));
+                        });
+                    }
 
 
                 long lastSeekFood = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
