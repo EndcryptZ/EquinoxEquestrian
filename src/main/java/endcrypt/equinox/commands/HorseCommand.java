@@ -225,7 +225,15 @@ public class HorseCommand {
             return;
         }
 
-        horse.teleport(player.getLocation());
+        EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
+        AbstractHorse abstractHorse = EquineUtils.findHorseByUuidAndLocation(equineLiveHorse.getUuid(), equineLiveHorse.getLastLocation());
+        if(abstractHorse == null) {
+            player.sendMessage(ColorUtils.color("<red>Horse '<horse><red>' not found.",
+                    Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(horse.getName())))));
+            return;
+        }
+
+        abstractHorse.teleport(player.getLocation());
         player.sendMessage(ColorUtils.color("<prefix><green>Your selected horse has been teleported to you!",
                 Placeholder.parsed("prefix", plugin.getPrefix())));
     }
