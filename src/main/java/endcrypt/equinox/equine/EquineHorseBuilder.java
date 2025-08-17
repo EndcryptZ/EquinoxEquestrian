@@ -127,7 +127,6 @@ public class EquineHorseBuilder {
 
             // Set base stats
             nbt.setDouble(Keys.BASE_SPEED.getKey(), Objects.requireNonNull(horse.getAttribute(Attribute.MOVEMENT_SPEED)).getBaseValue());
-            nbt.setDouble(Keys.BASE_JUMP.getKey(), horse.getJumpStrength());
             nbt.setString(Keys.SKULL_ID.getKey(), randomSkullId());
 
             // Set state flags
@@ -153,10 +152,10 @@ public class EquineHorseBuilder {
 
             // SPEED
             // normal horses
-            double walkSpeed = generateSpeed(0.4, 1.2, 80, 1.2, 2.7, 55);
-            double trotSpeed = generateSpeed(3.4, 4.4, 80, 4.4, 5.7, 55);
-            double canterSpeed = generateSpeed(7.3, 8.6, 80, 8.6, 9.5, 55);
-            double gallopSpeed = generateSpeed(11.4, 12.8, 80, 12.8, 13.7, 55);
+            double walkSpeed = generateSpeed(0.4, 1.2, 1.2, 2.7);
+            double trotSpeed = generateSpeed(3.4, 4.4, 4.4, 5.7);
+            double canterSpeed = generateSpeed(7.3, 8.6, 8.6, 9.5);
+            double gallopSpeed = generateSpeed(11.4, 12.8, 12.8, 13.7);
 
             // racehorses (overrides for racing disciplines)
             if (EnumSet.of(Discipline.FLAT_RACING_SHORT, Discipline.FLAT_RACING_LONG)
@@ -170,6 +169,17 @@ public class EquineHorseBuilder {
             nbt.setDouble(Keys.TROT_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(trotSpeed));
             nbt.setDouble(Keys.CANTER_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(canterSpeed));
             nbt.setDouble(Keys.GALLOP_SPEED.getKey(), EquineUtils.blocksToMnecraftSpeed(gallopSpeed));
+
+            // Set Jump
+            double jumpStrength = generateJumpStrength();
+
+            // Show Jumpers (overrides for jumper discipline)
+            if (equineHorse.getDiscipline() == Discipline.SHOW_JUMPING) {
+                jumpStrength = 4.0;
+            }
+
+            nbt.setDouble(Keys.BASE_JUMP.getKey(), EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
+            Objects.requireNonNull(horse.getAttribute(Attribute.JUMP_STRENGTH)).setBaseValue(EquineUtils.blocksToMinecraftJumpStrength(jumpStrength));
 
         });
 
@@ -201,21 +211,48 @@ public class EquineHorseBuilder {
         return new EquineHorse(name, discipline, breeds, coatColor, coatModifier, gender, age, height, traits);
     }
 
-    private double generateSpeed(double min1, double max1, int chance1,
-                                        double min2, double max2, int chance2) {
+    private double generateSpeed(double min1, double max1,
+                                 double min2, double max2) {
         Random random = new Random();
         int roll = random.nextInt(100) + 1;
         double value;
 
-        if (roll <= chance1) {
+        if (roll <= 80) {
             value = randomInRange(min1, max1);
-        } else if (roll <= chance1 + chance2) {
-            value = randomInRange(min2, max2);
         } else {
-            value = randomInRange(min1, max1);
+            value = randomInRange(min2, max2);
         }
 
         return Math.round(value * 100.0) / 100.0;
+    }
+
+
+    public double generateJumpStrength() {
+        Random random = new Random();
+
+        // weights
+        double[] values = {2.7, 3.2, 3.6, 4.0};
+        int[] weights = {80, 65, 45, 25}; // chance weights
+
+        // total weight
+        int totalWeight = 0;
+        for (int w : weights) {
+            totalWeight += w;
+        }
+
+        // roll between 0 and totalWeight
+        int roll = random.nextInt(totalWeight) + 1;
+
+        // pick based on cumulative weight
+        int cumulative = 0;
+        for (int i = 0; i < values.length; i++) {
+            cumulative += weights[i];
+            if (roll <= cumulative) {
+                return values[i];
+            }
+        }
+
+        return -1; // should never happen
     }
 
     private static double randomInRange(double min, double max) {
