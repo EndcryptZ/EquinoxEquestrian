@@ -146,8 +146,12 @@ public class    HorseInfoMenu {
     private SGButton motionInformation(EquineLiveHorse equineHorse){
 
         String[] baseLore = {
-                "&7▸ &bSpeed: &7WIP",
-                "&7▸ &bJump: &7WIP",
+                "&7▸ &bSpeed: ",
+                "  &7▸ &bWalk: &7" + EquineUtils.minecraftSpeedToBlocks(equineHorse.getWalkSpeed()) + " mph",
+                "  &7▸ &bTrot: &7" + EquineUtils.minecraftSpeedToBlocks(equineHorse.getTrotSpeed()) + " mph",
+                "  &7▸ &bCanter: &7" + EquineUtils.minecraftSpeedToBlocks(equineHorse.getCanterSpeed()) + " mph",
+                "  &7▸ &bGallop: &7" + EquineUtils.minecraftSpeedToBlocks(equineHorse.getGallopSpeed()) + " mph",
+                "&7▸ &bJump: &7" + EquineUtils.minecraftJumpStrengthToBlocks(equineHorse.getBaseJumpPower()) + " block(s)",
                 "&7▸ &bStamina: &7WIP",
                 "&7▸ &bLevel: &7WIP",
                 "&7▸ &bDiscipline: &7" + equineHorse.getDiscipline().getDisciplineName(),
