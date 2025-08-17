@@ -175,13 +175,13 @@ public class HorseMenu {
         }
 
         if (thirst < 30) {
-            player.sendMessage(ColorUtils.color("This horse is too thirsty to ride. It needs at least 30% thirst before you can ride it."));
+            player.sendMessage(ColorUtils.color("<red>This horse is too thirsty to ride. It needs at least 30% thirst before you can ride it."));
             player.closeInventory();
             return false;
         }
 
         if (hunger < 30) {
-            player.sendMessage(ColorUtils.color("This horse is too hungry to ride. It needs at least 30% hunger before you can ride it."));
+            player.sendMessage(ColorUtils.color("<red>This horse is too hungry to ride. It needs at least 30% hunger before you can ride it."));
             player.closeInventory();
             return false;
         }

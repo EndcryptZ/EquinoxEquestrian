@@ -87,7 +87,7 @@ public class EquineHungerTask {
                     if (currentHunger < 30) {
                         horse.getPassengers().forEach(passenger -> {
                             horse.removePassenger(passenger);
-                            passenger.sendMessage(ColorUtils.color("This horse is too hungry to be ridden. It needs at least 30% hunger."));
+                            passenger.sendMessage(ColorUtils.color("<red>This horse is too hungry to be ridden. It needs at least 30% hunger."));
                         });
                     }
 
