@@ -164,10 +164,24 @@ public class HorseMenu {
 
     public boolean canMountHorse(Player player, AbstractHorse horse) {
         int age = Keys.readPersistentData(horse, Keys.AGE);
+        double thirst = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
+        double hunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
 
         // check age restriction
         if (age < 4) {
             player.sendMessage(ColorUtils.color("<red>This horse is too young to ride. It must be at least 4 years old!"));
+            player.closeInventory();
+            return false;
+        }
+
+        if (thirst < 30) {
+            player.sendMessage(ColorUtils.color("This horse is too thirsty to ride. It needs at least 30% thirst before you can ride it."));
+            player.closeInventory();
+            return false;
+        }
+
+        if (hunger < 30) {
+            player.sendMessage(ColorUtils.color("This horse is too hungry to ride. It needs at least 30% hunger before you can ride it."));
             player.closeInventory();
             return false;
         }
