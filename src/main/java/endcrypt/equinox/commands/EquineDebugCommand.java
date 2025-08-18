@@ -37,6 +37,7 @@ public class EquineDebugCommand {
 
     private void registerCommands() {
         new CommandAPICommand("equinedebug")
+                .withAliases("eqdebug")
                 .withSubcommand(new CommandAPICommand("debugplayerhead")
                         .executesPlayer(this::debugPlayerHead))
 
