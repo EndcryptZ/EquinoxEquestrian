@@ -6,96 +6,55 @@ A Minecraft plugin for advanced equestrian gameplay and horse management.
 
 ## 🐴 Overview
 
-**EquinoxEquestrian** is a feature-rich Minecraft plugin that brings realistic horse management and equestrian activities to your server. It provides in-depth mechanics for horse handling, breeding, grooming, training, and stable management, aiming to enhance the equestrian experience for players.
+**EquinoxEquestrian** introduces a suite of front-end features that provide realistic horse management and immersive equestrian activities for Minecraft servers. Designed for private and advanced use, the plugin centers around comprehensive GUI interactions, player-driven horse management, and stable operations.
 
 ---
 
-## ✨ Features
+## ✨ Front-End Features
 
-- **Advanced Horse Management:**  
-  - Breed, train, and manage horses with unique genetics, coats, traits, and stats.
-  - Track horse age, gender, prominent and mixed breeds, discipline, and traits.
-  - Manage horse health, pregnancy, and other lifecycle events.
+- **Horse Management Menus:**  
+  - Intuitive GUIs for selecting, viewing, and managing horses.
+  - Inspect horse stats: genetics, breed, coat, traits, health, pregnancy, age, gender, and discipline.
+  - Easily claim, rename, release, and transfer horses.
 
-- **Stable & Ownership System:**  
-  - Claim, cross-tie, lunge, and teleport horses.
-  - Privacy and public settings for horses.
-  - Permissions system to control player interactions with horses.
+- **Stable & Ownership Controls:**  
+  - Set privacy or public access for each horse.
+  - Assign trusted players for shared management.
+  - Cross-tie, lunge, or teleport horses directly from menus.
 
 - **Grooming & Equipment:**  
-  - Use dedicated grooming tools and items.
-  - Manage equipment and inventory related to horses.
+  - Interactive grooming system with dedicated tools.
+  - Equip and manage tack, accessories, and horse inventory through item-based GUIs.
 
-- **GUI Integration:**  
-  - Menus for horse management and building (via SpiGUI and custom forms).
-  - Bedrock/Java compatibility features.
+- **Training & Lifecycle:**  
+  - Train horses in specific disciplines and track progress visually.
+  - Manage breeding, pregnancy events, and lifecycle changes with menu-driven options.
 
-- **Economy & Tokens:**  
-  - Token-based systems for in-game rewards and actions.
-  - Economy integration for buying and selling horses or services.
+- **Economy & Token System:**  
+  - Token-based actions and rewards, integrated into horse management menus.
+  - Buy, sell, and trade horses or stable services using built-in economic features.
 
-- **PlaceholderAPI Support:**  
-  - Integration with PlaceholderAPI for dynamic server placeholders.
+- **Stable Home & Teleportation:**  
+  - Set and teleport horses to custom “pasture” or “stall” locations via GUI forms.
 
-- **Database Persistence:**  
-  - All player and horse data is stored in a persistent SQLite database.
+- **Bedrock & Java Compatibility:**  
+  - Unified interface for both Java and Bedrock players.
+  - Custom forms and menus adapt for platform-specific interactions.
 
----
+- **Admin & Player Data Control:**  
+  - Admin panels for overseeing stables, player horse data, and permissions.
+  - Direct menu access for saving/loading player profiles and horse states.
 
-## 🛠️ Installation
-
-1. **Download** the latest release from the [releases page](https://github.com/EndcryptZ/EquinoxEquestrian/releases).
-2. **Drag and drop** the `.jar` file into your server's `plugins/` directory.
-3. **Restart** your Minecraft server.
-4. **(Optional)** Configure plugin settings in the generated config files.
-
----
-
-## 🏇 Usage
-
-- Use in-game commands and GUIs to interact with horse features (see `/help equinox` for details).
-- Manage horses via menus, claim and train them, and use tokens to unlock special features.
-- Admins can manage player data and oversee stable operations.
+- **Persistent Data:**  
+  - All menu selections and horse/player states are saved automatically for seamless gameplay and recovery.
 
 ---
 
-## 🔌 Dependencies
+## 👩‍💻 Developer Notes
 
-- [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
-- [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) (optional, for placeholders)
-- [Floodgate](https://github.com/GeyserMC/Floodgate) (for Bedrock support)
-- [SpiGUI](https://github.com/SpiGetOrg/SpiGUI)
-- [NBT-API](https://github.com/tr7zw/Item-NBT-API)
-- [Vault](https://www.spigotmc.org/resources/vault.34315/) (for economy features)
-
----
-
-## 👩‍💻 Development
-
-- **Language:** Java
-- **API:** Spigot/Bukkit
-
-The main plugin class is `EquinoxEquestrian`, and the code is modularized into managers for horses, databases, commands, and menus. See the `src/main/java/endcrypt/equinox/` directory for the code structure.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open issues or pull requests for suggestions, bugfixes, or new features.
-
----
-
-## 📄 License
-
-MIT License. See [`LICENSE`](LICENSE) for details.
-
----
-
-## 📬 Contact
-
-- **Author:** [EndcryptZ](https://github.com/EndcryptZ)
-- **Issues:** [GitHub Issues](https://github.com/EndcryptZ/EquinoxEquestrian/issues)
-- **Discord:** _Coming soon_
+- All game-changing actions and features are accessed through custom GUIs and forms—no command memorization required.
+- The plugin is modular, with managers for horses, menus, player data, and economy systems.
+- Menu layouts and options are tailored for immersive, realistic equestrian simulation.
 
 ---
 
