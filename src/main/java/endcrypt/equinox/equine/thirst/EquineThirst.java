@@ -45,6 +45,18 @@ public class EquineThirst {
                 return;
             }
 
+            if (!horse.getWorld().equals(targetBlock.getWorld())) {
+                plugin.getLogger().warning(String.format(
+                        "checkWater: cancelled — horse is in world '%s' but target block is in world '%s'.",
+                        horse.getWorld().getName(),
+                        targetBlock.getWorld().getName()
+                ));
+                Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
+                task.cancel();
+                return; // worlds are different, so cancel the method
+            }
+
+
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             double reqDistance = targetBlock.getType() == Material.WATER ? 2 : 2.5;
             horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
