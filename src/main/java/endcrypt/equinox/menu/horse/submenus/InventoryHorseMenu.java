@@ -63,7 +63,6 @@ public class InventoryHorseMenu implements Listener {
             Player player = (Player) event.getPlayer();
             editingHorseInventories.put(horse, player);
             IntStream.range(0, 25).forEach(i -> event.getInventory().setItem(i, loadSlot(i, horse)));
-            validateArmor(event.getInventory(), horse);
         }
     }
 
@@ -172,27 +171,6 @@ public class InventoryHorseMenu implements Listener {
     private boolean hasEmptySlot(Inventory inventory) {
         for (ItemStack item : inventory.getContents()) {
             if (item == null || item.getType() == Material.AIR) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void validateArmor(Inventory inventory, AbstractHorse horse) {
-        ItemStack armorSlotItem = horse.getInventory().getItem(1);
-        if (!isHorseArmor(armorSlotItem)) return;
-        if (isInInventory(inventory, armorSlotItem)) return;
-
-        // Find a free slot in the inventory and put the armor in it
-        int freeSlot = inventory.firstEmpty();
-        if (freeSlot != -1) {
-            inventory.setItem(freeSlot, armorSlotItem);
-        }
-    }
-
-    private boolean isInInventory(Inventory inventory, ItemStack itemStack) {
-        for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.isSimilar(itemStack)) {
                 return true;
             }
         }
