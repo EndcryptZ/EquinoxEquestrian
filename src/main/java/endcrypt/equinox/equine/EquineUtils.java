@@ -220,35 +220,6 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_BREED));
     }
 
-
-    public static void printEquineNBTData(EquineLiveHorse horse) {
-        if (horse == null) return;
-        AbstractHorse abstractHorse = horse.getHorse();
-        if (abstractHorse == null) return;
-
-        NBT.getPersistentData(abstractHorse, nbt -> {
-            for (Keys key : Keys.values()) {
-                if (key.equals(Keys.TRAIT_PREFIX) || key.equals(Keys.BREED_PREFIX)) {
-                    for (int i = 0; i < 3; i++) {
-                        String fullKey = key.getKey() + i;
-                        Bukkit.broadcastMessage(fullKey + ": " + nbt.getString(fullKey));
-                    }
-                } else if (key.getDefaultValue() instanceof String) {
-                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getString(key.getKey()));
-                } else if (key.getDefaultValue() instanceof Integer) {
-                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getInteger(key.getKey()));
-                } else if (key.getDefaultValue() instanceof Double) {
-                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getDouble(key.getKey()));
-                } else if (key.getDefaultValue() instanceof Long) {
-                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getLong(key.getKey()));
-                } else if (key.getDefaultValue() instanceof Boolean) {
-                    Bukkit.broadcastMessage(key.getKey() + ": " + nbt.getBoolean(key.getKey()));
-                }
-            }
-            return null;
-        });
-    }
-
     public static boolean hasSelectedHorse(Player player) {
         AbstractHorse horse = instance.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
         if (horse == null) {
