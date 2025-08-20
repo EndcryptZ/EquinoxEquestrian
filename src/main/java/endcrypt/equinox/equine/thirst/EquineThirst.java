@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class EquineThirst {
 
+    Set<Material> allowedWaterSource = Set.of(Material.WATER, Material.WATER_CAULDRON);
     private final EquinoxEquestrian plugin;
     public EquineThirst(EquinoxEquestrian plugin) {
         this.plugin = plugin;
@@ -23,7 +24,7 @@ public class EquineThirst {
         // Find the nearest drinkable blocks for horse
         Block targetBlock = findNearestBlock(
                 horse.getLocation(),
-                Set.of(Material.WATER, Material.WATER_CAULDRON),
+                allowedWaterSource,
                 7 // radius
         );
 
@@ -78,9 +79,15 @@ public class EquineThirst {
                 horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_HORSE_EAT, 1.0f, 1.0f);
                 horse.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, horse.getLocation().add(0, 1, 0), 8);
 
-                // After 3 seconds, stop eating and consume the block
+                // After 3 seconds, stop drinking
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     craftHorse.getHandle().setEating(false);
+
+                    // Cancel the process if the block is not a valid water
+                    if (!allowedWaterSource.contains(targetBlock.getType())) {
+                        Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
+                        return;
+                    }
 
                     // Play block break effect and particles
                     horse.getWorld().playSound(targetBlock.getLocation(), Sound.ENTITY_WITCH_DRINK, 1.0f, 1.0f);
