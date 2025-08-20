@@ -28,7 +28,7 @@ public class EquineThirstListener implements Listener {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    List<Material> allowedDrinksFromHand = Arrays.asList(Material.WATER_BUCKET);
+    List<Material> allowedDrinksFromHand = List.of(Material.WATER_BUCKET);
 
     @EventHandler
     public void onHorseEat(PlayerInteractEntityEvent event) {
