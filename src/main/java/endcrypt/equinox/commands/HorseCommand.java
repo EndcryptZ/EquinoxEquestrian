@@ -120,7 +120,7 @@ public class HorseCommand {
         Player player = (Player) sender;
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
 
-        if (!EquineUtils.hasSelectedHorse(player)) return;
+        if (EquineUtils.hasNoSelectedHorse(player)) return;
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
 
@@ -207,7 +207,7 @@ public class HorseCommand {
         }
 
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if (!EquineUtils.hasSelectedHorse(player)) return;
+        if (EquineUtils.hasNoSelectedHorse(player)) return;
 
         player.teleport(horse);
         player.sendMessage(ColorUtils.color("<prefix><green>You have been teleported to your selected horse!",
@@ -459,7 +459,7 @@ public class HorseCommand {
 
 
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
-        if (!EquineUtils.hasSelectedHorse(player)) return;
+        if (EquineUtils.hasNoSelectedHorse(player)) return;
 
         String newName = args.getUnchecked("name");
         assert newName != null;
@@ -494,7 +494,7 @@ public class HorseCommand {
         Player receiver = args.getUnchecked("target");
 
         AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(sender).getSelectedHorse();
-        if (!EquineUtils.hasSelectedHorse(sender)) return;
+        if (EquineUtils.hasNoSelectedHorse(sender)) return;
 
         plugin.getEquineManager().getEquineTransferManager().requestTransferOwnership(receiver, sender, horse);
     }
