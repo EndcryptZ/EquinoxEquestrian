@@ -3,7 +3,6 @@ package endcrypt.equinox.menu.horse;
 import com.samjakob.spigui.buttons.SGButton;
 import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
-import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
@@ -15,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
+
+import java.util.Objects;
 
 public class HorseMenu {
 
@@ -62,7 +63,7 @@ public class HorseMenu {
                     Player player = (Player) event.getWhoClicked();
 
                     if(plugin.getMenuManager().getHorseMenuManager().getInventoryHorseMenu().isHorseInventoryOpened(abstractHorse)) {
-                        ItemUtils.itemMessage(plugin, event.getCurrentItem(), "§fInventory", ChatColor.RED + "The inventory is currently being edited by another player!", null, null);
+                        ItemUtils.itemMessage(plugin, Objects.requireNonNull(event.getCurrentItem()), "§fInventory", ChatColor.RED + "The inventory is currently being edited by another player!", null, null);
                         return;
                     }
 
@@ -136,7 +137,7 @@ public class HorseMenu {
 
     private SGButton mountUnmountButton(Player player, AbstractHorse abstractHorse) {
 
-        if(abstractHorse.getPassenger() == player) {
+        if(abstractHorse.getPassengers().contains(player)) {
             return new SGButton(
                     new ItemBuilder(Material.SADDLE)
                             .name("&fUnmount")
