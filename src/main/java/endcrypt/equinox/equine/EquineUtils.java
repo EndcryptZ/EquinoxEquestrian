@@ -180,7 +180,9 @@ public class EquineUtils {
         if (instance.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, player)) return true;
         if(isHorsePublic(horse)) return true;
         if(EquineBypass.hasBypass(player)) return true;
-        return horse.getOwner() == player;
+        if(horse.getOwner() == player) return true;
+
+        return false;
     }
 
     public static Gender getHorseGender(AbstractHorse horse) {
@@ -231,15 +233,19 @@ public class EquineUtils {
     }
 
     public static boolean isPlayerHorseSlotsMax(Player player) {
-        return instance.getPermissionManager().getMaxHorsesAllowed(player) <= instance.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size();
+        if (instance.getPermissionManager().getMaxHorsesAllowed(player) <= instance.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size()) {
+            return true;
+        }
+
+        return false;
     }
 
     public static void applySpeedsToHorse(AbstractHorse horse) {
         EquineHorse equineHorse = fromAbstractHorse(horse);
-        double walkSpeed = generateSpeed(0.4, 1.2, 1.2, 2.7);
-        double trotSpeed = generateSpeed(3.4, 4.4, 4.4, 5.7);
-        double canterSpeed = generateSpeed(7.3, 8.6, 8.6, 9.5);
-        double gallopSpeed = generateSpeed(11.4, 12.8, 12.8, 13.7);
+        double walkSpeed = generateSpeed(0.4, 1.2, 80, 1.2, 2.7, 55);
+        double trotSpeed = generateSpeed(3.4, 4.4, 80, 4.4, 5.7, 55);
+        double canterSpeed = generateSpeed(7.3, 8.6, 80, 8.6, 9.5, 55);
+        double gallopSpeed = generateSpeed(11.4, 12.8, 80, 12.8, 13.7, 55);
 
         // override speeds if racehorse
         if (EnumSet.of(Discipline.FLAT_RACING_SHORT, Discipline.FLAT_RACING_LONG)
@@ -255,15 +261,15 @@ public class EquineUtils {
         Keys.writePersistentData(horse, Keys.GALLOP_SPEED, EquineUtils.blocksToMnecraftSpeed(gallopSpeed));
     }
 
-    private static double generateSpeed(double min1, double max1,
-                                        double min2, double max2) {
+    private static double generateSpeed(double min1, double max1, int chance1,
+                                        double min2, double max2, int chance2) {
         Random random = new Random();
         int roll = random.nextInt(100) + 1;
         double value;
 
-        if (roll <= 80) {
+        if (roll <= chance1) {
             value = randomInRange(min1, max1);
-        } else if (roll <= 80 + 55) {
+        } else if (roll <= chance1 + chance2) {
             value = randomInRange(min2, max2);
         } else {
             value = randomInRange(min1, max1);
