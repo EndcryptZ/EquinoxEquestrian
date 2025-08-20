@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class EquineHunger {
 
+    Set<Material> allowedFoodSource = Set.of(Material.GRASS_BLOCK, Material.SHORT_GRASS, Material.TALL_GRASS);
     private final EquinoxEquestrian plugin;
     public EquineHunger(EquinoxEquestrian plugin) {
         this.plugin = plugin;
@@ -23,7 +24,7 @@ public class EquineHunger {
         // Find the nearest edible blocks for horse
         Block targetBlock = findNearestBlock(
                 horse.getLocation(),
-                Set.of(Material.GRASS_BLOCK, Material.SHORT_GRASS, Material.TALL_GRASS),
+                allowedFoodSource,
                 7 // radius
         );
 
@@ -82,10 +83,17 @@ public class EquineHunger {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     craftHorse.getHandle().setEating(false);
 
+                    // Cancel the process if the block is not a valid food source
+                    if (!allowedFoodSource.contains(targetBlock.getType())) {
+                        Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                        return;
+                    }
+
                     // Play block break effect and particles
                     horse.getWorld().playSound(targetBlock.getLocation(), Sound.BLOCK_GRASS_BREAK, 1.0f, 1.0f);
                     horse.getWorld().spawnParticle(Particle.BLOCK, targetBlock.getLocation().add(0.5, 0.5, 0.5), 20,
                             0.3, 0.3, 0.3, targetBlock.getBlockData());
+
 
                     // Replace grass block with dirt
                     if(targetBlock.getType().equals(Material.GRASS_BLOCK)) {
