@@ -133,6 +133,10 @@ public class EquineGaitsListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
+        if (player.isInsideVehicle()) {
+            player.leaveVehicle();
+        }
+
         if(!(player.getVehicle() instanceof AbstractHorse equineHorse)) {
             return;
         }
