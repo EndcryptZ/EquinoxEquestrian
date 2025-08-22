@@ -8,3 +8,5 @@ depend:
   - floodgate
 softdepend:
   - PlaceholderAPI
+  - CMI
+  - EssentialsX
