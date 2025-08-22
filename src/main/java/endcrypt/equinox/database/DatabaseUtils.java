@@ -68,6 +68,16 @@ public class DatabaseUtils {
             horse.setPregnant(resultSet.getBoolean("is_pregnant"));
             horse.setInHeat(resultSet.getBoolean("is_in_heat"));
 
+            horse.setHungerPercentage(resultSet.getDouble("hunger_percentage"));
+            horse.setLastHungerUpdate(resultSet.getLong("last_hunger_update"));
+            horse.setThirstPercentage(resultSet.getDouble("thirst_percentage"));
+            horse.setLastThirstUpdate(resultSet.getLong("last_thirst_update"));
+
+            horse.setWalkSpeed(resultSet.getDouble("walk_speed"));
+            horse.setTrotSpeed(resultSet.getDouble("trot_speed"));
+            horse.setCanterSpeed(resultSet.getDouble("canter_speed"));
+            horse.setGallopSpeed(resultSet.getDouble("gallop_speed"));
+
             return horse;
         } catch (Exception e) {
             plugin.getLogger().severe("Failed to map result set to horse: " + e.getMessage());

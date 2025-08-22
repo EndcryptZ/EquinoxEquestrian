@@ -49,7 +49,10 @@ public class DatabaseHorses {
         put("last_hunger_update", "BIGINT"); // Epoch millis
         put("thirst_percentage", "REAL"); // 0–100, decimal safe
         put("last_thirst_update", "BIGINT"); // Epoch millis
-
+        put("walk_speed", "REAL");
+        put("trot_speed", "REAL");
+        put("canter_speed", "REAL");
+        put("gallop_speed", "REAL");
     }};
 
 
@@ -115,6 +118,10 @@ public class DatabaseHorses {
             long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
             double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());
             long lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey());
+            double walkSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
+            double trotSpeed = nbt.getDouble(Keys.TROT_SPEED.getKey());
+            double canterSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
+            double gallopSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
 
             boolean isMySQL;
             try {
@@ -127,8 +134,8 @@ public class DatabaseHorses {
                     "uuid, owner_uuid, display_name, discipline, breed_1, breed_2, prominent_breed, coat_color, coat_modifier, " +
                     "gender, age, height, trait_1, trait_2, trait_3, claim_time, birth_time, owner_name, base_speed, base_jump_power, " +
                     "skull_id, last_world, last_location_x, last_location_y, last_location_z, is_pregnant, is_in_heat, hunger_percentage, " +
-                    "last_hunger_update, thirst_percentage, last_thirst_update" +
-                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "last_hunger_update, thirst_percentage, last_thirst_update, walk_speed, trot_speed, canter_speed, gallop_speed" +
+                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, uuid);
@@ -162,6 +169,10 @@ public class DatabaseHorses {
                 ps.setLong(29, lastHungerUpdate);
                 ps.setDouble(30, thirstPercentage);
                 ps.setLong(31, lastThirstUpdate);
+                ps.setDouble(32, walkSpeed);
+                ps.setDouble(33, trotSpeed);
+                ps.setDouble(34, canterSpeed);
+                ps.setDouble(35, gallopSpeed);
 
                 ps.executeUpdate();
                 return true;
@@ -267,6 +278,11 @@ public class DatabaseHorses {
             long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
             double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());
             long lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey());
+            double walkSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
+            double trotSpeed = nbt.getDouble(Keys.TROT_SPEED.getKey());
+            double canterSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
+            double gallopSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey());
+
 
             boolean isMySQL;
             try {
@@ -281,7 +297,7 @@ public class DatabaseHorses {
                     "trait_3 = ?, claim_time = ?, birth_time = ?, owner_name = ?, base_speed = ?, base_jump_power = ?, " +
                     "skull_id = ?, last_world = ?, last_location_x = ?, last_location_y = ?, last_location_z = ?, " +
                     "is_pregnant = ?, is_in_heat = ?, hunger_percentage = ?, last_hunger_update = ?, thirst_percentage = ?, " +
-                    "last_thirst_update = ? " +
+                    "last_thirst_update = ?, walk_speed = ?, trot_speed = ?, canter_speed = ?, gallop_speed = ? " +
                     "WHERE uuid = ?";
 
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -315,7 +331,11 @@ public class DatabaseHorses {
                 ps.setLong(28, lastHungerUpdate);
                 ps.setDouble(29, thirstPercentage);
                 ps.setLong(30, lastThirstUpdate);
-                ps.setString(31, uuid);
+                ps.setDouble(31, walkSpeed);
+                ps.setDouble(32, trotSpeed);
+                ps.setDouble(33, canterSpeed);
+                ps.setDouble(34, gallopSpeed);
+                ps.setString(35, uuid);
 
                 ps.executeUpdate();
                 return true;
