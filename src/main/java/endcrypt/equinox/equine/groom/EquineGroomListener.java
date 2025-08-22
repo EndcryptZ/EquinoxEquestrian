@@ -5,6 +5,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerSelectHorseEvent;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.utils.ColorUtils;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -83,10 +84,10 @@ public class EquineGroomListener implements Listener {
         plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).setGroomTimes(plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).getGroomTimes() + 1);
         plugin.getEquineManager().getEquineGroomManager().damageGroomItem(player, heldItem);
 
-        player.sendMessage(ColorUtils.color("<prefix><gray>You have used <white><item> <gray>on <white><italic><horse> <gray>(<white><times>/2<gray>).",
+        player.sendMessage(ColorUtils.color("<prefix><gray>You have used <white><item> <gray>on <white><horse> <gray>(<white><times>/2<gray>).",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("item", item.getName()),
-                Placeholder.parsed("horse", horse.getName()),
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("times", String.valueOf(plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).getGroomTimes()))));
 
         if(plugin.getEquineManager().getEquineGroomManager().getGroomMap().get(player).getGroomTimes() == 2) {
