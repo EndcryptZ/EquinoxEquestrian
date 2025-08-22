@@ -1,6 +1,5 @@
 package endcrypt.equinox.equine.waste;
 
-import com.sk89q.worldedit.command.tool.BlockTool;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.database.dao.DatabaseWaste;
 import endcrypt.equinox.player.data.PlayerData;
