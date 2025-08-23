@@ -54,7 +54,7 @@ public class EquinePrivacyListener implements Listener {
     public void onUntrust(EquinePlayerUntrustEvent event) {
         if(event.getTrustedPlayer().getPlayer() != null) {
             if (event.getHorse().getPassengers().contains(event.getTrustedPlayer().getPlayer())) {
-                event.getHorse().removePassenger(event.getTrustedPlayer().getPlayer());
+                event.getTrustedPlayer().getPlayer().leaveVehicle();
             }
         }
 
