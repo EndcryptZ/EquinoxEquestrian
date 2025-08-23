@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.transfer;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -35,6 +36,13 @@ public class EquineTransferManager {
         if (receiver.getUniqueId().toString().equalsIgnoreCase(liveHorse.getOwnerUUID())) {
             sender.sendMessage(ColorUtils.color("<red>Transfer request failed: This player is already the owner of this horse!"));
             return;
+        }
+
+        if (sender != abstractHorse.getOwner()) {
+            if(!EquineBypass.hasBypass(sender)) {
+                sender.sendMessage(ColorUtils.color("<red>Transfer requested failed: You're not the owner of this horse!"));
+                return;
+            }
         }
 
         EquineTransfer newTransfer = new EquineTransfer(sender, receiver, abstractHorse);
