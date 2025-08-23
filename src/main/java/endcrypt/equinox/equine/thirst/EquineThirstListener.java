@@ -77,7 +77,7 @@ public class EquineThirstListener implements Listener {
         horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_WITCH_DRINK, 1.0f, 1.0f);
 
         event.getPlayer().sendMessage(ColorUtils.color(
-                "<prefix><green><horse> drank <item>, restoring 2% thirst! Current thirst: <thirst>%",
+                "<prefix><horse> <green>drank <item>, restoring 2% thirst! Current thirst: <thirst>%",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("item", formattedItemName),

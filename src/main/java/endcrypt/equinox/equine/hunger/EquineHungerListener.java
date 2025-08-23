@@ -78,7 +78,7 @@ public class EquineHungerListener implements Listener {
         horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_HORSE_EAT, 1.0f, 1.0f);
 
         event.getPlayer().sendMessage(ColorUtils.color(
-                "<prefix><green>You fed <horse> a <item> and restored 2% hunger! Current hunger: <hunger>%",
+                "<prefix><green>You fed <horse> <green>a <item> and restored 2% hunger! Current hunger: <hunger>%",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("item", formattedItemName),
