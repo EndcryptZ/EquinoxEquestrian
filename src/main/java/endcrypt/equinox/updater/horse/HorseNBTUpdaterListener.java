@@ -50,12 +50,12 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: ").append(horse.name()).append(ColorUtils.color(" <green>(Owner: " + horse.getOwner().getName() + ")")));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: <white>").append(horse.name()).append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")));
                 continue;
             }
 
             plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
-            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: ").append(horse.name()).append(ColorUtils.color(" <green>(Owner: " + horse.getOwner().getName() + ")")));
+            plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: <white>").append(horse.name()).append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")));
 
             equineLiveHorse.update();
         }
@@ -78,7 +78,7 @@ public class HorseNBTUpdaterListener implements Listener {
             if(plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
                 equineLiveHorse.update();
                 plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
-                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: ").append(horse.name()).append(ColorUtils.color(" <green>(Owner: " + horse.getOwner().getName() + ")")));
+                plugin.getServer().getConsoleSender().sendMessage(ColorUtils.color(plugin.getPrefix() + "<green>[Unload] Updated horse in database: <white>").append(horse.name()).append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")));
             }
         }
     }
