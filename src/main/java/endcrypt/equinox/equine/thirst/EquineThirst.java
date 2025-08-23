@@ -1,5 +1,6 @@
 package endcrypt.equinox.equine.thirst;
 
+import com.destroystokyo.paper.entity.Pathfinder;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.*;
@@ -36,6 +37,14 @@ public class EquineThirst {
             Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
             return;
         }
+
+        Pathfinder horsePathfinder = horse.getPathfinder();
+        horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+        if (horsePathfinder.getCurrentPath() != null) {
+            if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) return;
+        }
+
+
         Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, true);
 
         // Schedule a repeating task to check distance until reached
@@ -60,7 +69,16 @@ public class EquineThirst {
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             double reqDistance = targetBlock.getType() == Material.WATER ? 2 : 2.5;
-            horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
+            horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+
+            if (horsePathfinder.getCurrentPath() != null) {
+                if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) {
+                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                    task.cancel();
+                    return;
+                }
+            }
+
             if (dist <= reqDistance) {
                 // make horse face the target block
                 Location horseLoc = horse.getLocation();
