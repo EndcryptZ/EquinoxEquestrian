@@ -1,5 +1,6 @@
 package endcrypt.equinox.equine.hunger;
 
+import com.destroystokyo.paper.entity.Pathfinder;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.*;
@@ -32,9 +33,16 @@ public class EquineHunger {
             Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
             return;
         }
+
         if (Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK)) {
             Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
             return;
+        }
+
+        Pathfinder horsePathfinder = horse.getPathfinder();
+        horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+        if (horsePathfinder.getCurrentPath() != null) {
+           if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) return;
         }
 
         Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, true);
@@ -61,7 +69,16 @@ public class EquineHunger {
 
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
-            horse.getPathfinder().moveTo(targetBlock.getLocation(), 1.2);
+            horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+
+            if (horsePathfinder.getCurrentPath() != null) {
+                if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) {
+                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                    task.cancel();
+                    return;
+                }
+            }
+
             if (dist <= 2.5) {
                 Location horseLoc = horse.getLocation();
                 Location targetLoc = targetBlock.getLocation().clone().add(0.5, 0, 0.5); // center of block
