@@ -1,5 +1,5 @@
 name: EquinoxEquestrian
-version: '1.0.1'
+version: '1.0.2'
 main: endcrypt.equinox.EquinoxEquestrian
 api-version: '1.20'
 depend:
