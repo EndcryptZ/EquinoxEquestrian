@@ -36,6 +36,17 @@ public class EquineBreedingInHeatTask {
         long calculatedEndInHeat = liveHorse.getLastInHeat() + TimeUtils.daysToMillis(3);
         long calculatedNextInHeat = liveHorse.getLastInHeat() + TimeUtils.daysToMillis(28);
 
+        if (liveHorse.getAge() < 3) {
+            liveHorse.setInHeat(false);
+            liveHorse.update();
+            return;
+        }
+        if (liveHorse.getAge() > 12) {
+            liveHorse.setInHeat(false);
+            liveHorse.update();
+            return;
+        }
+
         if (liveHorse.isInHeat()) {
             if (calculatedEndInHeat < System.currentTimeMillis()) {
                 liveHorse.setInHeat(false);
