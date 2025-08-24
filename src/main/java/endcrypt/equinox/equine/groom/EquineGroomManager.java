@@ -6,6 +6,7 @@ import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -57,11 +58,11 @@ public class EquineGroomManager implements Listener {
         player.closeInventory();
         player.sendMessage(ColorUtils.color("<prefix><gray>Left-Click <white><italic><horse> <gray>to use item(s).",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", horse.getName())));
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
 
         player.sendMessage(ColorUtils.color("<prefix><gray>Right-Click <white><italic><horse> <gray>to cancel.",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
-                Placeholder.parsed("horse", horse.getName())));
+                Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name()))));
         return true;
     }
 
