@@ -39,6 +39,7 @@ import endcrypt.equinox.updater.horse.HorseNBTUpdaterListener;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -54,6 +55,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
 
     private SpiGUI spiGUI;
     private Economy econ;
+    private Permission perms;
     private BedrockBuildForm bedrockBuildForm;
     private FloodgateApi floodgateApi;
 
@@ -85,6 +87,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         this.initializeInstances();
         this.initializeListeners();
         this.setupEconomy();
+        this.setupPermissions();
         this.commandManager.registerCommands();
         this.loadPlaceholderAPI();
 
@@ -156,6 +159,12 @@ public final class EquinoxEquestrian extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
 
+    }
+
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
     }
 
     private void unloadDatabase() {
