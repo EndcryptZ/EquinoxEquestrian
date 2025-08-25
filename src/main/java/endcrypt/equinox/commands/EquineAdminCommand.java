@@ -581,8 +581,8 @@ public class EquineAdminCommand {
         int resultMaxHorseSlots = targetMaxHorseSlots + amount;
 
         // Update permissions
-        plugin.getPerms().playerRemove(target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + targetMaxHorseSlots);
-        plugin.getPerms().playerAdd(target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + resultMaxHorseSlots);
+        plugin.getPerms().playerRemove(null, target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + targetMaxHorseSlots);
+        plugin.getPerms().playerAdd(null, target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + resultMaxHorseSlots);
 
         // Notify command sender
         commandSender.sendMessage(ColorUtils.color(
