@@ -34,7 +34,7 @@ public class PermissionManager {
     public int getMaxHorsesAllowed(Player player) {
         String basePermission = PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission();
         // Check from highest to lowest to ensure highest rank takes priority
-        for (int i = 100; i >= 1; i--) {
+        for (int i = 1000; i >= 1; i--) {
             String numberedPermission = basePermission + "." + i;
             if (player.hasPermission(numberedPermission)) {
                 return i;
