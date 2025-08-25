@@ -12,10 +12,10 @@ import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.items.Item;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.permissions.PermissionsEnum;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
@@ -124,6 +124,12 @@ public class EquineAdminCommand {
                         .withArguments(new MultiLiteralArgument("action", "give", "set"))
                         .withArguments(new DoubleArgument("amount"))
                         .executes(this::exp))
+
+                .withSubcommand(new CommandAPICommand("addslot")
+                        .withPermission("equinox.cmd.equineadmin.addslot")
+                        .withArguments(new PlayerArgument("player"))
+                        .withArguments(new IntegerArgument("amount"))
+                        .executes(this::addSlot))
 
                 .register();
     }
@@ -565,5 +571,27 @@ public class EquineAdminCommand {
                     Placeholder.parsed("exp", String.valueOf(amount)),
                     Placeholder.parsed("sender", commandSender.getName())));
         }
+    }
+
+    private void addSlot(CommandSender commandSender, CommandArguments args) {
+        Player target = (Player) args.get("player");
+        int amount = args.getUnchecked("amount");
+
+        int targetMaxHorseSlots = plugin.getPermissionManager().getMaxHorsesAllowed(target);
+        int resultMaxHorseSlots = targetMaxHorseSlots + amount;
+
+        // Update permissions
+        plugin.getPerms().playerRemove(target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + targetMaxHorseSlots);
+        plugin.getPerms().playerAdd(target, PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission() + "." + resultMaxHorseSlots);
+
+        // Notify command sender
+        commandSender.sendMessage(ColorUtils.color(
+                "<green>You have set <yellow>" + target.getName() + "</yellow>'s max horse slots to <aqua>" + resultMaxHorseSlots + "</aqua>."
+        ));
+
+        // Notify target player
+        target.sendMessage(ColorUtils.color(
+                "<green>Your max horse slots have been updated to <aqua>" + resultMaxHorseSlots + "</aqua>."
+        ));
     }
 }
