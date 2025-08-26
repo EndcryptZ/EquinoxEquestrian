@@ -18,7 +18,7 @@ public class Placeholders extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getAuthor() {
-        return String.join(", ", plugin.getDescription().getAuthors()); //
+        return String.join(", ", plugin.getDescription().getAuthors());
     }
 
     @Override
@@ -29,12 +29,12 @@ public class Placeholders extends PlaceholderExpansion {
     @Override
     @NotNull
     public String getVersion() {
-        return plugin.getDescription().getVersion(); //
+        return plugin.getDescription().getVersion();
     }
 
     @Override
     public boolean persist() {
-        return true; //
+        return true;
     }
 
     @Override
@@ -42,10 +42,10 @@ public class Placeholders extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("selected_horse")) {
             AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse();
             if (horse == null) {
-                return "None"; //
+                return "None";
             }
 
-            return plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse().getName(); //
+            return plugin.getPlayerDataManager().getPlayerData((Player) player).getSelectedHorse().getName();
         }
 
         if (params.equalsIgnoreCase("tokens")) {

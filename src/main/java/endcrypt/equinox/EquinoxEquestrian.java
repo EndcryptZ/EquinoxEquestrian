@@ -182,8 +182,8 @@ public final class EquinoxEquestrian extends JavaPlugin {
     }
 
     private void loadPlaceholderAPI() {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) { //
-            new Placeholders(this).register(); //
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new Placeholders(this).register();
         }
     }
 
