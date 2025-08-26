@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.selector;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerSelectHorseEvent;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.MessageUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;

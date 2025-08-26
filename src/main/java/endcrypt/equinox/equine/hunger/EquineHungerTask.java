@@ -1,13 +1,12 @@
 package endcrypt.equinox.equine.hunger;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractHorse;
-import org.bukkit.entity.Player;
 
 public class EquineHungerTask {
 

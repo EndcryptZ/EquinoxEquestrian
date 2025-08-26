@@ -4,7 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashEvent;
 import endcrypt.equinox.api.events.EquinePlayerCrossTieLeashRemovedEvent;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.MessageUtils;

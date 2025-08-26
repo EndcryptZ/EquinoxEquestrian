@@ -7,7 +7,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
 import endcrypt.equinox.commands.arg.TransferOwnershipRequestsArgument;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.CommandCooldownUtils;

@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.breeding.inheat;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.TaskUtils;

@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.transfer;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.utils.ColorUtils;
 import lombok.Getter;

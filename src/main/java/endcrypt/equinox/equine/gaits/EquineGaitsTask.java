@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.gaits;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;

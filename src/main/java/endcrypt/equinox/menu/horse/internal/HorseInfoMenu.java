@@ -5,7 +5,7 @@ import com.samjakob.spigui.item.ItemBuilder;
 import com.samjakob.spigui.menu.SGMenu;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.attributes.Breed;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.equine.attributes.Trait;

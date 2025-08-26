@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.aging;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;

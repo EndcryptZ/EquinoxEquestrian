@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.pregnancy;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.TaskUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;

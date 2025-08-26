@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.breeding.inheat.EquineBreedingInHeat;
 import endcrypt.equinox.utils.TaskUtils;
 import lombok.Getter;

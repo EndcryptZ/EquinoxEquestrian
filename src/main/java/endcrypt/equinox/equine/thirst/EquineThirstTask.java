@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.thirst;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.TimeUtils;

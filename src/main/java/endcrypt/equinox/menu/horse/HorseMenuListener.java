@@ -1,7 +1,7 @@
 package endcrypt.equinox.menu.horse;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractHorse;

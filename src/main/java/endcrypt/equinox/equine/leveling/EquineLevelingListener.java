@@ -3,7 +3,7 @@ package endcrypt.equinox.equine.leveling;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerLungeHorseEvent;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;

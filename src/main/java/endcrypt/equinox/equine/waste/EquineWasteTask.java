@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.waste;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.HeadUtils;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Location;

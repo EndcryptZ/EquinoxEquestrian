@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.privacy;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.MessageUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

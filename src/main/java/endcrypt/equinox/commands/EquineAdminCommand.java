@@ -7,7 +7,7 @@ import dev.jorel.commandapi.executors.CommandArguments;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineHorseBuilder;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.equine.EquineUtils;
+import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.items.Item;
