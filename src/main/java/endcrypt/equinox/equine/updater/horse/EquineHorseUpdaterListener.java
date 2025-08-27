@@ -9,6 +9,7 @@ import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
 
@@ -24,11 +25,9 @@ public class EquineHorseUpdaterListener implements Listener {
     public void onEntitiesLoad(EntitiesLoadEvent event) {
 
         for (Entity entity : event.getEntities()) {
-            if (!(entity instanceof AbstractHorse horse)) {
-                continue;
-            }
+            if (!(entity instanceof AbstractHorse horse)) continue;
 
-            plugin.getEquineManager().getEquineHorseUpdater().loadHorse(horse);
+            plugin.getEquineManager().getEquineHorseUpdater().loadHorse(horse, UpdateAction.ENTITY_LOAD);
         }
 
 
@@ -37,11 +36,16 @@ public class EquineHorseUpdaterListener implements Listener {
     @EventHandler
     public void onEntitiesUnload(EntitiesUnloadEvent event) {
         for (Entity entity : event.getEntities()) {
-            if (!(entity instanceof AbstractHorse horse)) {
-                continue;
-            }
+            if (!(entity instanceof AbstractHorse horse)) continue;
 
-            plugin.getEquineManager().getEquineHorseUpdater().saveHorse(horse, true);
+            plugin.getEquineManager().getEquineHorseUpdater().saveHorse(horse, UpdateAction.ENTITY_UNLOAD);
         }
+    }
+
+    @EventHandler
+    public void onTeleport(EntityTeleportEvent event) {
+        if (!(event.getEntity() instanceof AbstractHorse horse)) return;
+
+        plugin.getEquineManager().getEquineHorseUpdater().updateLastLocation(horse, UpdateAction.TELEPORT);
     }
 }

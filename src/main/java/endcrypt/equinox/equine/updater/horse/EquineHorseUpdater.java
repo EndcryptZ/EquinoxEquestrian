@@ -7,6 +7,8 @@ import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
 
+import java.util.Objects;
+
 public class EquineHorseUpdater {
 
     private final EquinoxEquestrian plugin;
@@ -14,9 +16,11 @@ public class EquineHorseUpdater {
         this.plugin = plugin;
     }
 
-    public void loadHorse(AbstractHorse horse) {
+    public void loadHorse(AbstractHorse horse, UpdateAction action) {
         if (!EquineUtils.isLivingEquineHorse(horse)) return;
         if (horse.getOwner() == null) return;
+
+        String actionText = "[" + action.getName() + "] ";
 
         // apply gait speeds if missing
         if (!Keys.hasPersistentData(horse, Keys.WALK_SPEED)) {
@@ -34,14 +38,14 @@ public class EquineHorseUpdater {
             equineLiveHorse.update();
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>[Load] Updated horse in database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText +  "Updated horse in database: <white>")
                             .append(horse.name())
                             .append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")))
             ;
         } else {
             plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>[Load] Added horse to database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText +  " Added horse to database: <white>")
                             .append(horse.name())
                             .append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")))
             ;
@@ -49,21 +53,41 @@ public class EquineHorseUpdater {
         }
     }
 
-    public void saveHorse(AbstractHorse horse, boolean isUnload) {
+    public void saveHorse(AbstractHorse horse, UpdateAction action) {
         if (!EquineUtils.isLivingEquineHorse(horse)) return;
 
         EquineLiveHorse equineLiveHorse = new EquineLiveHorse(horse);
         equineLiveHorse.setLastLocation(horse.getLocation());
 
+        String actionText = "[" + action.getName() + "] ";
+
         if (plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
             equineLiveHorse.update();
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
-            String action = isUnload ? "[Unload]" : "[Save]";
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>" + action + " Updated horse in database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + " Updated horse in database: <white>")
                             .append(horse.name())
-                            .append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")))
-            ;
+                            .append(ColorUtils.color(" <yellow>(Owner: " + Objects.requireNonNull(horse.getOwner()).getName() + ")")));
+        }
+    }
+
+    // Efficiently updates the horse's last location (use this when only the last location needs updating)
+    public void updateLastLocation(AbstractHorse horse, UpdateAction action) {
+        if (!EquineUtils.isLivingEquineHorse(horse)) return;
+
+        String actionText = "[" + action.getName() + "] ";
+
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_X, horse.getLocation().getX());
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Y, horse.getLocation().getY());
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Z, horse.getLocation().getZ());
+        Keys.writePersistentData(horse, Keys.LAST_WORLD, horse.getWorld().getName());
+
+        if (plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
+            plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
+            plugin.getServer().getConsoleSender().sendMessage(
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + " Updated last location of horse in database: <white>")
+                            .append(horse.name())
+                            .append(ColorUtils.color(" <yellow>(Owner: " + Objects.requireNonNull(horse.getOwner()).getName() + ")")));
         }
     }
 }
