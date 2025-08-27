@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.thirst;
 import com.destroystokyo.paper.entity.Pathfinder;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.nbt.Keys;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.entity.CraftHorse;
@@ -29,6 +30,8 @@ public class EquineThirst {
                 7 // radius
         );
 
+
+
         if (targetBlock == null) {
             Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
             return;
@@ -38,8 +41,9 @@ public class EquineThirst {
             return;
         }
 
+        Location targetBlockLocation = targetBlock.getType() == Material.WATER ? targetBlock.getLocation().add(0, 1, 0) : targetBlock.getLocation();
         Pathfinder horsePathfinder = horse.getPathfinder();
-        horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+        horsePathfinder.moveTo(targetBlockLocation, 1.2);
         if (horsePathfinder.getCurrentPath() != null) {
             if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) return;
         }
@@ -69,11 +73,11 @@ public class EquineThirst {
 
             double dist = horse.getLocation().distance(targetBlock.getLocation());
             double reqDistance = targetBlock.getType() == Material.WATER ? 2 : 2.5;
-            horsePathfinder.moveTo(targetBlock.getLocation(), 1.2);
+            horsePathfinder.moveTo(targetBlockLocation, 1.2);
 
             if (horsePathfinder.getCurrentPath() != null) {
                 if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) {
-                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                    Keys.writePersistentData(horse, Keys.IS_IN_WATER_TASK, false);
                     task.cancel();
                     return;
                 }
