@@ -37,7 +37,7 @@ public class HorseListMenu {
     }
 
     private Inventory createMenu(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        String guiName = isTrustedHorses ? "Trusted Horses of " + player.getName() : "Horse List of " + player.getName();
+        String guiName = isTrustedHorses ? "Trusted Horses of " + player.getName() : "Horse List of " + player.getName() + " (" + plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size() + "/" + plugin.getPermissionManager().getMaxHorsesAllowed(player) + ")" ;
 
         SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
 
