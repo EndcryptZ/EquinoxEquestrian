@@ -35,7 +35,7 @@ import endcrypt.equinox.permissions.PermissionManager;
 import endcrypt.equinox.player.data.PlayerDataListener;
 import endcrypt.equinox.player.data.PlayerDataManager;
 import endcrypt.equinox.token.TokenManager;
-import endcrypt.equinox.updater.horse.HorseNBTUpdaterListener;
+import endcrypt.equinox.equine.updater.horse.EquineHorseUpdaterListener;
 import lombok.Getter;
 import lombok.Setter;
 import net.milkbowl.vault.economy.Economy;
@@ -125,7 +125,7 @@ public final class EquinoxEquestrian extends JavaPlugin {
         new HorseMenuListener(this);
         new EquineCrossTieListener(this);
         new EquineGroomListener(this);
-        new HorseNBTUpdaterListener(this);
+        new EquineHorseUpdaterListener(this);
         new EquineSelectorListener(this);
         new EquinePrivacyListener(this);
         new EquineBypassListener(this);
