@@ -7,7 +7,8 @@ public enum UpdateAction {
 
     ENTITY_LOAD("Entity Load"),
     ENTITY_UNLOAD("Entity Unload"),
-    TELEPORT("Teleport");
+    TELEPORT("Teleport"),
+    PLUGIN_DISABLE("Plugin Shutdown Event");
 
     private final String name;
 
