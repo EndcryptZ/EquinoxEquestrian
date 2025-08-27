@@ -45,7 +45,7 @@ public class EquineHorseUpdater {
         } else {
             plugin.getDatabaseManager().getDatabaseHorses().addHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText +  " Added horse to database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText +  "Added horse to database: <white>")
                             .append(horse.name())
                             .append(ColorUtils.color(" <yellow>(Owner: " + horse.getOwner().getName() + ")")))
             ;
@@ -65,7 +65,7 @@ public class EquineHorseUpdater {
             equineLiveHorse.update();
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + " Updated horse in database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + "Updated horse in database: <white>")
                             .append(horse.name())
                             .append(ColorUtils.color(" <yellow>(Owner: " + Objects.requireNonNull(horse.getOwner()).getName() + ")")));
         }
@@ -85,7 +85,7 @@ public class EquineHorseUpdater {
         if (plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
             plugin.getServer().getConsoleSender().sendMessage(
-                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + " Updated last location of horse in database: <white>")
+                    ColorUtils.color(plugin.getPrefix() + "<green>" + actionText + "Updated last location of horse in database: <white>")
                             .append(horse.name())
                             .append(ColorUtils.color(" <yellow>(Owner: " + Objects.requireNonNull(horse.getOwner()).getName() + ")")));
         }
