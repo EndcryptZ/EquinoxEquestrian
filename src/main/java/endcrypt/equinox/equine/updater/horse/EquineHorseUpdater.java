@@ -5,6 +5,7 @@ import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.EquineUtils;
+import org.bukkit.Location;
 import org.bukkit.entity.AbstractHorse;
 
 import java.util.Objects;
@@ -72,15 +73,15 @@ public class EquineHorseUpdater {
     }
 
     // Efficiently updates the horse's last location (use this when only the last location needs updating)
-    public void updateLastLocation(AbstractHorse horse, UpdateAction action) {
+    public void updateLastLocation(AbstractHorse horse, Location location, UpdateAction action) {
         if (!EquineUtils.isLivingEquineHorse(horse)) return;
 
         String actionText = "[" + action.getName() + "] ";
 
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_X, horse.getLocation().getX());
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Y, horse.getLocation().getY());
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Z, horse.getLocation().getZ());
-        Keys.writePersistentData(horse, Keys.LAST_WORLD, horse.getWorld().getName());
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_X, location.getX());
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Y, location.getY());
+        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Z, location.getZ());
+        Keys.writePersistentData(horse, Keys.LAST_WORLD, location.getWorld().getName());
 
         if (plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);
