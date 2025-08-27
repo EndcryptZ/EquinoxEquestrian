@@ -1,6 +1,7 @@
 package endcrypt.equinox.permissions;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -31,12 +32,12 @@ public class PermissionManager {
         }
     }
 
-    public int getMaxHorsesAllowed(Player player) {
+    public int getMaxHorsesAllowed(OfflinePlayer player) {
         String basePermission = PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission();
         // Check from highest to lowest to ensure highest rank takes priority
         for (int i = 1000; i >= 1; i--) {
             String numberedPermission = basePermission + "." + i;
-            if (player.hasPermission(numberedPermission)) {
+            if (plugin.getPerms().playerHas(null, player, numberedPermission)) {
                 return i;
             }
         }
