@@ -12,10 +12,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -143,6 +142,43 @@ public class EquineWasteListener implements Listener {
             Location holoLoc = block.getLocation().add(0.5, 1, 0.5);
             plugin.getHologramManager().createTemporaryHolo(holoId, holoText, holoLoc);
         });
+    }
+
+    @EventHandler
+    public void onBucket(PlayerBucketEmptyEvent event) {
+        // the block the player clicked
+        Block clickedBlock = event.getBlockClicked();
+        // the face of the block that was clicked
+        BlockFace face = event.getBlockFace();
+
+        // the location where the water/lava will be placed
+        Location placeLocation = clickedBlock.getRelative(face).getLocation();
+
+        if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(placeLocation)) event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPistonExtend(BlockPistonExtendEvent event) {
+        for (Block block : event.getBlocks()) {
+            // check the block itself and the block above
+            if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(block.getLocation()) ||
+                    plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(block.getRelative(BlockFace.UP).getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPistonRetract(BlockPistonRetractEvent event) {
+        for (Block block : event.getBlocks()) {
+            // check the block itself and the block above
+            if (plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(block.getLocation()) ||
+                    plugin.getDatabaseManager().getDatabaseWaste().hasWasteBlock(block.getRelative(BlockFace.UP).getLocation())) {
+                event.setCancelled(true);
+                return;
+            }
+        }
     }
 
     private boolean isUsingShovel(PlayerInteractEvent event) {
