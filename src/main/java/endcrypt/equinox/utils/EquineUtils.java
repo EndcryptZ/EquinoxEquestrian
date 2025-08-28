@@ -25,10 +25,6 @@ public class EquineUtils {
         return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_EQUINE));
     }
 
-    public static double getBaseSpeed(AbstractHorse horse) {
-        return Keys.readPersistentData(horse, Keys.BASE_SPEED);
-    }
-
     public static List<Entity> getLeashedEntities(Player player) {
         if (player == null) return new ArrayList<>();
 

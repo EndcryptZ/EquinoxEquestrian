@@ -107,7 +107,7 @@ public class EquineGaitsListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().remove(player);
-        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(EquineUtils.getBaseSpeed(equineHorse));
+        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, Keys.BASE_SPEED));
         player.sendActionBar(ColorUtils.color(""));
 
     }
@@ -146,6 +146,6 @@ public class EquineGaitsListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().remove(player);
-        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(EquineUtils.getBaseSpeed(equineHorse));
+        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, Keys.BASE_SPEED));
     }
 }
