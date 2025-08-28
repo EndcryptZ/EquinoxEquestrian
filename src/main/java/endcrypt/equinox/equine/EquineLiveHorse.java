@@ -10,6 +10,7 @@ import endcrypt.equinox.utils.EquineUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -155,56 +156,61 @@ public class EquineLiveHorse {
 
         this.uuid = horse.getUniqueId();
         this.horse = horse;
-        this.isCrossTied = EquineUtils.isCrossTied(horse);
-        this.isPublic = EquineUtils.isHorsePublic(horse);
-        this.isInHeat = EquineUtils.isHorseInHeat(horse);
-        this.isPregnant = EquineUtils.isHorsePregnant(horse);
-        this.isBreeding = EquineUtils.isBreeding(horse);
-        this.isInstantFoal = EquineUtils.isInstantFoal(horse);
-        this.isInstantBreed = EquineUtils.isInstantBreed(horse);
 
-        NBT.getPersistentData(horse, nbt -> this.claimTime = nbt.getLong(Keys.CLAIM_TIME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.birthTime = nbt.getLong(Keys.BIRTH_TIME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.ownerName = nbt.getString(Keys.OWNER_NAME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.ownerUUID = nbt.getString(Keys.OWNER_UUID.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.baseSpeed = nbt.getDouble(Keys.BASE_SPEED.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.baseJumpPower = nbt.getDouble(Keys.BASE_JUMP.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.skullId = nbt.getString(Keys.SKULL_ID.getKey()));
+        // Simple flags
+        this.isCrossTied   = Keys.readPersistentData(horse, Keys.IS_CROSS_TIED);
+        this.isPublic      = Keys.readPersistentData(horse, Keys.IS_PUBLIC);
+        this.isInHeat      = Keys.readPersistentData(horse, Keys.IS_IN_HEAT);
+        this.isPregnant    = Keys.readPersistentData(horse, Keys.IS_PREGNANT);
+        this.isBreeding    = Keys.readPersistentData(horse, Keys.IS_BREEDING);
+        this.isInstantFoal = Keys.readPersistentData(horse, Keys.INSTANT_FOAL);
+        this.isInstantBreed= Keys.readPersistentData(horse, Keys.INSTANT_BREED);
 
-        NBT.getPersistentData(horse, nbt -> this.lastInHeat = nbt.getLong(Keys.LAST_IN_HEAT.getKey()));
+        // Core stats
+        this.claimTime     = Keys.readPersistentData(horse, Keys.CLAIM_TIME);
+        this.birthTime     = Keys.readPersistentData(horse, Keys.BIRTH_TIME);
+        this.ownerName     = Keys.readPersistentData(horse, Keys.OWNER_NAME);
+        this.ownerUUID     = Keys.readPersistentData(horse, Keys.OWNER_UUID);
+        this.baseSpeed     = Keys.readPersistentData(horse, Keys.BASE_SPEED);
+        this.baseJumpPower = Keys.readPersistentData(horse, Keys.BASE_JUMP);
+        this.skullId       = Keys.readPersistentData(horse, Keys.SKULL_ID);
 
-        NBT.getPersistentData(horse, nbt -> this.pregnancyStartTime = nbt.getLong(Keys.PREGNANCY_START_TIME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.pregnancyPartnerUUID = nbt.getString(Keys.PREGNANCY_PARTNER.getKey()));
+        // Heat + pregnancy
+        this.lastInHeat            = Keys.readPersistentData(horse, Keys.LAST_IN_HEAT);
+        this.pregnancyStartTime    = Keys.readPersistentData(horse, Keys.PREGNANCY_START_TIME);
+        this.pregnancyPartnerUUID  = Keys.readPersistentData(horse, Keys.PREGNANCY_PARTNER);
+        this.breedingStartTime     = Keys.readPersistentData(horse, Keys.BREEDING_START_TIME);
+        this.breedingPartnerUUID   = Keys.readPersistentData(horse, Keys.BREEDING_PARTNER);
 
-        NBT.getPersistentData(horse, nbt -> this.breedingStartTime = nbt.getLong(Keys.BREEDING_START_TIME.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.breedingPartnerUUID = nbt.getString(Keys.BREEDING_PARTNER.getKey()));
+        // Body functions
+        this.lastPoop  = Keys.readPersistentData(horse, Keys.LAST_POOP);
+        this.lastPee   = Keys.readPersistentData(horse, Keys.LAST_PEE);
 
-        NBT.getPersistentData(horse, nbt -> this.lastPoop = nbt.getLong(Keys.LAST_POOP.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastPee = nbt.getLong(Keys.LAST_PEE.getKey()));
+        // Hunger + thirst
+        this.hungerPercentage  = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+        this.lastHungerUpdate  = Keys.readPersistentData(horse, Keys.LAST_HUNGER_UPDATE);
+        this.lastSeekFood      = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
+        this.isInFoodTask      = Keys.readPersistentData(horse, Keys.IS_IN_FOOD_TASK);
 
-        NBT.getPersistentData(horse, nbt -> this.hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastSeekFood = nbt.getLong(Keys.LAST_SEEK_FOOD.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.isInFoodTask = nbt.getBoolean(Keys.IS_IN_FOOD_TASK.getKey()));
+        this.thirstPercentage  = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
+        this.lastThirstUpdate  = Keys.readPersistentData(horse, Keys.LAST_THIRST_UPDATE);
+        this.lastSeekWater     = Keys.readPersistentData(horse, Keys.LAST_SEEK_WATER);
+        this.isInWaterTask     = Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK);
 
-        NBT.getPersistentData(horse, nbt -> this.thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastThirstUpdate = nbt.getLong(Keys.LAST_THIRST_UPDATE.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.lastSeekWater = nbt.getLong(Keys.LAST_SEEK_WATER.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.isInWaterTask = nbt.getBoolean(Keys.IS_IN_WATER_TASK.getKey()));
+        // Movement speeds
+        this.walkSpeed   = Keys.readPersistentData(horse, Keys.WALK_SPEED);
+        this.trotSpeed   = Keys.readPersistentData(horse, Keys.TROT_SPEED);
+        this.canterSpeed = Keys.readPersistentData(horse, Keys.CANTER_SPEED);
+        this.gallopSpeed = Keys.readPersistentData(horse, Keys.GALLOP_SPEED);
 
-        NBT.getPersistentData(horse, nbt -> this.walkSpeed = nbt.getDouble(Keys.WALK_SPEED.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.trotSpeed = nbt.getDouble(Keys.TROT_SPEED.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.canterSpeed = nbt.getDouble(Keys.CANTER_SPEED.getKey()));
-        NBT.getPersistentData(horse, nbt -> this.gallopSpeed = nbt.getDouble(Keys.GALLOP_SPEED.getKey()));
-
-        World lastWorld = Bukkit.getWorld((String) NBT.getPersistentData(horse, nbt -> nbt.getString(Keys.LAST_WORLD.getKey())));
-        double lastX = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_X.getKey()));
-        double lastY = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Y.getKey()));
-        double lastZ = NBT.getPersistentData(horse, nbt -> nbt.getDouble(Keys.LAST_LOCATION_Z.getKey()));
+        // Last location
+        World lastWorld = Bukkit.getWorld((Key) Keys.readPersistentData(horse, Keys.LAST_WORLD));
+        double lastX    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_X);
+        double lastY    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_Y);
+        double lastZ    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_Z);
 
         this.lastLocation = new Location(lastWorld, lastX, lastY, lastZ);
     }
-
     public void breed(EquineLiveHorse horse) {
         this.isBreeding = true;
         this.breedingPartnerUUID = horse.getUuid().toString();
@@ -226,6 +232,22 @@ public class EquineLiveHorse {
         this.isInHeat = false;
         this.update();
     }
+
+    public int getSpeedDivision() {
+        double mphHorseSpeed = EquineUtils.minecraftSpeedToBlocks(gallopSpeed);
+
+        if (mphHorseSpeed >= 45 && mphHorseSpeed <= 50) return 1;
+        if (mphHorseSpeed >= 40 && mphHorseSpeed < 45) return 2;
+        if (mphHorseSpeed >= 35 && mphHorseSpeed < 40) return 3;
+        if (mphHorseSpeed >= 30 && mphHorseSpeed < 35) return 4;
+        if (mphHorseSpeed >= 25 && mphHorseSpeed < 30) return 5;
+        if (mphHorseSpeed >= 20 && mphHorseSpeed < 25) return 6;
+        if (mphHorseSpeed >= 15 && mphHorseSpeed < 20) return 7;
+        if (mphHorseSpeed >= 10 && mphHorseSpeed < 15) return 8;
+
+        return 0; // Out of range
+    }
+
 
     public void update() {
 

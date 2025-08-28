@@ -1,7 +1,7 @@
 package endcrypt.equinox.equine.gaits;
 
 import endcrypt.equinox.EquinoxEquestrian;
-import endcrypt.equinox.utils.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -21,7 +21,7 @@ public class EquineGaitsTask {
             for (Player player : plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().keySet()) {
                 Gaits playerCurrentGait = plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player);
 
-                if (EquineUtils.isCrossTied((AbstractHorse) player.getVehicle())) {
+                if (Keys.readPersistentData((AbstractHorse) player.getVehicle(), Keys.IS_CROSS_TIED)) {
                     continue;
                 }
 

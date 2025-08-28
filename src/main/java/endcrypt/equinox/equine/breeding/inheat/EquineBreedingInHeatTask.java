@@ -2,6 +2,7 @@ package endcrypt.equinox.equine.breeding.inheat;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.utils.TimeUtils;
@@ -25,7 +26,7 @@ public class EquineBreedingInHeatTask {
     private void checkInHeat() {
         for (AbstractHorse horse : new ArrayList<>(plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses())) {
             if(horse == null) continue;
-            if(EquineUtils.getHorseGender(horse) != Gender.MARE) continue;
+            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) continue;
             EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
             checkHorseInHeat(liveHorse);
         }

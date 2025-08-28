@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import org.bukkit.entity.AbstractHorse;
 import org.bukkit.entity.Entity;
@@ -27,7 +28,7 @@ public class EquineBreedingListener implements Listener {
                 continue;
             }
 
-            if(!EquineUtils.isBreeding(horse)) {
+            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_BREEDING)) {
                 continue;
             }
 
@@ -47,7 +48,7 @@ public class EquineBreedingListener implements Listener {
                 continue;
             }
 
-            if(!EquineUtils.isBreeding(horse)) {
+            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_BREEDING)) {
                 continue;
             }
 

@@ -2,7 +2,7 @@ package endcrypt.equinox.equine.breeding;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
-import endcrypt.equinox.utils.EquineUtils;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.equine.attributes.Gender;
 import endcrypt.equinox.utils.TimeUtils;
 import org.bukkit.Bukkit;
@@ -83,7 +83,7 @@ public class EquineBreedingTask {
 
     private void checkBreed() {
         for (AbstractHorse abstractMare : new ArrayList<>(plugin.getEquineManager().getEquineCrossTie().getCrosstiedHorses())) {
-            if(EquineUtils.getHorseGender(abstractMare) != Gender.MARE) continue;
+            if(Keys.readPersistentData(abstractMare, Keys.GENDER) != Gender.MARE) continue;
             EquineLiveHorse mare = new EquineLiveHorse(abstractMare);
             if(!canMareBreed(mare)) continue;
 
@@ -109,7 +109,7 @@ public class EquineBreedingTask {
 
         for (Entity entity : location.getNearbyEntities(5, 5, 5)) {
             if (!(entity instanceof AbstractHorse horse)) continue;
-            if (EquineUtils.getHorseGender(horse) != Gender.STALLION) continue;
+            if (Keys.readPersistentData(horse, Keys.GENDER) != Gender.STALLION) continue;
 
             double distance = location.distance(horse.getLocation());
             if (distance < minDistance) {
@@ -143,7 +143,7 @@ public class EquineBreedingTask {
         if (partner == null) return false;
         if (partner.isDead()) return false;
         if (partner.getLocation().distance(horse.getHorse().getLocation()) > 5) return false;
-        if (!EquineUtils.isBreeding(partner)) return false;
+        if (!(boolean) Keys.readPersistentData(partner, Keys.IS_BREEDING)) return false;
         return true;
     }
 

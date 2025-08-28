@@ -66,7 +66,7 @@ public class EquineLunge {
             return;
         }
 
-        if (EquineUtils.isLunging(horse)) {
+        if (Keys.readPersistentData(horse, Keys.IS_LUNGING)) {
             Keys.writePersistentData(horse, Keys.IS_LUNGING, "false");
             return;
         }
@@ -88,7 +88,7 @@ public class EquineLunge {
         final int[] pathIndex = { startIndex };
 
         Bukkit.getScheduler().runTaskTimer(plugin, (task) -> {
-            if (!horse.isLeashed() || horse.getLeashHolder() != player || !EquineUtils.isLunging(horse)) {
+            if (!horse.isLeashed() || horse.getLeashHolder() != player || !(boolean) Keys.readPersistentData(horse, Keys.IS_LUNGING)) {
                 stopLunging(horse, task);
                 return;
             }

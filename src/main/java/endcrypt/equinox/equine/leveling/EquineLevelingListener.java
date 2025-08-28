@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.leveling;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerLungeHorseEvent;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -90,7 +91,7 @@ public class EquineLevelingListener implements Listener {
 
             @Override
             public void run() {
-                if (!EquineUtils.isLunging(horse) || !player.isOnline()) {
+                if (!(boolean) Keys.readPersistentData(horse, Keys.IS_LUNGING) || !player.isOnline()) {
                     cancel();
                     return;
                 }

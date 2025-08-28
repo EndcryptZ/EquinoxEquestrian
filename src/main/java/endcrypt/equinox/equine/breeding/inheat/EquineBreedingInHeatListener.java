@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.breeding.inheat;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.equine.attributes.Gender;
 import org.bukkit.entity.AbstractHorse;
@@ -29,7 +30,7 @@ public class EquineBreedingInHeatListener implements Listener {
                 continue;
             }
 
-            if(EquineUtils.getHorseGender(horse) != Gender.MARE) {
+            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
                 continue;
             }
 
@@ -49,7 +50,7 @@ public class EquineBreedingInHeatListener implements Listener {
                 continue;
             }
 
-            if(EquineUtils.getHorseGender(horse) != Gender.MARE) {
+            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
                 continue;
             }
 
@@ -67,7 +68,7 @@ public class EquineBreedingInHeatListener implements Listener {
             return;
         }
 
-        if(EquineUtils.getHorseGender(horse) != Gender.MARE) {
+        if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
             return;
         }
 

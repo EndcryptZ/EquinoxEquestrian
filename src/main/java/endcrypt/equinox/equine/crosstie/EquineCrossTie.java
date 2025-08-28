@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.crosstie;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.TaskUtils;
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class EquineCrossTie {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if (EquineUtils.isCrossTied(abstractHorse)) {
+                if (Keys.readPersistentData(abstractHorse, Keys.IS_CROSS_TIED)) {
                     crosstiedHorses.add(abstractHorse);
                 }
             }

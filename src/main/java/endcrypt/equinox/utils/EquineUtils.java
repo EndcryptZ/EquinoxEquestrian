@@ -29,20 +29,6 @@ public class EquineUtils {
         return Keys.readPersistentData(horse, Keys.BASE_SPEED);
     }
 
-    public static double getBaseJumpPower(AbstractHorse horse) {
-        return Keys.readPersistentData(horse, Keys.BASE_JUMP);
-    }
-
-    public static boolean isCrossTied(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_CROSS_TIED));
-    }
-
-    public static boolean isLunging(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_LUNGING));
-    }
-
     public static List<Entity> getLeashedEntities(Player player) {
         if (player == null) return new ArrayList<>();
 
@@ -178,46 +164,11 @@ public class EquineUtils {
     public static boolean hasPermissionToHorse(Player player, AbstractHorse horse) {
         if (player == null || horse == null) return false;
         if (instance.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, player)) return true;
-        if(isHorsePublic(horse)) return true;
+        if(Keys.readPersistentData(horse, Keys.IS_PUBLIC)) return true;
         if(EquineBypass.hasBypass(player)) return true;
         if(horse.getOwner() == player) return true;
 
         return false;
-    }
-
-    public static Gender getHorseGender(AbstractHorse horse) {
-        if (horse == null) return null;
-        return Gender.getGenderByName(Keys.readPersistentData(horse, Keys.GENDER));
-    }
-
-    public static boolean isHorsePublic(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PUBLIC));
-    }
-
-    public static boolean isHorseInHeat(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
-    }
-
-    public static boolean isHorsePregnant(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
-    }
-
-    public static boolean isBreeding(AbstractHorse horse) {
-        if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_BREEDING));
-    }
-
-    public static boolean isInstantFoal(AbstractHorse horse) {
-        if(horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_FOAL));
-    }
-
-    public static boolean isInstantBreed(AbstractHorse horse) {
-        if(horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.INSTANT_BREED));
     }
 
     public static boolean hasNoSelectedHorse(Player player) {

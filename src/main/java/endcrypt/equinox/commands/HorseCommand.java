@@ -7,6 +7,7 @@ import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.api.events.EquinePlayerUntrustEvent;
 import endcrypt.equinox.commands.arg.TransferOwnershipRequestsArgument;
 import endcrypt.equinox.equine.EquineLiveHorse;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.menu.horse.internal.ListOrganizeType;
 import endcrypt.equinox.utils.ColorUtils;
@@ -251,7 +252,7 @@ public class HorseCommand {
             return;
         }
 
-        boolean isPublic = EquineUtils.isHorsePublic(horse);
+        boolean isPublic = Keys.readPersistentData(horse, Keys.IS_PUBLIC);
 
         assert privacy != null;
         if (privacy.equalsIgnoreCase("public")) {

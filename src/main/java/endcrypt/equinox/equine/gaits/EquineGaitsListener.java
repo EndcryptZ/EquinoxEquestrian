@@ -44,7 +44,7 @@ public class EquineGaitsListener implements Listener {
             return;
         }
 
-        if (EquineUtils.isCrossTied(equineHorse)) {
+        if (Keys.readPersistentData(equineHorse, Keys.IS_CROSS_TIED)) {
             return;
         }
 
@@ -85,7 +85,7 @@ public class EquineGaitsListener implements Listener {
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().put(player, Gaits.WALK);
 
-        if(EquineUtils.isCrossTied(equineHorse)) {
+        if(Keys.readPersistentData(equineHorse, Keys.IS_CROSS_TIED)) {
             Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(0);
             return;
         }

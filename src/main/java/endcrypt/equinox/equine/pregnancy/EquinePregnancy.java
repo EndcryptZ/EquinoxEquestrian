@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.pregnancy;
 
 import endcrypt.equinox.EquinoxEquestrian;
+import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
 import endcrypt.equinox.utils.TaskUtils;
 import lombok.Getter;
@@ -48,7 +49,7 @@ public class EquinePregnancy {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if (EquineUtils.isHorsePregnant(abstractHorse)) {
+                if (Keys.readPersistentData(abstractHorse, Keys.IS_PREGNANT)) {
                     pregnantHorses.add(abstractHorse);
                 }
             }
