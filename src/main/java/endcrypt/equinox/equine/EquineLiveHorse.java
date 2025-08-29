@@ -306,7 +306,6 @@ public class EquineLiveHorse {
         horse1.setColor(coatColor.getHorseColor());     
         horse1.setStyle(coatModifier.getHorseCoatModifier());
         Objects.requireNonNull(horse.getAttribute(Attribute.SCALE)).setBaseValue(height.getSize());
-        horse.setAge(this.age);
     }
 
     public void updateDefault() {
