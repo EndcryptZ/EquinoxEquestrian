@@ -14,10 +14,10 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public class EquineTransferManager {
 
 
-    @Getter
     private final Map<Player, EquineTransfer> requestMap = new HashMap<>();
     private final Map<Player, EquineTransfer> confirmationCache = new HashMap<>();
     private final EquinoxEquestrian plugin;
