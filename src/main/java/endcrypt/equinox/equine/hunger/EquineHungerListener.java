@@ -67,10 +67,6 @@ public class EquineHungerListener implements Listener {
         hungerPercentage = Math.min(100, hungerPercentage + 2);
         Keys.writeDouble(horse, Keys.HUNGER_PERCENTAGE, hungerPercentage);
 
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            item.setAmount(item.getAmount() - 1);
-        }
-
         String formattedItemName = Arrays.stream(item.getType().name().split("_"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
@@ -78,12 +74,17 @@ public class EquineHungerListener implements Listener {
         horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_HORSE_EAT, 1.0f, 1.0f);
 
         event.getPlayer().sendMessage(ColorUtils.color(
-                "<prefix><green>You fed <horse> <green>a <item> and restored 2% hunger! Current hunger: <hunger>%",
+                "<prefix><green>You fed <horse><reset> <green><item> and restored 2% hunger! Current hunger: <hunger>%",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("item", formattedItemName),
                 Placeholder.parsed("hunger", String.format("%.2f", hungerPercentage))
         ));
+
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+            item.setAmount(item.getAmount() - 1);
+        }
+
 
         event.getPlayer().swingMainHand();
         event.setCancelled(true);

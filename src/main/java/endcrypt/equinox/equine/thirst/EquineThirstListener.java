@@ -31,7 +31,7 @@ public class EquineThirstListener implements Listener {
     List<Material> allowedDrinksFromHand = List.of(Material.WATER_BUCKET);
 
     @EventHandler
-    public void onHorseEat(PlayerInteractEntityEvent event) {
+    public void onHorseDrink(PlayerInteractEntityEvent event) {
         if (!(event.getRightClicked() instanceof AbstractHorse horse)) return;
 
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
@@ -66,10 +66,6 @@ public class EquineThirstListener implements Listener {
         thirstPercentage = Math.min(100, thirstPercentage + 2);
         Keys.writeDouble(horse, Keys.THIRST_PERCENTAGE, thirstPercentage);
 
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            item.setAmount(item.getAmount() - 1);
-        }
-
         String formattedItemName = Arrays.stream(item.getType().name().split("_"))
                 .map(word -> word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase())
                 .collect(Collectors.joining(" "));
@@ -77,12 +73,16 @@ public class EquineThirstListener implements Listener {
         horse.getWorld().playSound(horse.getLocation(), Sound.ENTITY_WITCH_DRINK, 1.0f, 1.0f);
 
         event.getPlayer().sendMessage(ColorUtils.color(
-                "<prefix><horse> <green>drank <item>, restoring 2% thirst! Current thirst: <thirst>%",
+                "<prefix><horse><reset> <green>drank <item>, restoring 2% thirst! Current thirst: <thirst>%",
                 Placeholder.parsed("prefix", plugin.getPrefix()),
                 Placeholder.parsed("horse", MiniMessage.miniMessage().serialize(horse.name())),
                 Placeholder.parsed("item", formattedItemName),
                 Placeholder.parsed("thirst", String.format("%.2f", thirstPercentage))
         ));
+
+        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+            item.setAmount(item.getAmount() - 1);
+        }
 
         event.getPlayer().swingMainHand();
         event.setCancelled(true);
