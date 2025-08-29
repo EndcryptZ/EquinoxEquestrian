@@ -24,6 +24,8 @@ public class EquineAgingTask {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
+                abstractHorse.setAge(0);
+                abstractHorse.setAgeLock(true);
                 Long birthTime = Keys.readPersistentData(abstractHorse, Keys.BIRTH_TIME);
                 if (birthTime == null) continue;
 
