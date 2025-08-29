@@ -26,7 +26,7 @@ public class EquineAgingTask {
 
                 abstractHorse.setAge(0);
                 abstractHorse.setAgeLock(true);
-                Long birthTime = Keys.readLong(abstractHorse, Keys.BIRTH_TIME);
+                long birthTime = Keys.readLong(abstractHorse, Keys.BIRTH_TIME);
                 if (birthTime == 0) continue;
 
                 int currentAge = Keys.readInt(abstractHorse, Keys.AGE);

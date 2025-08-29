@@ -10,7 +10,6 @@ import endcrypt.equinox.utils.EquineUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import net.kyori.adventure.key.Key;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
