@@ -47,9 +47,15 @@ public class EquineAgingTask {
                 }
 
                 if (currentAge >= 3) {
-                    abstractHorse.setAdult();
+                    if (!abstractHorse.isAdult()) {
+                        abstractHorse.setAgeLock(false);
+                        abstractHorse.setAdult();
+                    }
                 } else {
-                    abstractHorse.setBaby();
+                    if (abstractHorse.isAdult()) {
+                        abstractHorse.setAgeLock(false);
+                        abstractHorse.setBaby();
+                    }
                 }
             }
         }
