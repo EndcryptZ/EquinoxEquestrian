@@ -10,6 +10,7 @@ import org.bukkit.entity.AbstractHorse;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class DatabaseHorses {
 
@@ -214,6 +215,28 @@ public class DatabaseHorses {
             plugin.getLogger().severe("Failed to get player horses: " + e.getMessage());
         }
         return horses;
+    }
+
+    public CompletableFuture<List<EquineLiveHorse>> getPlayerHorsesAsync(OfflinePlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            List<EquineLiveHorse> horses = new ArrayList<>();
+            String sql = "SELECT * FROM EQUINE_HORSES WHERE owner_uuid = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, player.getUniqueId().toString());
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        EquineLiveHorse horse = DatabaseUtils.mapResultSetToHorse(resultSet);
+                        if (horse != null) {
+                            horses.add(horse);
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to get player horses: " + e.getMessage());
+            }
+            return horses;
+        });
     }
 
     public boolean horseExists(AbstractHorse horse) {

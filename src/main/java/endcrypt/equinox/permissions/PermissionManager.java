@@ -2,9 +2,10 @@ package endcrypt.equinox.permissions;
 
 import endcrypt.equinox.EquinoxEquestrian;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
+
+import java.util.concurrent.CompletableFuture;
 
 public class PermissionManager {
 
@@ -42,5 +43,18 @@ public class PermissionManager {
             }
         }
         return 0; // default if none is set
+    }
+
+    public CompletableFuture<Integer> getMaxHorsesAllowedAsync(OfflinePlayer player) {
+        return CompletableFuture.supplyAsync(() -> {
+            String basePermission = PermissionsEnum.PERMISSION_HORSE_LIMIT.getPermission();
+            for (int i = 1000; i >= 1; i--) {
+                String numberedPermission = basePermission + "." + i;
+                if (plugin.getPerms().playerHas(null, player, numberedPermission)) {
+                    return i;
+                }
+            }
+            return 0;
+        });
     }
 }

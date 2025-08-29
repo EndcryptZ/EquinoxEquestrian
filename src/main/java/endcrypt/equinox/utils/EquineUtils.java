@@ -2,6 +2,7 @@ package endcrypt.equinox.utils;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import endcrypt.equinox.equine.EquineHorse;
+import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.attributes.*;
 import endcrypt.equinox.equine.bypass.EquineBypass;
 import endcrypt.equinox.equine.nbt.Keys;
@@ -14,6 +15,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static endcrypt.equinox.EquinoxEquestrian.instance;
@@ -185,6 +187,18 @@ public class EquineUtils {
         }
 
         return false;
+    }
+
+    public static CompletableFuture<Boolean> isPlayerHorseSlotsMaxAsync(Player player) {
+        CompletableFuture<Integer> maxAllowedFuture =
+                instance.getPermissionManager().getMaxHorsesAllowedAsync(player);
+
+        CompletableFuture<List<EquineLiveHorse>> horsesFuture =
+                instance.getDatabaseManager().getDatabaseHorses().getPlayerHorsesAsync(player);
+
+        return maxAllowedFuture.thenCombineAsync(horsesFuture,
+                (maxAllowed, horses) -> horses.size() >= maxAllowed
+        );
     }
 
     public static void applySpeedsToHorse(AbstractHorse horse) {

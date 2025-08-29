@@ -133,7 +133,7 @@ public class HorseCommand {
         String iniTarget = args.getUnchecked("target");
 
         if(iniTarget == null) {
-            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player, ListOrganizeType.AGE, false);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player, player, ListOrganizeType.AGE, false);
             return;
         }
 
@@ -141,7 +141,7 @@ public class HorseCommand {
         OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(iniTarget);
 
         if (offlineTarget.hasPlayedBefore()) {
-            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther(player, offlineTarget, ListOrganizeType.AGE, false);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player, offlineTarget, ListOrganizeType.AGE, false);
             return;
         }
 
@@ -156,7 +156,7 @@ public class HorseCommand {
             return;
         }
 
-        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther(player, target, ListOrganizeType.AGE, false);
+        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player, target, ListOrganizeType.AGE, false);
 
     }
 

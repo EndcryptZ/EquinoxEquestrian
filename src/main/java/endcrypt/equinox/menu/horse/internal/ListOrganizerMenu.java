@@ -70,10 +70,10 @@ public class ListOrganizerMenu {
                         .build()
         ).withListener(event -> {
             if(player != event.getWhoClicked()) {
-                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.ALPHABETICAL, isTrustedHorse);
+                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open((Player) event.getWhoClicked(), player, ListOrganizeType.ALPHABETICAL, isTrustedHorse);
                 return;
             }
-            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.ALPHABETICAL, isTrustedHorse);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), player, ListOrganizeType.ALPHABETICAL, isTrustedHorse);
         });
     }
 
@@ -91,10 +91,10 @@ public class ListOrganizerMenu {
                         .build()
         ).withListener(event -> {
             if(player != event.getWhoClicked()) {
-                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.AGE, isTrustedHorse);
+                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open((Player) event.getWhoClicked(), player, ListOrganizeType.AGE, isTrustedHorse);
                 return;
             }
-            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.AGE, isTrustedHorse);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), player, ListOrganizeType.AGE, isTrustedHorse);
         });
     }
 
@@ -128,10 +128,10 @@ public class ListOrganizerMenu {
                         .build()
         ).withListener(event -> {
             if(player != event.getWhoClicked()) {
-                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, ListOrganizeType.GENDER, isTrustedHorse);
+                plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open((Player) event.getWhoClicked(), player, ListOrganizeType.GENDER, isTrustedHorse);
                 return;
             }
-            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), ListOrganizeType.GENDER, isTrustedHorse);
+            plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), player, ListOrganizeType.GENDER, isTrustedHorse);
         });
     }
 

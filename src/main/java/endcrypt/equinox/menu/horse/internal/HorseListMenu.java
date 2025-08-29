@@ -18,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class HorseListMenu {
 
@@ -27,89 +28,121 @@ public class HorseListMenu {
     }
 
 
-    public void open(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> player.getPlayer().openInventory(createMenu(player, listOrganizeType, isTrustedHorses)));
+    public void open(Player viewer,
+                     OfflinePlayer target,
+                     ListOrganizeType listOrganizeType,
+                     boolean isTrustedHorses) {
+
+        // Run DB fetch async
+        CompletableFuture
+                .supplyAsync(() -> isTrustedHorses
+                        ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(target)
+                        : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(target))
+                // Once horses are fetched, build the menu async-aware
+                .thenCompose(horses -> createMenuAsync(target, listOrganizeType, isTrustedHorses, horses))
+                .thenAccept(menu -> Bukkit.getScheduler().runTask(plugin, () -> {
+                    viewer.openInventory(menu);
+                }));
     }
 
-    public void openToOther(Player player, OfflinePlayer target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses)));
+    public CompletableFuture<Inventory> createMenuAsync(OfflinePlayer target,
+                                                        ListOrganizeType listOrganizeType,
+                                                        boolean isTrustedHorses,
+                                                        List<EquineLiveHorse> horses) {
+
+        return plugin.getPermissionManager().getMaxHorsesAllowedAsync(target).thenApplyAsync(maxHorses -> {
+            String playerName = target.getName() != null ? target.getName() : "Unknown";
+
+            String guiName = isTrustedHorses
+                    ? "Trusted Horses of " + playerName
+                    : "Horse List of " + playerName + " (" + horses.size() + "/" + maxHorses + ")";
+
+            // Sort horses according to listOrganizeType
+            List<EquineLiveHorse> sorted = switch (listOrganizeType) {
+                case AGE -> horses.stream()
+                        .filter(Objects::nonNull)
+                        .sorted(Comparator.comparingInt(EquineLiveHorse::getAge))
+                        .toList();
+                case ALPHABETICAL -> horses.stream()
+                        .sorted(Comparator.comparing(h -> h.getName() != null ? h.getName() : ""))
+                        .toList();
+                case GENDER -> {
+                    Map<Gender, Integer> order = Map.of(
+                            Gender.MARE, 0,
+                            Gender.GELDING, 1,
+                            Gender.STALLION, 2
+                    );
+                    yield horses.stream()
+                            .filter(Objects::nonNull)
+                            .sorted(Comparator.comparingInt(h -> order.getOrDefault(h.getGender(), 3)))
+                            .toList();
+                }
+                default -> new ArrayList<>(horses);
+            };
+
+            // GUI must be created on main thread
+            CompletableFuture<Inventory> result = new CompletableFuture<>();
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
+
+                gui.setButton(31, menuOrganiserButton(target, listOrganizeType, isTrustedHorses));
+                gui.setButton(35, isTrustedHorses
+                        ? horseListButton(target, listOrganizeType)
+                        : trustedHorsesButton(target, listOrganizeType));
+
+                int slot = 0;
+                for (EquineLiveHorse horse : sorted) {
+                    gui.setButton(slot++, horseButton(target, horse, isTrustedHorses));
+                }
+
+                result.complete(gui.getInventory());
+            });
+            return result.join();
+        });
     }
 
-    private Inventory createMenu(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        String guiName = isTrustedHorses ? "Trusted Horses of " + player.getName() : "Horse List of " + player.getName() + " (" + plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player).size() + "/" + plugin.getPermissionManager().getMaxHorsesAllowed(player) + ")" ;
+    private Inventory createMenu(OfflinePlayer target,
+                                 ListOrganizeType listOrganizeType,
+                                 boolean isTrustedHorses,
+                                 List<EquineLiveHorse> horses) {
+
+        String playerName = target.getName() != null ? target.getName() : "Unknown";
+
+        String guiName = isTrustedHorses
+                ? "Trusted Horses of " + playerName
+                : "Horse List of " + playerName + " ("
+                + horses.size() + "/"
+                + plugin.getPermissionManager().getMaxHorsesAllowed(target) + ")";
 
         SGMenu gui = plugin.getSpiGUI().create(guiName, 4, "Horse List");
 
-        SGButton trustedHorsesButton = isTrustedHorses
-                ? horseListButton(player, listOrganizeType)
-                : trustedHorsesButton(player, listOrganizeType);
-
-        List<EquineLiveHorse> horseIds = isTrustedHorses
-                ? plugin.getDatabaseManager().getDatabaseTrustedPlayers().getTrustedHorses(player)
-                : plugin.getDatabaseManager().getDatabaseHorses().getPlayerHorses(player);
-
-        List<EquineLiveHorse> sortedHorses;
-        switch (listOrganizeType) {
-            case AGE -> sortedHorses = horseIds.stream()
+        // Sort horses according to listOrganizeType
+        List<EquineLiveHorse> sorted = switch (listOrganizeType) {
+            case AGE -> horses.stream()
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparingInt(EquineLiveHorse::getAge))
                     .toList();
-            case ALPHABETICAL -> sortedHorses = horseIds.stream()
+            case ALPHABETICAL -> horses.stream()
                     .sorted(Comparator.comparing(h -> h.getName() != null ? h.getName() : ""))
                     .toList();
             case GENDER -> {
-                Map<Gender, Integer> genderOrder = Map.of(
-                        Gender.MARE, 0,
-                        Gender.GELDING, 1,
-                        Gender.STALLION, 2
-                );
-                sortedHorses = horseIds.stream()
+                Map<Gender, Integer> order = Map.of(Gender.MARE, 0, Gender.GELDING, 1, Gender.STALLION, 2);
+                yield horses.stream()
                         .filter(Objects::nonNull)
-                        .sorted(Comparator.comparingInt(h -> genderOrder.getOrDefault(h.getGender(), 3)))
+                        .sorted(Comparator.comparingInt(h -> order.getOrDefault(h.getGender(), 3)))
                         .toList();
             }
-            default -> sortedHorses = new ArrayList<>(horseIds);
-        }
+            default -> new ArrayList<>(horses);
+        };
 
-        int tempoSlot = 0;
+        // Fill GUI
+        gui.setButton(31, menuOrganiserButton(target, listOrganizeType, isTrustedHorses));
+        gui.setButton(35, isTrustedHorses ? horseListButton(target, listOrganizeType)
+                : trustedHorsesButton(target, listOrganizeType));
+
         int slot = 0;
-        gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
-        gui.setButton(slot + 35, trustedHorsesButton);
-
-        for (EquineLiveHorse equineHorse : sortedHorses) {
-            EquineLiveHorse liveHorse = null;
-            // Try to get live Bukkit entity
-            AbstractHorse entity = (AbstractHorse) Bukkit.getEntity(equineHorse.getUuid());
-            if (entity != null) {
-                liveHorse = new EquineLiveHorse(entity);
-            }
-
-            if (tempoSlot == 0) {
-                if (gui.getMaxPage() > 0) {
-                    if (slot > (gui.getRowsPerPage() * 9) - 1)
-                        gui.setButton(slot + 30, previousPageButton(gui));
-                    if (sortedHorses.size() > slot + 27)
-                        gui.setButton(slot + 32, nextPageButton(gui));
-                }
-                gui.setButton(slot + 31, menuOrganiserButton(player, listOrganizeType, isTrustedHorses));
-                gui.setButton(slot + 35, trustedHorsesButton);
-            }
-
-            // Use live horse if loaded, otherwise use database object
-            SGButton horseButton = (entity != null)
-                    ? horseButton(player, liveHorse, isTrustedHorses) // overload for live horse
-                    : horseButton(player, equineHorse, isTrustedHorses);
-
-            if (tempoSlot == 27) {
-                slot += 9;
-                tempoSlot = 0;
-                gui.setButton(slot, horseButton);
-                continue;
-            }
-
-            gui.setButton(slot, horseButton);
-            tempoSlot++;
-            slot++;
+        for (EquineLiveHorse horse : sorted) {
+            gui.setButton(slot++, horseButton(target, horse, isTrustedHorses));
         }
 
         return gui.getInventory();
@@ -148,10 +181,10 @@ public class HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, true);
+                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open((Player) event.getWhoClicked(), player, listOrganizeType, true);
                         return;
                     }
-                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, true);
+                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), player, listOrganizeType, true);
 
                 });
     }
@@ -169,11 +202,11 @@ public class HorseListMenu {
         )
                 .withListener((InventoryClickEvent event ) -> {
                     if(player != event.getWhoClicked()) {
-                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().openToOther((Player) event.getWhoClicked(), player, listOrganizeType, false);
+                        plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open((Player) event.getWhoClicked(), player, listOrganizeType, false);
                         return;
                     }
 
-                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), listOrganizeType, false);
+                    plugin.getMenuManager().getHorseMenuManager().getHorseListMenu().open(player.getPlayer(), player, listOrganizeType, false);
 
                 });
     }
