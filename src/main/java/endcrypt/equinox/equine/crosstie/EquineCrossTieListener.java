@@ -11,6 +11,7 @@ import endcrypt.equinox.utils.MessageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -89,10 +90,12 @@ public class EquineCrossTieListener implements Listener {
         // Make the bat invisible, invulnerable, and non-collidable
         bat.setAI(false); // Disable AI so the bat doesn't move
         bat.setInvulnerable(true); // Make the bat invulnerable (god mode)
+        bat.getAttribute(Attribute.SCALE).setBaseValue(0.1);
         bat.setCollidable(false); // Make the bat non-collidable
         bat.setInvisible(true);
         bat.setPersistent(true); // Make the bat persistent so it doesn't get deleted when the player leaves the world
         bat.setAwake(true);
+        bat.setSilent(true);
 
         NBT.modifyPersistentData(bat, nbt -> {
             nbt.setString("LEASHED_HORSE", horse.getUniqueId().toString());
