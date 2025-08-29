@@ -28,7 +28,7 @@ public class EquineBreedingListener implements Listener {
                 continue;
             }
 
-            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_BREEDING)) {
+            if(!Keys.readBoolean(horse, Keys.IS_BREEDING)) {
                 continue;
             }
 
@@ -48,7 +48,7 @@ public class EquineBreedingListener implements Listener {
                 continue;
             }
 
-            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_BREEDING)) {
+            if(!Keys.readBoolean(horse, Keys.IS_BREEDING)) {
                 continue;
             }
 

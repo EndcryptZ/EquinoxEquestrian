@@ -20,7 +20,7 @@ public class EquineHunger {
     }
 
     public void checkFood(AbstractHorse horse) {
-        double hunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+        double hunger = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
 
         // Find the nearest edible blocks for horse
         Block targetBlock = findNearestBlock(
@@ -30,12 +30,12 @@ public class EquineHunger {
         );
 
         if (targetBlock == null) {
-            Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+            Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
             return;
         }
 
-        if (Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK)) {
-            Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+        if (Keys.readBoolean(horse, Keys.IS_IN_WATER_TASK)) {
+            Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
             return;
         }
 
@@ -45,14 +45,14 @@ public class EquineHunger {
            if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) return;
         }
 
-        Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, true);
+        Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, true);
 
 
         // Schedule a repeating task to check distance until reached
         Bukkit.getScheduler().runTaskTimer(plugin, task -> {
             if (!horse.isValid() || horse.isDead()) {
                 task.cancel();
-                Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
                 return;
             }
 
@@ -62,7 +62,7 @@ public class EquineHunger {
                         horse.getWorld().getName(),
                 targetBlock.getWorld().getName()
                 ));
-                Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
                 task.cancel();
                 return; // worlds are different, so cancel the method
             }
@@ -73,7 +73,7 @@ public class EquineHunger {
 
             if (horsePathfinder.getCurrentPath() != null) {
                 if (!horsePathfinder.getCurrentPath().canReachFinalPoint()) {
-                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                    Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
                     task.cancel();
                     return;
                 }
@@ -102,7 +102,7 @@ public class EquineHunger {
 
                     // Cancel the process if the block is not a valid food source
                     if (!allowedFoodSource.contains(targetBlock.getType())) {
-                        Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
+                        Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
                         return;
                     }
 
@@ -120,8 +120,8 @@ public class EquineHunger {
                     }
 
                     // Restore hunger
-                    Keys.writePersistentData(horse, Keys.IS_IN_FOOD_TASK, false);
-                    Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, Math.min(100, hunger + 10));
+                    Keys.writeBoolean(horse, Keys.IS_IN_FOOD_TASK, false);
+                    Keys.writeDouble(horse, Keys.HUNGER_PERCENTAGE, Math.min(100, hunger + 10));
 
                 }, 60L); // 3 seconds later
             }

@@ -252,7 +252,7 @@ public class HorseCommand {
             return;
         }
 
-        boolean isPublic = Keys.readPersistentData(horse, Keys.IS_PUBLIC);
+        boolean isPublic = Keys.readBoolean(horse, Keys.IS_PUBLIC);
 
         assert privacy != null;
         if (privacy.equalsIgnoreCase("public")) {

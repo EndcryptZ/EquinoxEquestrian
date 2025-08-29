@@ -28,12 +28,11 @@ public class HorseListMenu {
 
 
     public void open(Player player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        player.getPlayer().openInventory(createMenu(player, listOrganizeType, isTrustedHorses));
-
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> player.getPlayer().openInventory(createMenu(player, listOrganizeType, isTrustedHorses)));
     }
 
     public void openToOther(Player player, OfflinePlayer target, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {
-        player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses));
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> player.openInventory(createMenu(target, listOrganizeType, isTrustedHorses)));
     }
 
     private Inventory createMenu(OfflinePlayer player, ListOrganizeType listOrganizeType, boolean isTrustedHorses) {

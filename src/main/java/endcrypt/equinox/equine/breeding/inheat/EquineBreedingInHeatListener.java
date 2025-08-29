@@ -30,7 +30,7 @@ public class EquineBreedingInHeatListener implements Listener {
                 continue;
             }
 
-            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
+            if(Keys.readGender(horse) != Gender.MARE) {
                 continue;
             }
 
@@ -50,7 +50,7 @@ public class EquineBreedingInHeatListener implements Listener {
                 continue;
             }
 
-            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
+            if(Keys.readGender(horse) != Gender.MARE) {
                 continue;
             }
 
@@ -68,7 +68,7 @@ public class EquineBreedingInHeatListener implements Listener {
             return;
         }
 
-        if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) {
+        if(Keys.readGender(horse) != Gender.MARE) {
             return;
         }
 

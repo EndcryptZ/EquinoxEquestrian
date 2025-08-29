@@ -33,15 +33,15 @@ public class EquineHungerTask {
 
                 // Initialize hunger data if missing
                 if (!Keys.hasPersistentData(horse, Keys.HUNGER_PERCENTAGE)) {
-                    Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, Keys.HUNGER_PERCENTAGE.getDefaultValue());
+                    Keys.writeDouble(horse, Keys.HUNGER_PERCENTAGE, 100);
                 }
                 if (!Keys.hasPersistentData(horse, Keys.LAST_HUNGER_UPDATE)) {
-                    Keys.writePersistentData(horse, Keys.LAST_HUNGER_UPDATE, now);
+                    Keys.writeLong(horse, Keys.LAST_HUNGER_UPDATE, now);
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
 
-                double currentHunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
-                long lastUpdate = Keys.readPersistentData(horse, Keys.LAST_HUNGER_UPDATE);
+                double currentHunger = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
+                long lastUpdate = Keys.readLong(horse, Keys.LAST_HUNGER_UPDATE);
 
                 // Time elapsed since last update
                 long elapsedMillis = now - lastUpdate;
@@ -55,8 +55,8 @@ public class EquineHungerTask {
                 currentHunger -= decay;
                 if (currentHunger < 0) currentHunger = 0;
 
-                Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, currentHunger);
-                Keys.writePersistentData(horse, Keys.LAST_HUNGER_UPDATE, now);
+                Keys.writeDouble(horse, Keys.HUNGER_PERCENTAGE, currentHunger);
+                Keys.writeLong(horse, Keys.LAST_HUNGER_UPDATE, now);
 
                 /*
                 plugin.getLogger().info(String.format(
@@ -75,10 +75,10 @@ public class EquineHungerTask {
         for (World world : plugin.getServer().getWorlds()) {
             for (AbstractHorse horse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(horse)) continue;
-                double currentHunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+                double currentHunger = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
 
                 if (!Keys.hasPersistentData(horse, Keys.LAST_SEEK_FOOD)) {
-                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                    Keys.writeLong(horse, Keys.LAST_SEEK_FOOD, now);
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
 
@@ -91,17 +91,17 @@ public class EquineHungerTask {
                     }
 
 
-                long lastSeekFood = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
+                long lastSeekFood = Keys.readLong(horse, Keys.LAST_SEEK_FOOD);
                 if (currentHunger < 50 && lastSeekFood + TimeUtils.secondsToMillis(10) < now) {
                     plugin.getEquineManager().getEquineHunger().checkFood(horse);
-                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                    Keys.writeLong(horse, Keys.LAST_SEEK_FOOD, now);
                     continue;
                 }
 
 
                 if (lastSeekFood + TimeUtils.hoursToMillis(1) < now) {
                     plugin.getEquineManager().getEquineHunger().checkFood(horse);
-                    Keys.writePersistentData(horse, Keys.LAST_SEEK_FOOD, now);
+                    Keys.writeLong(horse, Keys.LAST_SEEK_FOOD, now);
                 }
             }
         }

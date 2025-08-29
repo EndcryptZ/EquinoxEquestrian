@@ -28,7 +28,7 @@ public class EquinePregnancyListener implements Listener {
                 continue;
             }
 
-            if (!(boolean) Keys.readPersistentData(horse, Keys.IS_PREGNANT)) {
+            if (!Keys.readBoolean(horse, Keys.IS_PREGNANT)) {
                 continue;
             }
 
@@ -47,7 +47,7 @@ public class EquinePregnancyListener implements Listener {
                 continue;
             }
 
-            if (!(boolean) Keys.readPersistentData(horse, Keys.IS_PREGNANT)) {
+            if (!Keys.readBoolean(horse, Keys.IS_PREGNANT)) {
                 continue;
             }
 

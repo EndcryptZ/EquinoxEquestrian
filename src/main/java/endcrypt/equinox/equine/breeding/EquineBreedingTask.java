@@ -83,7 +83,7 @@ public class EquineBreedingTask {
 
     private void checkBreed() {
         for (AbstractHorse abstractMare : new ArrayList<>(plugin.getEquineManager().getEquineCrossTie().getCrosstiedHorses())) {
-            if(Keys.readPersistentData(abstractMare, Keys.GENDER) != Gender.MARE) continue;
+            if(Keys.readGender(abstractMare) != Gender.MARE) continue;
             EquineLiveHorse mare = new EquineLiveHorse(abstractMare);
             if(!canMareBreed(mare)) continue;
 
@@ -109,7 +109,7 @@ public class EquineBreedingTask {
 
         for (Entity entity : location.getNearbyEntities(5, 5, 5)) {
             if (!(entity instanceof AbstractHorse horse)) continue;
-            if (Keys.readPersistentData(horse, Keys.GENDER) != Gender.STALLION) continue;
+            if (Keys.readGender(horse) != Gender.STALLION) continue;
 
             double distance = location.distance(horse.getLocation());
             if (distance < minDistance) {
@@ -143,7 +143,7 @@ public class EquineBreedingTask {
         if (partner == null) return false;
         if (partner.isDead()) return false;
         if (partner.getLocation().distance(horse.getHorse().getLocation()) > 5) return false;
-        if (!(boolean) Keys.readPersistentData(partner, Keys.IS_BREEDING)) return false;
+        if (!Keys.readBoolean(partner, Keys.IS_BREEDING)) return false;
         return true;
     }
 

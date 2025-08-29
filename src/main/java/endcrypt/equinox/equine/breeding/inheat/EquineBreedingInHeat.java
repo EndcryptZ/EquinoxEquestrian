@@ -30,7 +30,7 @@ public class EquineBreedingInHeat {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if (Keys.readPersistentData(abstractHorse, Keys.GENDER).equals(Gender.MARE)) {
+                if (Keys.readGender(abstractHorse) == Gender.MARE) {
                     mareHorses.add(abstractHorse);
                 }
             }

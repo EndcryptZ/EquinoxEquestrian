@@ -91,7 +91,7 @@ public class EquineLevelingListener implements Listener {
 
             @Override
             public void run() {
-                if (!(boolean) Keys.readPersistentData(horse, Keys.IS_LUNGING) || !player.isOnline()) {
+                if (!Keys.readBoolean(horse, Keys.IS_LUNGING) || !player.isOnline()) {
                     cancel();
                     return;
                 }

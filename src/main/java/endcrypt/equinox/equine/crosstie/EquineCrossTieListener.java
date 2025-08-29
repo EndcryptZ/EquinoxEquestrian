@@ -40,7 +40,7 @@ public class EquineCrossTieListener implements Listener {
 
         // Bug Fixing Method
         if (!horse.isLeashed()) {
-            if(Keys.readPersistentData(horse, Keys.IS_CROSS_TIED)) {
+            if(Keys.readBoolean(horse, Keys.IS_CROSS_TIED)) {
                 Bukkit.getPluginManager().callEvent(new EquinePlayerCrossTieLeashRemovedEvent(horse));
             }
             return;
@@ -62,7 +62,7 @@ public class EquineCrossTieListener implements Listener {
             return;
         }
 
-        if (Keys.readPersistentData(horse, Keys.IS_CROSS_TIED)) {
+        if (Keys.readBoolean(horse, Keys.IS_CROSS_TIED)) {
             event.setCancelled(true);
             return;
         }
@@ -109,7 +109,7 @@ public class EquineCrossTieListener implements Listener {
         });
 
         plugin.getEquineManager().getEquineCrossTie().remove(event.getHorse());
-        event.getHorse().setJumpStrength(Keys.readPersistentData(event.getHorse(), Keys.BASE_JUMP));
+        event.getHorse().setJumpStrength(Keys.readDouble(event.getHorse(), Keys.BASE_JUMP));
         event.getHorse().setAI(true);
     }
 
@@ -135,7 +135,7 @@ public class EquineCrossTieListener implements Listener {
                 continue;
             }
 
-            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_CROSS_TIED)) {
+            if(!Keys.readBoolean(horse, Keys.IS_CROSS_TIED)) {
                 continue;
             }
 
@@ -160,7 +160,7 @@ public class EquineCrossTieListener implements Listener {
                 continue;
             }
 
-            if(!(boolean) Keys.readPersistentData(horse, Keys.IS_CROSS_TIED)) {
+            if(!Keys.readBoolean(horse, Keys.IS_CROSS_TIED)) {
                 continue;
             }
 

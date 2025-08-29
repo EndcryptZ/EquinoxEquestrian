@@ -164,9 +164,9 @@ public class HorseMenu {
     }
 
     public boolean canMountHorse(Player player, AbstractHorse horse) {
-        int age = Keys.readPersistentData(horse, Keys.AGE);
-        double thirst = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
-        double hunger = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+        int age = Keys.readInt(horse, Keys.AGE);
+        double thirst = Keys.readDouble(horse, Keys.THIRST_PERCENTAGE);
+        double hunger = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
 
         // check age restriction
         if (age < 4) {

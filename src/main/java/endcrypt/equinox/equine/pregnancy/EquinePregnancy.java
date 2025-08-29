@@ -49,7 +49,7 @@ public class EquinePregnancy {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if (Keys.readPersistentData(abstractHorse, Keys.IS_PREGNANT)) {
+                if (Keys.readBoolean(abstractHorse, Keys.IS_PREGNANT)) {
                     pregnantHorses.add(abstractHorse);
                 }
             }

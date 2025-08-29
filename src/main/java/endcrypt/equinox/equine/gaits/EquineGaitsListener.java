@@ -44,7 +44,7 @@ public class EquineGaitsListener implements Listener {
             return;
         }
 
-        if (Keys.readPersistentData(equineHorse, Keys.IS_CROSS_TIED)) {
+        if (Keys.readBoolean(equineHorse, Keys.IS_CROSS_TIED)) {
             return;
         }
 
@@ -54,7 +54,7 @@ public class EquineGaitsListener implements Listener {
             if (Gaits.getNextGait(currentGait) != null) {
 
                 plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().put(player, Gaits.getNextGait(currentGait));
-                Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
+                Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
             }
         }
 
@@ -63,7 +63,7 @@ public class EquineGaitsListener implements Listener {
 
             if (Gaits.getPreviousGait(currentGait) != null) {
                 plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().put(player, Gaits.getPreviousGait(currentGait));
-                Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
+                Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
             }
         }
     }
@@ -85,11 +85,11 @@ public class EquineGaitsListener implements Listener {
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().put(player, Gaits.WALK);
 
-        if(Keys.readPersistentData(equineHorse, Keys.IS_CROSS_TIED)) {
+        if(Keys.readBoolean(equineHorse, Keys.IS_CROSS_TIED)) {
             Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(0);
             return;
         }
-        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
+        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
 
     }
 
@@ -107,7 +107,7 @@ public class EquineGaitsListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().remove(player);
-        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, Keys.BASE_SPEED));
+        Objects.requireNonNull(((AbstractHorse) event.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, Keys.BASE_SPEED));
         player.sendActionBar(ColorUtils.color(""));
 
     }
@@ -126,7 +126,7 @@ public class EquineGaitsListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().put(player, Gaits.WALK);
-        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
+        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player).getGaitSpeedKey()));
     }
 
     @EventHandler
@@ -146,6 +146,6 @@ public class EquineGaitsListener implements Listener {
         }
 
         plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().remove(player);
-        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readPersistentData(equineHorse, Keys.BASE_SPEED));
+        Objects.requireNonNull(((AbstractHorse) player.getVehicle()).getAttribute(Attribute.MOVEMENT_SPEED)).setBaseValue(Keys.readDouble(equineHorse, Keys.BASE_SPEED));
     }
 }

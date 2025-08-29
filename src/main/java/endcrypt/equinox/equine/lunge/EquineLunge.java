@@ -66,8 +66,8 @@ public class EquineLunge {
             return;
         }
 
-        if (Keys.readPersistentData(horse, Keys.IS_LUNGING)) {
-            Keys.writePersistentData(horse, Keys.IS_LUNGING, "false");
+        if (Keys.readBoolean(horse, Keys.IS_LUNGING)) {
+            Keys.writeBoolean(horse, Keys.IS_LUNGING, false);
             return;
         }
 
@@ -83,12 +83,12 @@ public class EquineLunge {
         if (event.isCancelled()) return;
 
         horse.setAI(false);
-        Keys.writePersistentData(horse, Keys.IS_LUNGING, "true");
+        Keys.writeBoolean(horse, Keys.IS_LUNGING, true);
 
         final int[] pathIndex = { startIndex };
 
         Bukkit.getScheduler().runTaskTimer(plugin, (task) -> {
-            if (!horse.isLeashed() || horse.getLeashHolder() != player || !(boolean) Keys.readPersistentData(horse, Keys.IS_LUNGING)) {
+            if (!horse.isLeashed() || horse.getLeashHolder() != player || !Keys.readBoolean(horse, Keys.IS_LUNGING)) {
                 stopLunging(horse, task);
                 return;
             }
@@ -119,7 +119,7 @@ public class EquineLunge {
     private void stopLunging(AbstractHorse horse, BukkitTask task) {
         task.cancel();
         horse.setAI(true);
-        Keys.writePersistentData(horse, Keys.IS_LUNGING, "false");
+        Keys.writeBoolean(horse, Keys.IS_LUNGING, false);
     }
 
     private int findClosestIndex(Location loc, List<Location> points) {

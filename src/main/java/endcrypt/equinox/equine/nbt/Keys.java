@@ -1,6 +1,7 @@
 package endcrypt.equinox.equine.nbt;
 
 import de.tr7zw.changeme.nbtapi.NBT;
+import endcrypt.equinox.equine.attributes.Gender;
 import lombok.Getter;
 import org.bukkit.entity.AbstractHorse;
 
@@ -79,42 +80,58 @@ public enum Keys {
         this.type = type;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T readPersistentData(AbstractHorse horse, Keys nbtKey) {
-        return NBT.getPersistentData(horse, nbt -> {
-            Object value;
-            if (nbtKey.getDefaultValue() instanceof String) {
-                value = nbt.getString(nbtKey.getKey());
-            } else if (nbtKey.getDefaultValue() instanceof Integer) {
-                value = nbt.getInteger(nbtKey.getKey());
-            } else if (nbtKey.getDefaultValue() instanceof Double) {
-                value = nbt.getDouble(nbtKey.getKey());
-            } else if (nbtKey.getDefaultValue() instanceof Long) {
-                value = nbt.getLong(nbtKey.getKey());
-            } else if (nbtKey.getDefaultValue() instanceof Boolean) {
-                value = nbt.getBoolean(nbtKey.getKey());
-            } else {
-                value = null;
-            }
+    public static String readString(AbstractHorse horse, Keys key) {
+        return NBT.getPersistentData(horse, nbt -> nbt.getString(key.getKey()));
+    }
 
-            return value != null ? (T) value : (T) nbtKey.getDefaultValue();
+    public static void writeString(AbstractHorse horse, Keys key, String value) {
+        NBT.modifyPersistentData(horse, nbt -> {
+            nbt.setString(key.getKey(), value);
         });
     }
 
-    public static <T> void writePersistentData(AbstractHorse horse, Keys nbtKey, T value) {
+    public static int readInt(AbstractHorse horse, Keys key) {
+        return NBT.getPersistentData(horse, nbt -> nbt.getInteger(key.getKey()));
+    }
+
+    public static void writeInt(AbstractHorse horse, Keys key, int value) {
         NBT.modifyPersistentData(horse, nbt -> {
-            if (value instanceof String) {
-                nbt.setString(nbtKey.getKey(), (String) value);
-            } else if (value instanceof Integer) {
-                nbt.setInteger(nbtKey.getKey(), (Integer) value);
-            } else if (value instanceof Double) {
-                nbt.setDouble(nbtKey.getKey(), (Double) value);
-            } else if (value instanceof Long) {
-                nbt.setLong(nbtKey.getKey(), (Long) value);
-            } else if (value instanceof Boolean) {
-                nbt.setBoolean(nbtKey.getKey(), (Boolean) value);
-            }
+            nbt.setInteger(key.getKey(), value);
         });
+    }
+
+    public static double readDouble(AbstractHorse horse, Keys key) {
+        return NBT.getPersistentData(horse, nbt -> nbt.getDouble(key.getKey()));
+    }
+
+    public static void writeDouble(AbstractHorse horse, Keys key, double value) {
+        NBT.modifyPersistentData(horse, nbt -> {
+            nbt.setDouble(key.getKey(), value);
+        });
+    }
+
+    public static long readLong(AbstractHorse horse, Keys key) {
+        return NBT.getPersistentData(horse, nbt -> nbt.getLong(key.getKey()));
+    }
+
+    public static void writeLong(AbstractHorse horse, Keys key, long value) {
+        NBT.modifyPersistentData(horse, nbt -> {
+            nbt.setLong(key.getKey(), value);
+        });
+    }
+
+    public static boolean readBoolean(AbstractHorse horse, Keys key) {
+        return NBT.getPersistentData(horse, nbt -> nbt.getBoolean(key.getKey()));
+    }
+
+    public static void writeBoolean(AbstractHorse horse, Keys key, boolean value) {
+        NBT.modifyPersistentData(horse, nbt -> {
+            nbt.setBoolean(key.getKey(), value);
+        });
+    }
+
+    public static Gender readGender(AbstractHorse horse) {
+        return Gender.getGenderByName(NBT.getPersistentData(horse, nbt -> nbt.getString(GENDER.getKey())));
     }
 
     public static boolean hasPersistentData(AbstractHorse horse, Keys nbtKey) {

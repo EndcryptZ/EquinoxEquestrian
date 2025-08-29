@@ -112,8 +112,8 @@ public class DatabaseHorses {
             double lastX = nbt.getDouble(Keys.LAST_LOCATION_X.getKey());
             double lastY = nbt.getDouble(Keys.LAST_LOCATION_Y.getKey());
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
-            boolean isPregnant = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
-            boolean isInHeat = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
+            boolean isPregnant = nbt.getBoolean(Keys.IS_PREGNANT.getKey());
+            boolean isInHeat = nbt.getBoolean(Keys.IS_IN_HEAT.getKey());
             double hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey());
             long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
             double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());
@@ -272,8 +272,8 @@ public class DatabaseHorses {
             double lastX = nbt.getDouble(Keys.LAST_LOCATION_X.getKey());
             double lastY = nbt.getDouble(Keys.LAST_LOCATION_Y.getKey());
             double lastZ = nbt.getDouble(Keys.LAST_LOCATION_Z.getKey());
-            boolean isPregnant = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_PREGNANT));
-            boolean isInHeat = "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_IN_HEAT));
+            boolean isPregnant = nbt.getBoolean(Keys.IS_PREGNANT.getKey());
+            boolean isInHeat = nbt.getBoolean(Keys.IS_IN_HEAT.getKey());
             double hungerPercentage = nbt.getDouble(Keys.HUNGER_PERCENTAGE.getKey());
             long lastHungerUpdate = nbt.getLong(Keys.LAST_HUNGER_UPDATE.getKey());
             double thirstPercentage = nbt.getDouble(Keys.THIRST_PERCENTAGE.getKey());

@@ -78,10 +78,10 @@ public class EquineHorseUpdater {
 
         String actionText = "[" + action.getName() + "] ";
 
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_X, location.getX());
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Y, location.getY());
-        Keys.writePersistentData(horse, Keys.LAST_LOCATION_Z, location.getZ());
-        Keys.writePersistentData(horse, Keys.LAST_WORLD, location.getWorld().getName());
+        Keys.writeDouble(horse, Keys.LAST_LOCATION_X, location.getX());
+        Keys.writeDouble(horse, Keys.LAST_LOCATION_Y, location.getY());
+        Keys.writeDouble(horse, Keys.LAST_LOCATION_Z, location.getZ());
+        Keys.writeString(horse, Keys.LAST_WORLD, location.getWorld().getName());
 
         if (plugin.getDatabaseManager().getDatabaseHorses().horseExists(horse)) {
             plugin.getDatabaseManager().getDatabaseHorses().updateHorse(horse);

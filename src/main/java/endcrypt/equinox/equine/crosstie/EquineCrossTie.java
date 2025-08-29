@@ -45,7 +45,7 @@ public class EquineCrossTie {
             for (AbstractHorse abstractHorse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(abstractHorse)) continue;
 
-                if (Keys.readPersistentData(abstractHorse, Keys.IS_CROSS_TIED)) {
+                if (Keys.readBoolean(abstractHorse, Keys.IS_CROSS_TIED)) {
                     crosstiedHorses.add(abstractHorse);
                 }
             }

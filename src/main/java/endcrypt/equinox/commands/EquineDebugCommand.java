@@ -192,17 +192,33 @@ public class EquineDebugCommand {
     private void modifyHorseNbtKey(CommandSender commandSender, CommandArguments args) {
         Player player = (Player) commandSender;
         Keys key = args.getUnchecked("key");
-        Object value = args.getUnchecked("value"); // This comes from KeyValueArgument
+        Object value = args.getUnchecked("value"); // from KeyValueArgument
 
-        AbstractHorse horse = plugin.getPlayerDataManager().getPlayerData(player).getSelectedHorse();
+        AbstractHorse horse = plugin.getPlayerDataManager()
+                .getPlayerData(player)
+                .getSelectedHorse();
 
-        if (!isExecutorDeveloper(player)) {
+        if (!isExecutorDeveloper(player) || horse == null) {
             return;
         }
 
-        // Write the data (Keys.writePersistentData should handle the type properly)
-        Keys.writePersistentData(horse, key, value);
+        // use the correct Keys method depending on type
+        if (value instanceof String str) {
+            Keys.writeString(horse, key, str);
+        } else if (value instanceof Integer i) {
+            Keys.writeInt(horse, key, i);
+        } else if (value instanceof Double d) {
+            Keys.writeDouble(horse, key, d);
+        } else if (value instanceof Long l) {
+            Keys.writeLong(horse, key, l);
+        } else if (value instanceof Boolean b) {
+            Keys.writeBoolean(horse, key, b);
+        } else {
+            player.sendMessage(ColorUtils.color("<red>Unsupported value type: " + value.getClass().getSimpleName()));
+            return;
+        }
 
+        // confirmation
         player.sendMessage(ColorUtils.color(
                 "<green>Successfully set <key> to <value> for your selected horse!",
                 Placeholder.parsed("key", key.getKey()),

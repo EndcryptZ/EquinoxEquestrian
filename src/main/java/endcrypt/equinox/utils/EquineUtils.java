@@ -22,7 +22,7 @@ public class EquineUtils {
 
     public static boolean isLivingEquineHorse(AbstractHorse horse) {
         if (horse == null) return false;
-        return "true".equalsIgnoreCase(Keys.readPersistentData(horse, Keys.IS_EQUINE));
+        return "true".equalsIgnoreCase(Keys.readString(horse, Keys.IS_EQUINE));
     }
 
     public static List<Entity> getLeashedEntities(Player player) {
@@ -160,7 +160,7 @@ public class EquineUtils {
     public static boolean hasPermissionToHorse(Player player, AbstractHorse horse) {
         if (player == null || horse == null) return false;
         if (instance.getDatabaseManager().getDatabaseTrustedPlayers().isTrustedToHorse(horse, player)) return true;
-        if(Keys.readPersistentData(horse, Keys.IS_PUBLIC)) return true;
+        if(Keys.readBoolean(horse, Keys.IS_PUBLIC)) return true;
         if(EquineBypass.hasBypass(player)) return true;
         if(horse.getOwner() == player) return true;
 
@@ -202,10 +202,10 @@ public class EquineUtils {
         }
 
         // apply converted speeds to NBT
-        Keys.writePersistentData(horse, Keys.WALK_SPEED, EquineUtils.blocksToMnecraftSpeed(walkSpeed));
-        Keys.writePersistentData(horse, Keys.TROT_SPEED, EquineUtils.blocksToMnecraftSpeed(trotSpeed));
-        Keys.writePersistentData(horse, Keys.CANTER_SPEED, EquineUtils.blocksToMnecraftSpeed(canterSpeed));
-        Keys.writePersistentData(horse, Keys.GALLOP_SPEED, EquineUtils.blocksToMnecraftSpeed(gallopSpeed));
+        Keys.writeDouble(horse, Keys.WALK_SPEED, EquineUtils.blocksToMnecraftSpeed(walkSpeed));
+        Keys.writeDouble(horse, Keys.TROT_SPEED, EquineUtils.blocksToMnecraftSpeed(trotSpeed));
+        Keys.writeDouble(horse, Keys.CANTER_SPEED, EquineUtils.blocksToMnecraftSpeed(canterSpeed));
+        Keys.writeDouble(horse, Keys.GALLOP_SPEED, EquineUtils.blocksToMnecraftSpeed(gallopSpeed));
     }
 
     private static double generateSpeed(double min1, double max1, int chance1,

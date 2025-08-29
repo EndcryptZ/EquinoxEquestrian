@@ -158,56 +158,56 @@ public class EquineLiveHorse {
         this.horse = horse;
 
         // Simple flags
-        this.isCrossTied   = Keys.readPersistentData(horse, Keys.IS_CROSS_TIED);
-        this.isPublic      = Keys.readPersistentData(horse, Keys.IS_PUBLIC);
-        this.isInHeat      = Keys.readPersistentData(horse, Keys.IS_IN_HEAT);
-        this.isPregnant    = Keys.readPersistentData(horse, Keys.IS_PREGNANT);
-        this.isBreeding    = Keys.readPersistentData(horse, Keys.IS_BREEDING);
-        this.isInstantFoal = Keys.readPersistentData(horse, Keys.INSTANT_FOAL);
-        this.isInstantBreed= Keys.readPersistentData(horse, Keys.INSTANT_BREED);
+        this.isCrossTied = Keys.readBoolean(horse, Keys.IS_CROSS_TIED);
+        this.isPublic = Keys.readBoolean(horse, Keys.IS_PUBLIC);
+        this.isInHeat = Keys.readBoolean(horse, Keys.IS_IN_HEAT);
+        this.isPregnant = Keys.readBoolean(horse, Keys.IS_PREGNANT);
+        this.isBreeding    = Keys.readBoolean(horse, Keys.IS_BREEDING);
+        this.isInstantFoal = Keys.readBoolean(horse, Keys.INSTANT_FOAL);
+        this.isInstantBreed= Keys.readBoolean(horse, Keys.INSTANT_BREED);
 
         // Core stats
-        this.claimTime     = Keys.readPersistentData(horse, Keys.CLAIM_TIME);
-        this.birthTime     = Keys.readPersistentData(horse, Keys.BIRTH_TIME);
-        this.ownerName     = Keys.readPersistentData(horse, Keys.OWNER_NAME);
-        this.ownerUUID     = Keys.readPersistentData(horse, Keys.OWNER_UUID);
-        this.baseSpeed     = Keys.readPersistentData(horse, Keys.BASE_SPEED);
-        this.baseJumpPower = Keys.readPersistentData(horse, Keys.BASE_JUMP);
-        this.skullId       = Keys.readPersistentData(horse, Keys.SKULL_ID);
+        this.claimTime     = Keys.readLong(horse, Keys.CLAIM_TIME);
+        this.birthTime     = Keys.readLong(horse, Keys.BIRTH_TIME);
+        this.ownerName     = Keys.readString(horse, Keys.OWNER_NAME);
+        this.ownerUUID     = Keys.readString(horse, Keys.OWNER_UUID);
+        this.baseSpeed     = Keys.readDouble(horse, Keys.BASE_SPEED);
+        this.baseJumpPower = Keys.readDouble(horse, Keys.BASE_JUMP);
+        this.skullId       = Keys.readString(horse, Keys.SKULL_ID);
 
         // Heat + pregnancy
-        this.lastInHeat            = Keys.readPersistentData(horse, Keys.LAST_IN_HEAT);
-        this.pregnancyStartTime    = Keys.readPersistentData(horse, Keys.PREGNANCY_START_TIME);
-        this.pregnancyPartnerUUID  = Keys.readPersistentData(horse, Keys.PREGNANCY_PARTNER);
-        this.breedingStartTime     = Keys.readPersistentData(horse, Keys.BREEDING_START_TIME);
-        this.breedingPartnerUUID   = Keys.readPersistentData(horse, Keys.BREEDING_PARTNER);
+        this.lastInHeat            = Keys.readLong(horse, Keys.LAST_IN_HEAT);
+        this.pregnancyStartTime    = Keys.readLong(horse, Keys.PREGNANCY_START_TIME);
+        this.pregnancyPartnerUUID  = Keys.readString(horse, Keys.PREGNANCY_PARTNER);
+        this.breedingStartTime     = Keys.readLong(horse, Keys.BREEDING_START_TIME);
+        this.breedingPartnerUUID   = Keys.readString(horse, Keys.BREEDING_PARTNER);
 
         // Body functions
-        this.lastPoop  = Keys.readPersistentData(horse, Keys.LAST_POOP);
-        this.lastPee   = Keys.readPersistentData(horse, Keys.LAST_PEE);
+        this.lastPoop  = Keys.readLong(horse, Keys.LAST_POOP);
+        this.lastPee   = Keys.readLong(horse, Keys.LAST_PEE);
 
         // Hunger + thirst
-        this.hungerPercentage  = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
-        this.lastHungerUpdate  = Keys.readPersistentData(horse, Keys.LAST_HUNGER_UPDATE);
-        this.lastSeekFood      = Keys.readPersistentData(horse, Keys.LAST_SEEK_FOOD);
-        this.isInFoodTask      = Keys.readPersistentData(horse, Keys.IS_IN_FOOD_TASK);
+        this.hungerPercentage  = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
+        this.lastHungerUpdate  = Keys.readLong(horse, Keys.LAST_HUNGER_UPDATE);
+        this.lastSeekFood      = Keys.readLong(horse, Keys.LAST_SEEK_FOOD);
+        this.isInFoodTask      = Keys.readBoolean(horse, Keys.IS_IN_FOOD_TASK);
 
-        this.thirstPercentage  = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
-        this.lastThirstUpdate  = Keys.readPersistentData(horse, Keys.LAST_THIRST_UPDATE);
-        this.lastSeekWater     = Keys.readPersistentData(horse, Keys.LAST_SEEK_WATER);
-        this.isInWaterTask     = Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK);
+        this.thirstPercentage  = Keys.readDouble(horse, Keys.THIRST_PERCENTAGE);
+        this.lastThirstUpdate  = Keys.readLong(horse, Keys.LAST_THIRST_UPDATE);
+        this.lastSeekWater     = Keys.readLong(horse, Keys.LAST_SEEK_WATER);
+        this.isInWaterTask     = Keys.readBoolean(horse, Keys.IS_IN_WATER_TASK);
 
         // Movement speeds
-        this.walkSpeed   = Keys.readPersistentData(horse, Keys.WALK_SPEED);
-        this.trotSpeed   = Keys.readPersistentData(horse, Keys.TROT_SPEED);
-        this.canterSpeed = Keys.readPersistentData(horse, Keys.CANTER_SPEED);
-        this.gallopSpeed = Keys.readPersistentData(horse, Keys.GALLOP_SPEED);
+        this.walkSpeed   = Keys.readDouble(horse, Keys.WALK_SPEED);
+        this.trotSpeed   = Keys.readDouble(horse, Keys.TROT_SPEED);
+        this.canterSpeed = Keys.readDouble(horse, Keys.CANTER_SPEED);
+        this.gallopSpeed = Keys.readDouble(horse, Keys.GALLOP_SPEED);
 
         // Last location
-        World lastWorld = Bukkit.getWorld((Key) Keys.readPersistentData(horse, Keys.LAST_WORLD));
-        double lastX    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_X);
-        double lastY    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_Y);
-        double lastZ    = Keys.readPersistentData(horse, Keys.LAST_LOCATION_Z);
+        World lastWorld = Bukkit.getWorld(Keys.readString(horse, Keys.LAST_WORLD));
+        double lastX    = Keys.readDouble(horse, Keys.LAST_LOCATION_X);
+        double lastY    = Keys.readDouble(horse, Keys.LAST_LOCATION_Y);
+        double lastZ    = Keys.readDouble(horse, Keys.LAST_LOCATION_Z);
 
         this.lastLocation = new Location(lastWorld, lastX, lastY, lastZ);
     }

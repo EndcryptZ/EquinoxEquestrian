@@ -21,7 +21,7 @@ public class EquineGaitsTask {
             for (Player player : plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().keySet()) {
                 Gaits playerCurrentGait = plugin.getEquineManager().getEquineGaits().getPlayerCurrentGaits().get(player);
 
-                if (Keys.readPersistentData((AbstractHorse) player.getVehicle(), Keys.IS_CROSS_TIED)) {
+                if (Keys.readBoolean((AbstractHorse) player.getVehicle(), Keys.IS_CROSS_TIED)) {
                     continue;
                 }
 

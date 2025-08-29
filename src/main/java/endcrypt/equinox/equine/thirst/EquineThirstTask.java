@@ -32,15 +32,15 @@ public class EquineThirstTask {
 
                 // Initialize thirst data if missing
                 if (!Keys.hasPersistentData(horse, Keys.THIRST_PERCENTAGE)) {
-                    Keys.writePersistentData(horse, Keys.THIRST_PERCENTAGE, Keys.THIRST_PERCENTAGE.getDefaultValue());
+                    Keys.writeDouble(horse, Keys.THIRST_PERCENTAGE, 100);
                 }
                 if (!Keys.hasPersistentData(horse, Keys.LAST_THIRST_UPDATE)) {
-                    Keys.writePersistentData(horse, Keys.LAST_THIRST_UPDATE, now);
+                    Keys.writeLong(horse, Keys.LAST_THIRST_UPDATE, now);
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
 
-                double currentThirst = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
-                long lastUpdate = Keys.readPersistentData(horse, Keys.LAST_THIRST_UPDATE);
+                double currentThirst = Keys.readDouble(horse, Keys.THIRST_PERCENTAGE);
+                long lastUpdate = Keys.readLong(horse, Keys.LAST_THIRST_UPDATE);
 
                 // Time elapsed since last update
                 long elapsedMillis = now - lastUpdate;
@@ -53,8 +53,8 @@ public class EquineThirstTask {
                 currentThirst -= decay;
                 if (currentThirst < 0) currentThirst = 0;
 
-                Keys.writePersistentData(horse, Keys.THIRST_PERCENTAGE, currentThirst);
-                Keys.writePersistentData(horse, Keys.LAST_THIRST_UPDATE, now);
+                Keys.writeDouble(horse, Keys.THIRST_PERCENTAGE, currentThirst);
+                Keys.writeLong(horse, Keys.LAST_THIRST_UPDATE, now);
 
             }
         }
@@ -66,10 +66,10 @@ public class EquineThirstTask {
         for (World world : plugin.getServer().getWorlds()) {
             for (AbstractHorse horse : world.getEntitiesByClass(AbstractHorse.class)) {
                 if (!EquineUtils.isLivingEquineHorse(horse)) continue;
-                double currentThirst = Keys.readPersistentData(horse, Keys.THIRST_PERCENTAGE);
+                double currentThirst = Keys.readDouble(horse, Keys.THIRST_PERCENTAGE);
 
                 if (!Keys.hasPersistentData(horse, Keys.LAST_SEEK_WATER)) {
-                    Keys.writePersistentData(horse, Keys.LAST_SEEK_WATER, now);
+                    Keys.writeLong(horse, Keys.LAST_SEEK_WATER, now);
                     continue; // Skip this tick so decay doesn't happen instantly
                 }
 
@@ -82,10 +82,10 @@ public class EquineThirstTask {
                 }
 
 
-                long lastSeekWater = Keys.readPersistentData(horse, Keys.LAST_SEEK_WATER);
+                long lastSeekWater = Keys.readLong(horse, Keys.LAST_SEEK_WATER);
                 if (currentThirst < 50 && lastSeekWater + TimeUtils.secondsToMillis(10) < now) {
                     plugin.getEquineManager().getEquineThirst().checkWater(horse);
-                    Keys.writePersistentData(horse, Keys.LAST_SEEK_WATER, now);
+                    Keys.writeLong(horse, Keys.LAST_SEEK_WATER, now);
                 }
 
             }

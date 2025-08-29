@@ -46,7 +46,7 @@ public class EquineHungerListener implements Listener {
             return;
         }
 
-        if (Keys.readPersistentData(horse, Keys.IS_IN_WATER_TASK)) {
+        if (Keys.readBoolean(horse, Keys.IS_IN_WATER_TASK)) {
             event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(
                     "<prefix><red>This horse is currently busy drinking water.",
                     Placeholder.parsed("prefix", plugin.getPrefix())
@@ -54,7 +54,7 @@ public class EquineHungerListener implements Listener {
             return;
         }
 
-        if (Keys.readPersistentData(horse, Keys.IS_IN_FOOD_TASK)) {
+        if (Keys.readBoolean(horse, Keys.IS_IN_FOOD_TASK)) {
             event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize(
                     "<prefix><red>This horse is currently busy foraging for food.",
                     Placeholder.parsed("prefix", plugin.getPrefix())
@@ -63,9 +63,9 @@ public class EquineHungerListener implements Listener {
         }
 
 
-        double hungerPercentage = Keys.readPersistentData(horse, Keys.HUNGER_PERCENTAGE);
+        double hungerPercentage = Keys.readDouble(horse, Keys.HUNGER_PERCENTAGE);
         hungerPercentage = Math.min(100, hungerPercentage + 2);
-        Keys.writePersistentData(horse, Keys.HUNGER_PERCENTAGE, hungerPercentage);
+        Keys.writeDouble(horse, Keys.HUNGER_PERCENTAGE, hungerPercentage);
 
         if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             item.setAmount(item.getAmount() - 1);

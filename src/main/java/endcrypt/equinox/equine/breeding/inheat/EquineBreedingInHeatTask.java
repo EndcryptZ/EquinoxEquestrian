@@ -26,7 +26,7 @@ public class EquineBreedingInHeatTask {
     private void checkInHeat() {
         for (AbstractHorse horse : new ArrayList<>(plugin.getEquineManager().getEquineBreeding().getBreedingInHeat().getMareHorses())) {
             if(horse == null) continue;
-            if(Keys.readPersistentData(horse, Keys.GENDER) != Gender.MARE) continue;
+            if(Keys.readGender(horse) != Gender.MARE) continue;
             EquineLiveHorse liveHorse = new EquineLiveHorse(horse);
             checkHorseInHeat(liveHorse);
         }

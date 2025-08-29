@@ -26,10 +26,10 @@ public class EquineAgingTask {
 
                 abstractHorse.setAge(0);
                 abstractHorse.setAgeLock(true);
-                Long birthTime = Keys.readPersistentData(abstractHorse, Keys.BIRTH_TIME);
-                if (birthTime == null) continue;
+                Long birthTime = Keys.readLong(abstractHorse, Keys.BIRTH_TIME);
+                if (birthTime == 0) continue;
 
-                int currentAge = Keys.readPersistentData(abstractHorse, Keys.AGE);
+                int currentAge = Keys.readInt(abstractHorse, Keys.AGE);
                 long now = System.currentTimeMillis();
 
                 // Time difference in milliseconds
@@ -43,7 +43,7 @@ public class EquineAgingTask {
 
                 // Update the horse's age only if it's changed
                 if (calculatedAge != currentAge) {
-                    Keys.writePersistentData(abstractHorse, Keys.AGE, calculatedAge);
+                    Keys.writeInt(abstractHorse, Keys.AGE, calculatedAge);
                 }
 
                 if (currentAge >= 3) {
