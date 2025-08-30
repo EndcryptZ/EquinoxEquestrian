@@ -46,6 +46,14 @@ public class EquineAgingTask {
                     Keys.writeInt(abstractHorse, Keys.AGE, calculatedAge);
                 }
 
+                if (currentAge == 0) {
+                    if (abstractHorse.isAdult()) {
+                        abstractHorse.setAgeLock(false);
+                        abstractHorse.setBaby();
+                        return;
+                    }
+                }
+
                 if (currentAge >= 3) {
                     if (!abstractHorse.isAdult()) {
                         abstractHorse.setAgeLock(false);

@@ -3,6 +3,7 @@ package endcrypt.equinox.equine.updater.horse;
 import endcrypt.equinox.EquinoxEquestrian;
 import endcrypt.equinox.equine.EquineLiveHorse;
 import endcrypt.equinox.equine.nbt.Keys;
+import endcrypt.equinox.utils.SpeedUtils;
 import endcrypt.equinox.utils.ColorUtils;
 import endcrypt.equinox.utils.EquineUtils;
 import org.bukkit.Location;
@@ -25,7 +26,7 @@ public class EquineHorseUpdater {
 
         // apply gait speeds if missing
         if (!Keys.hasPersistentData(horse, Keys.WALK_SPEED)) {
-            EquineUtils.applySpeedsToHorse(horse);
+            SpeedUtils.applySpeedsToHorse(horse);
             plugin.getLogger().info("Applied new gait speeds to horse '"
                     + horse.getName() + "' (" + horse.getUniqueId() + ")");
         }

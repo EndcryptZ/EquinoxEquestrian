@@ -107,9 +107,7 @@ public class EquineCrossTieListener implements Listener {
 
     @EventHandler
     public void onCrossTieRemoved(EquinePlayerCrossTieLeashRemovedEvent event) {
-        NBT.modifyPersistentData(event.getHorse(), nbt -> {
-            nbt.setString(Keys.IS_CROSS_TIED.getKey(), "false");
-        });
+        Keys.writeBoolean(event.getHorse(), Keys.IS_CROSS_TIED, false);
 
         plugin.getEquineManager().getEquineCrossTie().remove(event.getHorse());
         event.getHorse().setJumpStrength(Keys.readDouble(event.getHorse(), Keys.BASE_JUMP));
@@ -118,9 +116,7 @@ public class EquineCrossTieListener implements Listener {
 
     @EventHandler
     public void onCrossTie(EquinePlayerCrossTieLeashEvent event) {
-        NBT.modifyPersistentData(event.getHorse(), nbt -> {
-            nbt.setString(Keys.IS_CROSS_TIED.getKey(), "true");
-        });
+        Keys.writeBoolean(event.getHorse(), Keys.IS_CROSS_TIED, true);
 
         plugin.getEquineManager().getEquineCrossTie().add(event.getHorse());
         event.getHorse().setJumpStrength(0);

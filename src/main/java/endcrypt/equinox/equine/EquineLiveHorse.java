@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import endcrypt.equinox.equine.nbt.Keys;
 import endcrypt.equinox.utils.EquineUtils;
-import endcrypt.equinox.utils.UniqueIdUtil;
+import endcrypt.equinox.utils.UniqueIdUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -254,7 +254,7 @@ public class EquineLiveHorse {
         updateDefault();
 
         UUID possibleOwnerUUID;
-        if (UniqueIdUtil.isValidUUID(this.ownerUUID)) {
+        if (UniqueIdUtils.isValidUUID(this.ownerUUID)) {
             possibleOwnerUUID = UUID.fromString(this.ownerUUID);
         } else {
             possibleOwnerUUID = horse.getOwnerUniqueId();
